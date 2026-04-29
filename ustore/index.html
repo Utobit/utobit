@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UStore — Utobit</title>
+  <meta property="og:title" content="UStore">
+  <meta property="og:description" content="Utobit에서 만든 앱을 직접 받아보세요.">
+  <meta property="og:url" content="https://utobit.net/ustore/">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', 'Noto Sans KR', system-ui, sans-serif;
+      background: #fff; color: #111827;
+      min-height: 100vh; display: flex; flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    header {
+      padding: 24px 28px 0;
+      display: flex; flex-direction: column; align-items: center;
+      position: relative;
+    }
+    .logo { font-size: 1.5rem; font-weight: 900; color: #111827; letter-spacing: -.04em; margin-bottom: 4px; }
+    .logo a { color: inherit; text-decoration: none; }
+
+    .search-wrap {
+      width: 100%; max-width: 400px;
+      margin: 16px auto 0;
+    }
+    .search-wrap input {
+      width: 100%;
+      padding: 9px 16px;
+      border: 1px solid #e5e7eb; border-radius: 10px;
+      font-size: 0.875rem; font-family: inherit;
+      background: #f9fafb; color: #111827;
+      outline: none; transition: border-color .15s;
+    }
+    .search-wrap input:focus { border-color: #9ca3af; background: #fff; }
+    .search-wrap input::placeholder { color: #9ca3af; }
+
+    .tabbar {
+      display: flex; justify-content: center;
+      border-bottom: 1px solid #f3f4f6;
+      padding: 0 28px; background: #fff;
+      position: sticky; top: 0; z-index: 10;
+      margin-top: 12px;
+    }
+    .tabbar button {
+      padding: 14px 18px;
+      font-size: 0.875rem; font-weight: 600;
+      background: none; border: none;
+      border-bottom: 2px solid transparent;
+      cursor: pointer; color: #6b7280;
+      font-family: inherit;
+      transition: color .15s, border-color .15s;
+      margin-bottom: -1px;
+    }
+    .tabbar button.active { color: #111827; border-bottom-color: #111827; }
+    .tabbar button:hover:not(.active) { color: #374151; }
+
+    .content { flex: 1; }
+
+    .store-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+      padding: 28px;
+      max-width: 1080px; margin: 0 auto;
+    }
+
+    .store-card {
+      border: 1px solid #e5e7eb;
+      border-radius: 16px; padding: 22px;
+      transition: box-shadow .2s, border-color .2s;
+      display: flex; flex-direction: column;
+      cursor: pointer; text-decoration: none; color: inherit;
+    }
+    .store-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,.07); border-color: #d1d5db; }
+
+    .card-icon {
+      width: 52px; height: 52px; border-radius: 13px;
+      margin-bottom: 14px; object-fit: cover; display: block;
+    }
+    .card-icon-placeholder {
+      width: 52px; height: 52px; border-radius: 13px;
+      margin-bottom: 14px; background: #f3f4f6;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .card-meta {
+      display: flex; align-items: center; gap: 8px;
+      margin-bottom: 4px;
+    }
+    .card-label {
+      font-size: 0.6875rem; font-weight: 700;
+      color: #9ca3af; letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+    .status-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .status-dot.available { background: #22c55e; }
+    .status-dot.beta { background: #f59e0b; }
+    .status-dot.coming_soon { background: #d1d5db; }
+
+    .card-name { font-size: 1rem; font-weight: 700; color: #111827; margin-bottom: 6px; }
+    .card-desc { font-size: 0.8rem; color: #374151; line-height: 1.6; margin-bottom: 16px; flex: 1; }
+    .card-footer { display: flex; align-items: center; justify-content: space-between; }
+    .card-version { font-size: 0.72rem; color: #9ca3af; }
+    .card-btn {
+      display: inline-block; padding: 7px 16px;
+      border-radius: 8px; font-size: 0.8rem; font-weight: 600;
+      text-decoration: none; border: none; cursor: pointer; font-family: inherit;
+      transition: opacity .15s;
+    }
+    .card-btn:hover { opacity: .82; }
+    .card-btn-dark { background: #111827; color: #fff; }
+    .card-btn-beta { background: #fef3c7; color: #92400e; }
+    .card-btn-disabled { background: #f3f4f6; color: #9ca3af; cursor: default; pointer-events: none; }
+
+    .empty { padding: 72px 28px; text-align: center; color: #9ca3af; font-size: 0.875rem; }
+
+    footer {
+      border-top: 1px solid #f3f4f6;
+      padding: 20px 28px;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 12px;
+    }
+    .footer-copy { font-size: 0.78rem; color: #9ca3af; }
+    .back-utobit {
+      font-size: 0.8125rem; font-weight: 600;
+      color: #374151; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 5px;
+      transition: color .15s;
+    }
+    .back-utobit:hover { color: #111827; }
+
+    @media (max-width: 480px) {
+      header, .tabbar, .store-grid, footer { padding-left: 16px; padding-right: 16px; }
+      .store-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <span class="logo"><a href="/">UStore</a></span>
+  <div class="search-wrap">
+    <input type="search" id="searchInput" placeholder="앱 검색..." oninput="render()">
+  </div>
+</header>
+
+<div class="tabbar">
+  <button class="active" onclick="setTab('all', this)">전체</button>
+  <button onclick="setTab('mobile', this)">Mobile</button>
+  <button onclick="setTab('pc', this)">PC</button>
+  <button onclick="setTab('asset', this)">Asset</button>
+</div>
+
+<div class="content">
+  <div id="grid" class="store-grid"></div>
+</div>
+
+<footer>
+  <span class="footer-copy">© 2026 Utobit</span>
+  <a href="/" class="back-utobit">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10 4L6 8l4 4"/>
+    </svg>
+    Utobit.net
+  </a>
+</footer>
+
+<script>
+let apps = [];
+let currentTab = 'all';
+
+fetch('/ustore/apps.json')
+  .then(r => r.json())
+  .then(data => { apps = data.apps; render(); })
+  .catch(() => {
+    document.getElementById('grid').innerHTML = '<p class="empty">앱 목록을 불러오지 못했습니다.</p>';
+  });
+
+function setTab(tab, btn) {
+  currentTab = tab;
+  document.querySelectorAll('.tabbar button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
+
+function render() {
+  const q = (document.getElementById('searchInput').value || '').toLowerCase();
+  const filtered = apps.filter(app => {
+    const matchTab = currentTab === 'all' || app.category === currentTab;
+    const matchQ = !q || app.name.toLowerCase().includes(q) || app.description.toLowerCase().includes(q);
+    return matchTab && matchQ;
+  });
+
+  const grid = document.getElementById('grid');
+  if (!filtered.length) {
+    grid.innerHTML = '<p class="empty">결과가 없습니다.</p>';
+    return;
+  }
+
+  grid.innerHTML = filtered.map(app => {
+    const icon = app.icon
+      ? `<img class="card-icon" src="${app.icon}" alt="${app.name}">`
+      : `<div class="card-icon-placeholder"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>`;
+
+    const btnClass = app.status === 'available' ? 'card-btn-dark'
+      : app.status === 'beta' ? 'card-btn-beta'
+      : 'card-btn-disabled';
+    const btnLabel = app.status === 'available' ? '상세보기'
+      : app.status === 'beta' ? '베타'
+      : '출시 예정';
+
+    const label = `${app.category === 'mobile' ? 'Mobile' : app.category === 'pc' ? 'PC' : 'Asset'} · ${app.subcategory}`;
+    const version = app.version ? `v${app.version}` : '';
+
+    return `<a href="${app.detail_url}" class="store-card">
+      ${icon}
+      <div class="card-meta">
+        <span class="card-label">${label}</span>
+        <span class="status-dot ${app.status}"></span>
+      </div>
+      <p class="card-name">${app.name}</p>
+      <p class="card-desc">${app.description}</p>
+      <div class="card-footer">
+        <span class="card-version">${version}</span>
+        <span class="card-btn ${btnClass}">${btnLabel}</span>
+      </div>
+    </a>`;
+  }).join('');
+}
+</script>
+</body>
+</html>

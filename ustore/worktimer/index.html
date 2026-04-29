@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WorkTimer | UStore</title>
+  <meta property="og:title" content="WorkTimer — Utobit">
+  <meta property="og:description" content="업무 시간을 자동으로 기록하는 PC 타이머. 마우스 활동 감지, 월간·일간 뷰, 다크모드 지원.">
+  <meta property="og:url" content="https://utobit.net/ustore/worktimer/">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', 'Noto Sans KR', system-ui, sans-serif;
+      background: #fff; color: #111827;
+      min-height: 100vh; -webkit-font-smoothing: antialiased;
+    }
+
+    .topbar {
+      padding: 16px 28px;
+      border-bottom: 1px solid #f3f4f6;
+    }
+    .back-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 0.8125rem; font-weight: 600;
+      color: #6b7280; text-decoration: none; transition: color .15s;
+    }
+    .back-btn:hover { color: #111827; }
+
+    .hero {
+      max-width: 640px; margin: 0 auto;
+      padding: 64px 28px 48px; text-align: center;
+    }
+    .app-icon-placeholder {
+      width: 96px; height: 96px; border-radius: 22px;
+      margin: 0 auto 24px;
+      background: #f3f4f6;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 24px rgba(0,0,0,.06);
+    }
+    .badge-row {
+      display: flex; align-items: center; justify-content: center;
+      gap: 8px; margin-bottom: 16px;
+    }
+    .badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 3px 10px; border-radius: 20px;
+      font-size: 0.72rem; font-weight: 700;
+    }
+    .badge-green { background: #dcfce7; color: #166534; }
+    .badge-gray { background: #f3f4f6; color: #6b7280; }
+    .badge-dot { width: 6px; height: 6px; border-radius: 50%; background: #22c55e; }
+
+    .app-name {
+      font-size: 2.25rem; font-weight: 900;
+      letter-spacing: -.04em; color: #111827; margin-bottom: 10px;
+    }
+    .app-tagline {
+      font-size: 1rem; color: #6b7280;
+      margin-bottom: 36px; line-height: 1.8;
+    }
+
+    .dl-section { margin-bottom: 48px; }
+    .dl-title {
+      font-size: 0.72rem; font-weight: 700;
+      color: #9ca3af; letter-spacing: .1em;
+      text-transform: uppercase; margin-bottom: 14px;
+    }
+    .dl-row {
+      display: flex; gap: 10px;
+      justify-content: center; flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-size: 0.9rem; font-weight: 700;
+      text-decoration: none; border: none;
+      cursor: pointer; font-family: inherit;
+      transition: opacity .15s, transform .1s;
+    }
+    .btn:hover:not(.btn-disabled) { opacity: .88; transform: translateY(-1px); }
+    .btn-primary { background: #111827; color: #fff; }
+    .btn-outline { background: #fff; color: #111827; border: 1.5px solid #e5e7eb; }
+    .btn-disabled { background: #f3f4f6; color: #9ca3af; cursor: default; }
+    .btn svg { width: 17px; height: 17px; flex-shrink: 0; }
+
+    .divider { border: none; border-top: 1px solid #f3f4f6; margin: 0 28px 48px; max-width: 640px; margin-left: auto; margin-right: auto; }
+
+    .section {
+      max-width: 640px; margin: 0 auto;
+      padding: 0 28px 48px;
+    }
+    .section-title {
+      font-size: 0.72rem; font-weight: 700;
+      color: #9ca3af; letter-spacing: .1em;
+      text-transform: uppercase; margin-bottom: 16px;
+    }
+
+    .feature-list { list-style: none; }
+    .feature-list li {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid #f9fafb;
+      font-size: 0.9rem; color: #374151; line-height: 1.5;
+    }
+    .feature-list li:last-child { border-bottom: none; }
+    .check {
+      width: 18px; height: 18px; border-radius: 50%;
+      background: #dcfce7;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 1px;
+    }
+    .check svg { width: 10px; height: 10px; stroke: #16a34a; stroke-width: 2.5; }
+
+    .info-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 1px; background: #f3f4f6;
+      border-radius: 12px; overflow: hidden;
+    }
+    .info-cell {
+      background: #fff; padding: 16px 20px;
+    }
+    .info-label { font-size: 0.72rem; color: #9ca3af; margin-bottom: 4px; font-weight: 600; }
+    .info-value { font-size: 0.875rem; color: #111827; font-weight: 600; }
+
+    footer {
+      border-top: 1px solid #f3f4f6; padding: 24px 28px;
+      text-align: center; font-size: 0.78rem; color: #9ca3af;
+    }
+    footer a { color: #9ca3af; text-decoration: none; }
+    footer a:hover { color: #6b7280; }
+
+    @media (max-width: 480px) {
+      .hero { padding: 48px 16px 36px; }
+      .section, footer { padding-left: 16px; padding-right: 16px; }
+      .app-name { font-size: 1.75rem; }
+      .info-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="/ustore/" class="back-btn">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10 4L6 8l4 4"/>
+    </svg>
+    UStore
+  </a>
+</div>
+
+<section class="hero">
+  <div class="app-icon-placeholder">
+    <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/>
+      <polyline points="12 6 12 12 16 14"/>
+    </svg>
+  </div>
+
+  <div class="badge-row">
+    <span class="badge badge-green">
+      <span class="badge-dot"></span>출시됨
+    </span>
+    <span class="badge badge-gray">v1.0.2</span>
+    <span class="badge badge-gray">PC · Assist</span>
+  </div>
+
+  <h1 class="app-name">WorkTimer</h1>
+  <p class="app-tagline">조용히, 자동으로 기록합니다<br>마우스 활동을 감지해 업무 구간을 저장합니다</p>
+
+  <div class="dl-section">
+    <p class="dl-title">다운로드</p>
+    <div class="dl-row">
+      <a id="btn-msix" href="https://github.com/Utobit/WorkTimer/releases/download/v1.0.2/WorkTimer.msix"
+         class="btn btn-primary">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        직접 다운로드 (.msix)
+      </a>
+      <span class="btn btn-disabled">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="3" width="20" height="14" rx="2"/>
+          <path d="M8 21h8M12 17v4"/>
+        </svg>
+        MS Store (준비 중)
+      </span>
+      <a href="https://github.com/Utobit/WorkTimer" target="_blank" rel="noopener"
+         class="btn btn-outline">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+        </svg>
+        소스코드 보기
+      </a>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section class="section">
+  <p class="section-title">주요 기능</p>
+  <ul class="feature-list">
+    <li>
+      <span class="check"><svg viewBox="0 0 12 12" fill="none"><polyline points="2 6 5 9 10 3"/></svg></span>
+      마우스 활동 자동 감지 — 키·클릭 없이도 작업 구간 기록
+    </li>
+    <li>
+      <span class="check"><svg viewBox="0 0 12 12" fill="none"><polyline points="2 6 5 9 10 3"/></svg></span>
+      월간 시계 뷰 + 일간 상세 타임라인
+    </li>
+    <li>
+      <span class="check"><svg viewBox="0 0 12 12" fill="none"><polyline points="2 6 5 9 10 3"/></svg></span>
+      60초 자동 저장 — 비정상 종료 시 데이터 복구
+    </li>
+    <li>
+      <span class="check"><svg viewBox="0 0 12 12" fill="none"><polyline points="2 6 5 9 10 3"/></svg></span>
+      다크모드 지원
+    </li>
+    <li>
+      <span class="check"><svg viewBox="0 0 12 12" fill="none"><polyline points="2 6 5 9 10 3"/></svg></span>
+      작업 구간 메모 및 CSV 내보내기
+    </li>
+    <li>
+      <span class="check"><svg viewBox="0 0 12 12" fill="none"><polyline points="2 6 5 9 10 3"/></svg></span>
+      단일 인스턴스 — 중복 실행 방지
+    </li>
+  </ul>
+</section>
+
+<section class="section">
+  <p class="section-title">앱 정보</p>
+  <div class="info-grid">
+    <div class="info-cell">
+      <p class="info-label">버전</p>
+      <p class="info-value">1.0.2</p>
+    </div>
+    <div class="info-cell">
+      <p class="info-label">출시일</p>
+      <p class="info-value">2026-04-30</p>
+    </div>
+    <div class="info-cell">
+      <p class="info-label">OS</p>
+      <p class="info-value">Windows 10 / 11</p>
+    </div>
+    <div class="info-cell">
+      <p class="info-label">라이선스</p>
+      <p class="info-value">MIT (오픈소스)</p>
+    </div>
+    <div class="info-cell">
+      <p class="info-label">설치 형식</p>
+      <p class="info-value">MSIX 패키지</p>
+    </div>
+    <div class="info-cell">
+      <p class="info-label">크기</p>
+      <p class="info-value">약 15 MB</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>WorkTimer © 2026 Utobit ·
+    <a href="https://github.com/Utobit/WorkTimer" target="_blank" rel="noopener">GitHub</a> ·
+    <a href="mailto:clus0109@gmail.com">clus0109@gmail.com</a>
+  </p>
+</footer>
+
+</body>
+</html>

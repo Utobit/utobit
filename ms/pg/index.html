@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="ko" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project Glyph | 마나무한 스튜디오</title>
+  <meta name="description" content="마나무한 스튜디오가 선보이는 수집형 RPG — Project Glyph.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            pg: { deep: "#050a15", navy: "#0c1629", ice: "#37a9ff", mist: "#94c5fd" },
+          },
+          fontFamily: {
+            sans: ["'Noto Sans KR'", "system-ui", "sans-serif"],
+          },
+          boxShadow: {
+            "pg-glow": "0 0 40px rgba(55, 169, 255, 0.35), 0 0 80px rgba(55, 169, 255, 0.12)",
+          },
+        },
+      },
+    };
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: "Noto Sans KR", sans-serif; background-color: #050a15; color: #e2e8f0; }
+    .glow-text {
+      text-shadow: 0 0 20px rgba(55, 169, 255, 0.75), 0 0 48px rgba(55, 169, 255, 0.35);
+    }
+    .card-blur {
+      backdrop-filter: blur(14px);
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-18px); }
+    }
+    .floating { animation: float 4.2s ease-in-out infinite; }
+    @keyframes pg-shimmer {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+    .pg-shimmer-bar {
+      background: linear-gradient(90deg, rgba(55,169,255,0.15), rgba(147,197,253,0.35), rgba(55,169,255,0.15));
+      background-size: 200% 100%;
+      animation: pg-shimmer 4s linear infinite;
+    }
+    .pg-ease { transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1); }
+    .pg-tab-panel {
+      transition: opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1), transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .pg-tab-panel.is-hidden {
+      opacity: 0;
+      transform: translateY(10px);
+      pointer-events: none;
+      position: absolute;
+      inset: 0;
+      visibility: hidden;
+    }
+    .pg-tab-panel.is-active {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+      position: relative;
+      visibility: visible;
+    }
+    .pg-gallery-frame::after {
+      content: "";
+      position: absolute; inset: 0;
+      border: 1px solid rgba(147, 197, 253, 0.25);
+      border-radius: inherit;
+      pointer-events: none;
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.45);
+    }
+    .nav-link.is-active { color: #60a5fa; }
+    @keyframes pg-scan {
+      0% { transform: translateY(-100%); }
+      100% { transform: translateY(100%); }
+    }
+    .pg-gacha-scan::before {
+      content: "";
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom, transparent 0%, rgba(56, 189, 248, 0.08) 50%, transparent 100%);
+      animation: pg-scan 4s linear infinite;
+      pointer-events: none;
+    }
+    .pg-monster-scroll {
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(56, 189, 248, 0.35) transparent;
+    }
+    .pg-monster-scroll::-webkit-scrollbar { height: 6px; }
+    .pg-monster-scroll::-webkit-scrollbar-thumb {
+      background: rgba(56, 189, 248, 0.35);
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body class="overflow-x-hidden antialiased">
+
+  <nav id="pg-nav" class="fixed w-full z-50 border-b border-white/10 bg-black/55 backdrop-blur-md transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 md:h-20 flex justify-between items-center">
+      <a href="../" class="text-2xl font-extrabold tracking-tighter glow-text shrink-0" aria-label="Manamuhan Studio">MANAMUHAN</a>
+      <button type="button" id="pg-nav-toggle" class="md:hidden p-2 rounded-lg border border-white/15 text-white/90" aria-expanded="false" aria-controls="pg-nav-links" aria-label="메뉴 열기">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+      <div id="pg-nav-links" class="flex flex-col md:flex-row md:items-center gap-5 md:gap-10 absolute md:static top-full left-0 right-0 md:top-auto bg-black/95 md:bg-transparent border-b md:border-0 border-white/10 px-6 py-4 md:p-0 text-sm font-medium text-gray-300 max-md:hidden">
+        <a href="#game-info" data-nav="game-info" class="nav-link hover:text-sky-400 transition pg-ease py-2 md:py-0">소개</a>
+        <a href="#gallery" data-nav="gallery" class="nav-link hover:text-sky-400 transition pg-ease py-2 md:py-0">갤러리</a>
+        <a href="#reserve" data-nav="reserve" class="nav-link text-sky-400 font-bold hover:text-sky-300 transition pg-ease py-2 md:py-0">사전등록</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero: 컨셉 아트 Hero1~3 + 카피 -->
+  <header class="relative min-h-screen flex flex-col justify-between overflow-hidden">
+    <div class="absolute inset-0 z-0">
+      <img src="assets/images/characters/Character/Hero1.jpg" alt="" class="absolute inset-0 w-full h-full object-cover scale-105 opacity-35" width="1920" height="1080" decoding="async">
+      <div class="absolute inset-0 bg-gradient-to-b from-pg-deep/95 via-pg-deep/85 to-pg-deep"></div>
+      <div class="absolute inset-0 bg-gradient-to-r from-pg-deep via-transparent to-pg-deep/90 opacity-95"></div>
+      <div class="w-full h-full flex justify-center items-center opacity-20 pointer-events-none">
+        <div class="w-[min(90vw,520px)] aspect-square bg-sky-500 rounded-full blur-[120px] floating"></div>
+      </div>
+    </div>
+    <div class="relative z-10 flex-1 flex flex-col items-center justify-center text-center px-4 max-w-4xl mx-auto pt-24 pb-8">
+      <p class="text-sky-400 tracking-[0.25em] text-xs md:text-sm font-bold mb-4 opacity-90">마나무한 스튜디오 · 수집형 RPG</p>
+      <h1 class="text-5xl sm:text-6xl md:text-8xl font-black mb-4 tracking-tighter leading-[1.05]">
+        PROJECT <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 via-white to-sky-200 glow-text">GLYPH</span>
+      </h1>
+      <p class="max-w-2xl mx-auto text-gray-300 text-base md:text-lg leading-relaxed mb-10">
+        누구나가 서사를 가지고 있다.<br class="hidden sm:block">
+        마나무한 스튜디오에서 개발 중인 게임을 소개합니다.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="#game-info" class="px-10 py-4 bg-sky-600 hover:bg-sky-500 text-white font-extrabold rounded-full transition-all duration-300 pg-ease shadow-pg-glow hover:scale-[1.03] text-center">게임 정보</a>
+        <a href="#reserve" class="px-10 py-4 card-blur hover:bg-white/10 text-white font-extrabold rounded-full transition-all duration-300 pg-ease text-center">사전등록</a>
+      </div>
+    </div>
+    <div class="relative z-10 w-full max-w-6xl mx-auto px-4 pb-10 md:pb-14">
+      <p class="text-center text-[10px] md:text-xs text-gray-500 tracking-widest mb-1 uppercase">Concept Art</p>
+      <p class="text-center text-[10px] text-gray-600 mb-3">이미지를 눌러 캐릭터 소개를 확인하세요</p>
+      <div class="grid grid-cols-3 gap-2 md:gap-4">
+        <button type="button" data-hero-concept="0" class="group rounded-xl overflow-hidden border border-white/10 aspect-[3/5] max-h-[220px] md:max-h-[320px] mx-auto w-full shadow-lg shadow-black/50 text-left cursor-pointer focus:outline-none focus:ring-2 focus:ring-sky-500/50 focus:ring-offset-2 focus:ring-offset-pg-deep transition hover:border-sky-500/40">
+          <img src="assets/images/characters/Character/Hero1.jpg" alt="산사요 컨셉" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-700 pg-ease pointer-events-none" width="600" height="1000" decoding="async">
+        </button>
+        <button type="button" data-hero-concept="1" class="group rounded-xl overflow-hidden border border-white/10 aspect-[3/5] max-h-[220px] md:max-h-[320px] mx-auto w-full shadow-lg shadow-black/50 ring-1 ring-sky-500/20 text-left cursor-pointer focus:outline-none focus:ring-2 focus:ring-sky-500/50 focus:ring-offset-2 focus:ring-offset-pg-deep transition hover:border-sky-500/40">
+          <img src="assets/images/characters/Character/Hero2.png" alt="시에르 컨셉" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-700 pg-ease pointer-events-none" width="600" height="1000" decoding="async">
+        </button>
+        <button type="button" data-hero-concept="2" class="group rounded-xl overflow-hidden border border-white/10 aspect-[3/5] max-h-[220px] md:max-h-[320px] mx-auto w-full shadow-lg shadow-black/50 text-left cursor-pointer focus:outline-none focus:ring-2 focus:ring-sky-500/50 focus:ring-offset-2 focus:ring-offset-pg-deep transition hover:border-sky-500/40">
+          <img src="assets/images/characters/Character/Hero3.jpg" alt="이세라 컨셉" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-700 pg-ease pointer-events-none" width="600" height="1000" decoding="async">
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Game Info: 탭 캐릭터 / 콘텐츠 / 시스템 / 세계관 -->
+  <section id="game-info" class="relative py-24 md:py-32 px-4 sm:px-6 scroll-mt-24 md:scroll-mt-28">
+    <div class="absolute inset-0 -z-10 opacity-25">
+      <img src="assets/images/characters/Character/Hero2.png" alt="" class="w-full h-full object-cover" width="1920" height="1080" decoding="async">
+      <div class="absolute inset-0 bg-pg-deep/94"></div>
+    </div>
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-12 md:mb-16">
+        <p class="text-sky-400 text-xs font-bold tracking-[0.2em] mb-3">게임 정보</p>
+        <h2 class="text-3xl md:text-5xl font-black tracking-tight mb-4">PROJECT GLYPH</h2>
+        <p class="text-gray-400 max-w-2xl mx-auto text-sm md:text-base">캐릭터·콘텐츠·시스템·세계관을 한 페이지에서 살펴보세요.</p>
+      </div>
+
+      <div class="card-blur rounded-3xl p-4 md:p-8 border border-white/10 shadow-2xl shadow-black/40">
+        <div role="tablist" aria-label="게임 정보 탭" class="flex flex-wrap gap-2 md:gap-3 mb-8 border-b border-white/10 pb-4">
+          <button type="button" role="tab" aria-selected="true" aria-controls="pg-panel-characters" id="pg-tab-characters" data-tab="characters"
+            class="pg-tab-btn px-4 md:px-5 py-2.5 rounded-full text-sm font-bold transition-all duration-300 pg-ease bg-sky-500/20 text-sky-300 border border-sky-500/40">캐릭터</button>
+          <button type="button" role="tab" aria-selected="false" aria-controls="pg-panel-content" id="pg-tab-content" data-tab="content"
+            class="pg-tab-btn px-4 md:px-5 py-2.5 rounded-full text-sm font-bold transition-all duration-300 pg-ease text-gray-400 border border-transparent hover:border-white/20 hover:text-white">콘텐츠</button>
+          <button type="button" role="tab" aria-selected="false" aria-controls="pg-panel-system" id="pg-tab-system" data-tab="system"
+            class="pg-tab-btn px-4 md:px-5 py-2.5 rounded-full text-sm font-bold transition-all duration-300 pg-ease text-gray-400 border border-transparent hover:border-white/20 hover:text-white">시스템</button>
+          <button type="button" role="tab" aria-selected="false" aria-controls="pg-panel-world" id="pg-tab-world" data-tab="world"
+            class="pg-tab-btn px-4 md:px-5 py-2.5 rounded-full text-sm font-bold transition-all duration-300 pg-ease text-gray-400 border border-transparent hover:border-white/20 hover:text-white">세계관</button>
+        </div>
+
+        <div class="relative min-h-[560px] md:min-h-[520px] lg:min-h-[480px]">
+          <!-- 세계관 -->
+          <div id="pg-panel-world" role="tabpanel" aria-labelledby="pg-tab-world" class="pg-tab-panel is-hidden space-y-6 md:space-y-8" hidden>
+            <div class="grid md:grid-cols-2 gap-8 items-start">
+              <div>
+                <h3 class="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+                  <span class="text-sky-400">◆</span> 차가운 빛과 고대의 상징
+                </h3>
+                <p class="text-gray-300 leading-relaxed mb-4 text-sm md:text-base">
+                  이 세계는 심연 너머로 스며든 <em class="text-sky-200 not-italic">청색광</em>이 어둠을 비추는 시대입니다.
+                  잊힌 문명이 남긴 <strong class="text-sky-300">Glyph(상징)</strong>은 힘의 문법이자 계약의 인장으로, 플레이어는 이를 모으고 조합해 진실을 밝혀 나갑니다.
+                </p>
+                <p class="text-gray-400 leading-relaxed text-sm md:text-base">
+                  마나무한 스튜디오는 네이비 톤의 공간감과 차가운 발광 UI로 몰입감 있는 수집·성장 루프를 지향합니다.
+                </p>
+              </div>
+              <div class="card-blur rounded-2xl p-6 border border-sky-500/20">
+                <p class="text-xs font-bold text-sky-400 tracking-widest mb-3">세계관 하이라이트</p>
+                <ul class="space-y-3 text-sm text-gray-300">
+                  <li class="flex gap-3"><span class="text-sky-500 shrink-0">01</span> 고대 도시의 잔향이 남은 폐허와 지하 제단 탐사</li>
+                  <li class="flex gap-3"><span class="text-sky-500 shrink-0">02</span> 상징 간 <span class="text-white">공명·상성</span>에 따른 전술 변화</li>
+                  <li class="flex gap-3"><span class="text-sky-500 shrink-0">03</span> 세력·종족 간 단편 서사와 수집형 도감 연계</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- 캐릭터 -->
+          <div id="pg-panel-characters" role="tabpanel" aria-labelledby="pg-tab-characters" class="pg-tab-panel is-active">
+            <p class="text-gray-400 text-sm mb-8 text-center">대표 비주얼과 전승 캐릭터, 가챠 화면 스타일의 실루엣 프리뷰입니다. 카드를 누르면 6종 스탯 예시를 볼 수 있습니다.</p>
+
+            <div class="mb-10">
+              <h4 class="text-lg font-bold text-white mb-4 text-center md:text-left flex items-center justify-center md:justify-start gap-2">
+                <span class="text-sky-400 text-sm">★</span> 대표 캐릭터
+              </h4>
+              <div class="grid md:grid-cols-2 gap-4 md:gap-6">
+                <figure class="card-blur rounded-xl overflow-hidden border border-white/10">
+                  <div class="relative aspect-[2/1] sm:aspect-[21/9] min-h-[140px] sm:min-h-[180px] bg-pg-navy overflow-hidden">
+                    <img src="assets/images/characters/Character/Main.png" alt="대표 캐릭터 Main" class="absolute inset-0 w-full h-full object-cover object-center" width="1200" height="600" decoding="async">
+                  </div>
+                  <figcaption class="px-3 py-2 text-center text-[11px] text-gray-500 border-t border-white/5">Main Key Visual</figcaption>
+                </figure>
+                <figure class="card-blur rounded-xl overflow-hidden border border-white/10">
+                  <div class="relative aspect-[2/1] sm:aspect-[21/9] min-h-[140px] sm:min-h-[180px] bg-pg-navy overflow-hidden">
+                    <img src="assets/images/characters/Character/SubMain.png" alt="대표 캐릭터 Sub" class="absolute inset-0 w-full h-full object-cover object-center" width="1200" height="600" decoding="async">
+                  </div>
+                  <figcaption class="px-3 py-2 text-center text-[11px] text-gray-500 border-t border-white/5">Sub Key Visual</figcaption>
+                </figure>
+              </div>
+            </div>
+
+            <h4 class="text-lg font-bold text-white mb-4 text-center md:text-left">전승 캐릭터</h4>
+            <div class="flex flex-row gap-3 md:gap-4 overflow-x-auto pb-4 md:pb-2 md:justify-center snap-x snap-mandatory">
+              <article class="group cursor-pointer shrink-0 snap-center w-[42vw] max-w-[200px] md:w-1/5 md:max-w-[180px]" data-char-open="0">
+                <div class="relative rounded-2xl overflow-hidden border border-white/10 bg-pg-navy/80 aspect-[3/5]">
+                  <img src="assets/images/characters/Character/A17_Zeo.png" alt="Zeo" class="w-full h-full object-cover object-top group-hover:scale-[1.03] transition duration-500 pg-ease" width="400" height="667" decoding="async">
+                  <div class="absolute bottom-0 inset-x-0 pg-shimmer-bar h-0.5 opacity-70"></div>
+                </div>
+                <div class="mt-3 text-center">
+                  <h5 class="text-sm font-bold text-white">Zeo</h5>
+                  <p class="text-[10px] text-gray-500">A17 · 탭하여 스탯</p>
+                </div>
+              </article>
+              <article class="group cursor-pointer shrink-0 snap-center w-[42vw] max-w-[200px] md:w-1/5 md:max-w-[180px]" data-char-open="1">
+                <div class="relative rounded-2xl overflow-hidden border border-white/10 bg-pg-navy/80 aspect-[3/5]">
+                  <img src="assets/images/characters/Character/A30_Savior.png" alt="Savior" class="w-full h-full object-cover object-top group-hover:scale-[1.03] transition duration-500 pg-ease" width="400" height="667" decoding="async">
+                  <div class="absolute bottom-0 inset-x-0 pg-shimmer-bar h-0.5 opacity-70"></div>
+                </div>
+                <div class="mt-3 text-center">
+                  <h5 class="text-sm font-bold text-white">Savior</h5>
+                  <p class="text-[10px] text-gray-500">A30</p>
+                </div>
+              </article>
+              <article class="group cursor-pointer shrink-0 snap-center w-[42vw] max-w-[200px] md:w-1/5 md:max-w-[180px]" data-char-open="2">
+                <div class="relative rounded-2xl overflow-hidden border border-white/10 bg-pg-navy/80 aspect-[3/5]">
+                  <img src="assets/images/characters/Character/A29_Destroyer.png" alt="Destroyer" class="w-full h-full object-cover object-top group-hover:scale-[1.03] transition duration-500 pg-ease" width="400" height="667" decoding="async">
+                  <div class="absolute bottom-0 inset-x-0 pg-shimmer-bar h-0.5 opacity-70"></div>
+                </div>
+                <div class="mt-3 text-center">
+                  <h5 class="text-sm font-bold text-white">Destroyer</h5>
+                  <p class="text-[10px] text-gray-500">A29</p>
+                </div>
+              </article>
+              <article class="group cursor-pointer shrink-0 snap-center w-[42vw] max-w-[200px] md:w-1/5 md:max-w-[180px]" data-char-open="3">
+                <div class="relative rounded-2xl overflow-hidden border border-white/10 bg-pg-navy/80 aspect-[3/5]">
+                  <img src="assets/images/characters/Character/A24_Necro.png" alt="Necro" class="w-full h-full object-cover object-top group-hover:scale-[1.03] transition duration-500 pg-ease" width="400" height="667" decoding="async">
+                  <div class="absolute bottom-0 inset-x-0 pg-shimmer-bar h-0.5 opacity-70"></div>
+                </div>
+                <div class="mt-3 text-center">
+                  <h5 class="text-sm font-bold text-white">Necro</h5>
+                  <p class="text-[10px] text-gray-500">A24</p>
+                </div>
+              </article>
+              <article class="group cursor-pointer shrink-0 snap-center w-[42vw] max-w-[200px] md:w-1/5 md:max-w-[180px]" data-char-open="4">
+                <div class="relative rounded-2xl overflow-hidden border border-white/10 bg-pg-navy/80 aspect-[3/5]">
+                  <img src="assets/images/characters/Character/A04_magician.png" alt="Magician" class="w-full h-full object-cover object-top group-hover:scale-[1.03] transition duration-500 pg-ease" width="400" height="667" decoding="async">
+                  <div class="absolute bottom-0 inset-x-0 pg-shimmer-bar h-0.5 opacity-70"></div>
+                </div>
+                <div class="mt-3 text-center">
+                  <h5 class="text-sm font-bold text-white">Magician</h5>
+                  <p class="text-[10px] text-gray-500">A04</p>
+                </div>
+              </article>
+            </div>
+
+            <div class="mt-12 pt-10 border-t border-white/10">
+              <h4 class="text-lg font-bold text-white mb-2 text-center">소환 프리뷰 · 실루엣</h4>
+              <p class="text-xs text-gray-500 text-center mb-6">인게임 가챠 화면 느낌의 히든 캐릭터 힌트. 업데이트로 공개됩니다.</p>
+              <div class="grid md:grid-cols-2 gap-6">
+                <figure class="pg-gallery-frame pg-gacha-scan relative rounded-2xl overflow-hidden aspect-[9/16] max-h-[360px] mx-auto w-full max-w-[240px] border border-sky-500/30 bg-black">
+                  <img src="assets/images/characters/Character/실루엣1.jpg" alt="미공개 캐릭터 실루엣 1" class="w-full h-full object-cover opacity-90" width="720" height="1280" decoding="async">
+                  <div class="absolute inset-0 bg-gradient-to-t from-pg-deep via-transparent to-pg-deep/80 pointer-events-none"></div>
+                  <figcaption class="absolute bottom-4 left-0 right-0 text-center text-xs font-bold tracking-[0.2em] text-sky-300/90">UNKNOWN · SILHOUETTE 01</figcaption>
+                  <span class="absolute top-3 right-3 text-[10px] px-2 py-0.5 rounded bg-black/70 border border-white/10 text-amber-200/90">PREVIEW</span>
+                </figure>
+                <figure class="pg-gallery-frame pg-gacha-scan relative rounded-2xl overflow-hidden aspect-[9/16] max-h-[360px] mx-auto w-full max-w-[240px] border border-sky-500/30 bg-black">
+                  <img src="assets/images/characters/Character/실루엣2.jpg" alt="미공개 캐릭터 실루엣 2" class="w-full h-full object-cover opacity-90" width="720" height="1280" decoding="async">
+                  <div class="absolute inset-0 bg-gradient-to-t from-pg-deep via-transparent to-pg-deep/80 pointer-events-none"></div>
+                  <figcaption class="absolute bottom-4 left-0 right-0 text-center text-xs font-bold tracking-[0.2em] text-sky-300/90">UNKNOWN · SILHOUETTE 02</figcaption>
+                  <span class="absolute top-3 right-3 text-[10px] px-2 py-0.5 rounded bg-black/70 border border-white/10 text-amber-200/90">PREVIEW</span>
+                </figure>
+              </div>
+            </div>
+          </div>
+
+          <!-- 콘텐츠 -->
+          <div id="pg-panel-content" role="tabpanel" aria-labelledby="pg-tab-content" class="pg-tab-panel is-hidden" hidden>
+            <h3 class="text-xl md:text-2xl font-bold text-center mb-2">플레이 콘텐츠</h3>
+            <p class="text-center text-gray-400 text-sm mb-10 max-w-2xl mx-auto">메인 스토리를 중심으로 다양한 모드에서 Glyph를 시험합니다.</p>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div class="card-blur rounded-2xl p-5 border border-white/10">
+                <p class="text-sky-400 text-xs font-bold tracking-widest mb-2">STORY</p>
+                <p class="text-lg font-bold text-white mb-1">메인 스토리</p>
+                <p class="text-xs text-gray-400 leading-relaxed">청색광과 Glyph의 기원을 따라가는 캠페인.</p>
+              </div>
+              <div class="card-blur rounded-2xl p-5 border border-white/10">
+                <p class="text-sky-400 text-xs font-bold tracking-widest mb-2">TOWER</p>
+                <p class="text-lg font-bold text-white mb-1">탑</p>
+                <p class="text-xs text-gray-400 leading-relaxed">층별 규칙과 보스로 구성된 도전 콘텐츠.</p>
+              </div>
+              <div class="card-blur rounded-2xl p-5 border border-white/10">
+                <p class="text-sky-400 text-xs font-bold tracking-widest mb-2">PVP</p>
+                <p class="text-lg font-bold text-white mb-1">PVP</p>
+                <p class="text-xs text-gray-400 leading-relaxed">다른 플레이어와 전략을 겨루는 대전.</p>
+              </div>
+              <div class="card-blur rounded-2xl p-5 border border-white/10">
+                <p class="text-sky-400 text-xs font-bold tracking-widest mb-2">DUNGEON</p>
+                <p class="text-lg font-bold text-white mb-1">던전</p>
+                <p class="text-xs text-gray-400 leading-relaxed">장비·재화·성장 재료를 노리는 인스턴스.</p>
+              </div>
+              <div class="card-blur rounded-2xl p-5 border border-amber-500/25 ring-1 ring-amber-500/10">
+                <p class="text-amber-300 text-xs font-bold tracking-widest mb-2">GUILD</p>
+                <p class="text-lg font-bold text-white mb-1">길드전</p>
+                <p class="text-xs text-amber-200/80 leading-relaxed mb-1">길드 단위 대규모 전투.</p>
+                <span class="inline-block text-[10px] font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-200 border border-amber-500/30">업데이트 예정</span>
+              </div>
+              <div class="card-blur rounded-2xl p-5 border border-white/10">
+                <p class="text-sky-400 text-xs font-bold tracking-widest mb-2">RAID</p>
+                <p class="text-lg font-bold text-white mb-1">월드 보스</p>
+                <p class="text-xs text-gray-400 leading-relaxed">서버 전체가 협력하는 거대 보스전.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 시스템 -->
+          <div id="pg-panel-system" role="tabpanel" aria-labelledby="pg-tab-system" class="pg-tab-panel is-hidden" hidden>
+            <h3 class="text-xl md:text-2xl font-bold text-center mb-2">핵심 성장 루프</h3>
+            <p class="text-center text-gray-400 text-sm mb-2 max-w-2xl mx-auto leading-relaxed">
+              캐릭터 강화 → 여섯 스탯이 모두 S등급 기준에 도달 → <strong class="text-sky-300 font-semibold">전승 캐릭터 해금</strong> → 이후 선택적 강화로 원하는 캐릭터를 깊게 육성합니다.
+            </p>
+            <p class="text-center text-sky-400/90 text-xs mb-8 max-w-xl mx-auto">재화는 일원화되어 있어, 성장과 플레이를 한 흐름으로 이어가기 쉽습니다.</p>
+
+            <div class="flex flex-col md:grid md:grid-cols-7 gap-2 md:gap-1.5 items-stretch max-w-5xl mx-auto mb-8">
+              <div class="card-blur rounded-xl p-3 md:p-4 border border-white/10 flex flex-col items-center text-center">
+                <div class="w-11 h-11 rounded-xl bg-sky-500/20 border border-sky-500/40 flex items-center justify-center text-lg font-bold mb-2">①</div>
+                <p class="text-[10px] text-sky-400 font-bold tracking-wider mb-1">ENHANCE</p>
+                <p class="text-xs font-bold text-white mb-1">캐릭터 강화</p>
+                <p class="text-[10px] text-gray-400 leading-snug">강화·육성으로 기초 전투력을 쌓습니다.</p>
+              </div>
+              <div class="flex md:items-center justify-center text-sky-500/50 text-xl py-0.5 md:py-0 select-none" aria-hidden="true"><span class="md:hidden">↓</span><span class="hidden md:inline">→</span></div>
+              <div class="card-blur rounded-xl p-3 md:p-4 border border-sky-500/30 flex flex-col items-center text-center ring-1 ring-sky-500/15">
+                <div class="w-11 h-11 rounded-xl bg-sky-600/25 border border-sky-400/40 flex items-center justify-center text-lg font-bold mb-2">②</div>
+                <p class="text-[10px] text-sky-300 font-bold tracking-wider mb-1">ALL S</p>
+                <p class="text-xs font-bold text-white mb-1">스탯 ALL S</p>
+                <p class="text-[10px] text-gray-300 leading-snug">6종 스탯이 모두 <strong class="text-white">500</strong>을 넘기면 S등급 기준 달성.</p>
+              </div>
+              <div class="flex md:items-center justify-center text-sky-500/50 text-xl py-0.5 md:py-0 select-none" aria-hidden="true"><span class="md:hidden">↓</span><span class="hidden md:inline">→</span></div>
+              <div class="card-blur rounded-xl p-3 md:p-4 border border-sky-400/35 flex flex-col items-center text-center shadow-lg shadow-sky-900/30 ring-1 ring-sky-500/25">
+                <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-sky-600 to-indigo-800 border border-white/15 flex items-center justify-center text-lg font-black mb-2">③</div>
+                <p class="text-[10px] text-sky-200 font-bold tracking-wider mb-1">ASCENSION</p>
+                <p class="text-xs font-bold text-white mb-1">전승 캐릭터 해금</p>
+                <p class="text-[10px] text-gray-300 leading-snug">해당 캐릭터의 전승 형태가 열립니다.</p>
+              </div>
+              <div class="flex md:items-center justify-center text-sky-500/50 text-xl py-0.5 md:py-0 select-none" aria-hidden="true"><span class="md:hidden">↓</span><span class="hidden md:inline">→</span></div>
+              <div class="card-blur rounded-xl p-3 md:p-4 border border-white/10 flex flex-col items-center text-center">
+                <div class="w-11 h-11 rounded-xl bg-white/5 border border-white/15 flex items-center justify-center text-lg font-bold mb-2">④</div>
+                <p class="text-[10px] text-gray-400 font-bold tracking-wider mb-1">FOCUS</p>
+                <p class="text-xs font-bold text-white mb-1">선택적 육성</p>
+                <p class="text-[10px] text-gray-400 leading-snug">원하는 캐릭터에 자원을 집중해 끝까지 키웁니다.</p>
+              </div>
+            </div>
+
+            <div class="card-blur rounded-2xl p-5 md:p-6 border border-white/10 space-y-4 text-sm text-gray-300 leading-relaxed">
+              <h4 class="text-base font-bold text-white text-center md:text-left">스테이터스 · 전승 안내</h4>
+              <p>캐릭터 스테이터스는 <strong class="text-white">6종</strong>입니다. <span class="text-sky-200">근력, 민첩, 마력, 지능, 행운, 서사</span>를 꾸준히 올리면 됩니다.</p>
+              <p>위 여섯 가지가 <strong class="text-white">모두 500을 초과</strong>하면 해당 캐릭터는 S등급 기준을 만족하며, <strong class="text-sky-300">전승 해금</strong> 조건이 충족됩니다.</p>
+              <p><strong class="text-white">전승 캐릭터</strong>는 별도 <strong class="text-white">최상급 유닛</strong>으로 취급되며, 더 강한 성능을 갖춘 형태로 플레이에 참여합니다.</p>
+            </div>
+            <div class="mt-4 text-center text-[11px] text-gray-500">
+              수치·밸런스는 출시 및 업데이트에 따라 달라질 수 있습니다.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 갤러리: 몬스터 등 -->
+  <section id="gallery" class="py-24 md:py-32 px-4 sm:px-6 bg-sky-950/20 border-y border-white/5 scroll-mt-24">
+    <div class="max-w-6xl mx-auto">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
+        <div>
+          <p class="text-sky-400 text-xs font-bold tracking-[0.2em] mb-2">갤러리</p>
+          <h2 class="text-3xl md:text-4xl font-black">몬스터 &amp; 비주얼</h2>
+          <p class="text-gray-500 text-sm mt-2">전장에 등장하는 개성 있는 적들입니다.</p>
+        </div>
+        <div class="flex gap-2">
+          <button type="button" id="pg-gallery-prev" class="px-4 py-2 rounded-xl border border-white/15 hover:border-sky-500/50 text-sm font-bold transition pg-ease" aria-label="이전">←</button>
+          <button type="button" id="pg-gallery-next" class="px-4 py-2 rounded-xl border border-white/15 hover:border-sky-500/50 text-sm font-bold transition pg-ease" aria-label="다음">→</button>
+        </div>
+      </div>
+      <div class="relative overflow-hidden rounded-xl border border-white/10 bg-black/40">
+        <div id="pg-gallery-track" class="flex transition-transform duration-500 pg-ease">
+          <div class="min-w-full shrink-0 px-2 py-4 md:py-5">
+            <p class="text-center text-[10px] text-gray-500 mb-2 tracking-wide">몬스터 도감 · 좌우로 드래그 · 최대 10종 예정</p>
+            <div class="pg-monster-scroll overflow-x-auto overflow-y-hidden pb-2">
+              <div class="flex flex-row gap-3 md:gap-4 w-max mx-auto px-2 snap-x snap-mandatory">
+                <figure class="pg-gallery-frame relative w-[264px] h-[264px] sm:w-[304px] sm:h-[304px] rounded-xl overflow-hidden bg-pg-navy group shrink-0 snap-start">
+                  <img src="assets/images/characters/Monster/M1-Dusty.png" alt="M1 Dusty" class="w-full h-full object-contain p-3 opacity-90 group-hover:opacity-100 transition duration-300" width="256" height="256" decoding="async">
+                  <figcaption class="absolute bottom-1.5 inset-x-0 text-center text-[10px] font-bold text-sky-200/90 truncate px-1">M1 · Dusty</figcaption>
+                </figure>
+                <figure class="pg-gallery-frame relative w-[264px] h-[264px] sm:w-[304px] sm:h-[304px] rounded-xl overflow-hidden bg-pg-navy group shrink-0 snap-start">
+                  <img src="assets/images/characters/Monster/M2-크로롱.png" alt="M2" class="w-full h-full object-contain p-3 opacity-90 group-hover:opacity-100 transition duration-300" width="256" height="256" decoding="async">
+                  <figcaption class="absolute bottom-1.5 inset-x-0 text-center text-[10px] font-bold text-sky-200/90 truncate px-1">M2 · 크로롱</figcaption>
+                </figure>
+                <figure class="pg-gallery-frame relative w-[264px] h-[264px] sm:w-[304px] sm:h-[304px] rounded-xl overflow-hidden bg-pg-navy group shrink-0 snap-start">
+                  <img src="assets/images/characters/Monster/M3-섀도라.png" alt="M3 섀도라" class="w-full h-full object-contain p-3 opacity-90 group-hover:opacity-100 transition duration-300" width="256" height="256" decoding="async">
+                  <figcaption class="absolute bottom-1.5 inset-x-0 text-center text-[10px] font-bold text-sky-200/90 truncate px-1">M3 · 섀도라</figcaption>
+                </figure>
+                <div class="pg-gallery-frame relative w-[264px] h-[264px] sm:w-[304px] sm:h-[304px] rounded-xl overflow-hidden bg-pg-navy/40 border border-dashed border-white/15 shrink-0 snap-start flex flex-col items-center justify-center" aria-hidden="true">
+                    <img src="assets/images/characters/Monster/M3-섀도라.png" alt="M3 섀도라" class="w-full h-full object-contain p-3 opacity-90 group-hover:opacity-100 transition duration-300" width="256" height="256" decoding="async">
+                    <figcaption class="absolute bottom-1.5 inset-x-0 text-center text-[10px] font-bold text-sky-200/90 truncate px-1">M3 · 섀도라</figcaption>
+                  </div>
+                <div class="pg-gallery-frame relative w-[264px] h-[264px] sm:w-[304px] sm:h-[304px] rounded-xl overflow-hidden bg-pg-navy/40 border border-dashed border-white/15 shrink-0 snap-start flex flex-col items-center justify-center" aria-hidden="true">
+                    <img src="assets/images/characters/Monster/M3-섀도라.png" alt="M3 섀도라" class="w-full h-full object-contain p-3 opacity-90 group-hover:opacity-100 transition duration-300" width="256" height="256" decoding="async">
+                    <figcaption class="absolute bottom-1.5 inset-x-0 text-center text-[10px] font-bold text-sky-200/90 truncate px-1">M3 · 섀도라</figcaption>
+                </div>
+                <div class="pg-gallery-frame relative w-[264px] h-[264px] sm:w-[304px] sm:h-[304px] rounded-xl overflow-hidden bg-pg-navy/40 border border-dashed border-white/15 shrink-0 snap-start flex flex-col items-center justify-center" aria-hidden="true">
+                    <img src="assets/images/characters/Monster/M3-섀도라.png" alt="M3 섀도라" class="w-full h-full object-contain p-3 opacity-90 group-hover:opacity-100 transition duration-300" width="256" height="256" decoding="async">
+                    <figcaption class="absolute bottom-1.5 inset-x-0 text-center text-[10px] font-bold text-sky-200/90 truncate px-1">M3 · 섀도라</figcaption>
+                </div>
+                <div class="pg-gallery-frame relative w-[264px] h-[264px] sm:w-[304px] sm:h-[304px] rounded-xl overflow-hidden bg-pg-navy/40 border border-dashed border-white/15 shrink-0 snap-start flex flex-col items-center justify-center" aria-hidden="true">
+                    <img src="assets/images/characters/Monster/M3-섀도라.png" alt="M3 섀도라" class="w-full h-full object-contain p-3 opacity-90 group-hover:opacity-100 transition duration-300" width="256" height="256" decoding="async">
+                    <figcaption class="absolute bottom-1.5 inset-x-0 text-center text-[10px] font-bold text-sky-200/90 truncate px-1">M3 · 섀도라</figcaption>
+                </div>
+                <div class="pg-gallery-frame relative w-[264px] h-[264px] sm:w-[304px] sm:h-[304px] rounded-xl overflow-hidden bg-pg-navy/40 border border-dashed border-white/15 shrink-0 snap-start flex flex-col items-center justify-center" aria-hidden="true">
+                    <img src="assets/images/characters/Monster/M3-섀도라.png" alt="M3 섀도라" class="w-full h-full object-contain p-3 opacity-90 group-hover:opacity-100 transition duration-300" width="256" height="256" decoding="async">
+                    <figcaption class="absolute bottom-1.5 inset-x-0 text-center text-[10px] font-bold text-sky-200/90 truncate px-1">M3 · 섀도라</figcaption>
+                </div>
+                <div class="pg-gallery-frame relative w-[264px] h-[264px] sm:w-[304px] sm:h-[304px] rounded-xl overflow-hidden bg-pg-navy/40 border border-dashed border-white/15 shrink-0 snap-start flex flex-col items-center justify-center" aria-hidden="true">
+                    <img src="assets/images/characters/Monster/M3-섀도라.png" alt="M3 섀도라" class="w-full h-full object-contain p-3 opacity-90 group-hover:opacity-100 transition duration-300" width="256" height="256" decoding="async">
+                    <figcaption class="absolute bottom-1.5 inset-x-0 text-center text-[10px] font-bold text-sky-200/90 truncate px-1">M3 · 섀도라</figcaption>
+                </div>
+                <div class="pg-gallery-frame relative w-[264px] h-[264px] sm:w-[304px] sm:h-[304px] rounded-xl overflow-hidden bg-pg-navy/40 border border-dashed border-white/15 shrink-0 snap-start flex flex-col items-center justify-center" aria-hidden="true">
+                    <img src="assets/images/characters/Monster/M3-섀도라.png" alt="M3 섀도라" class="w-full h-full object-contain p-3 opacity-90 group-hover:opacity-100 transition duration-300" width="256" height="256" decoding="async">
+                    <figcaption class="absolute bottom-1.5 inset-x-0 text-center text-[10px] font-bold text-sky-200/90 truncate px-1">M3 · 섀도라</figcaption>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="min-w-full shrink-0 px-3 py-4 md:py-5">
+            <p class="text-center text-[10px] text-gray-500 mb-3">컨셉 · 키 비주얼 (축소 프리뷰)</p>
+            <div class="mx-auto max-w-md flex flex-row justify-center gap-2 md:gap-3">
+              <figure class="pg-gallery-frame relative w-[72px] sm:w-20 rounded-md overflow-hidden aspect-[3/5] bg-black group max-h-[120px] sm:max-h-[132px]">
+                <img src="assets/images/characters/Character/Hero2.png" alt="컨셉" class="w-full h-full object-cover opacity-85 group-hover:opacity-100 transition duration-300" width="400" height="667" decoding="async">
+                <figcaption class="absolute top-1 left-1 px-1 py-0.5 rounded bg-black/70 text-[7px] font-bold text-sky-200">C</figcaption>
+              </figure>
+              <figure class="pg-gallery-frame relative w-[72px] sm:w-20 rounded-md overflow-hidden aspect-[3/5] bg-black group max-h-[120px] sm:max-h-[132px]">
+                <img src="assets/images/characters/Character/Hero3.jpg" alt="컨셉" class="w-full h-full object-cover opacity-85 group-hover:opacity-100 transition duration-300" width="400" height="667" decoding="async">
+                <figcaption class="absolute top-1 left-1 px-1 py-0.5 rounded bg-black/70 text-[7px] font-bold text-sky-200">C</figcaption>
+              </figure>
+              <figure class="pg-gallery-frame relative w-[100px] sm:w-[112px] rounded-md overflow-hidden aspect-[2/1] bg-black group max-h-[72px] sm:max-h-20 self-center">
+                <img src="assets/images/characters/Character/Main.png" alt="키 비주얼" class="w-full h-full object-contain object-center p-0.5 opacity-90 group-hover:opacity-100 transition duration-300" width="400" height="200" decoding="async">
+                <figcaption class="absolute top-1 left-1 px-1 py-0.5 rounded bg-black/70 text-[7px] font-bold text-sky-200">KV</figcaption>
+              </figure>
+            </div>
+          </div>
+        </div>
+        <div class="absolute bottom-3 left-0 right-0 flex justify-center gap-2" id="pg-gallery-dots"></div>
+      </div>
+
+      <div class="mt-14 md:mt-20 pt-10 border-t border-white/10">
+        <h3 class="text-xl md:text-2xl font-black text-center mb-2">플레이 화면</h3>
+        <p class="text-center text-gray-500 text-xs md:text-sm mb-8 max-w-xl mx-auto">인게임 가로 화면 캡처 예시입니다. 파일명만 맞추면 이미지를 교체할 수 있습니다.</p>
+        <div class="flex flex-col gap-4 md:gap-5 max-w-3xl mx-auto">
+          <figure class="pg-gallery-frame relative rounded-xl overflow-hidden aspect-video bg-pg-navy border border-white/10">
+            <img src="assets/images/screenshots/play_01.png" alt="플레이 화면 1" class="w-full h-full object-cover object-center opacity-90 hover:opacity-100 transition duration-300" width="1280" height="720" decoding="async">
+            <figcaption class="absolute bottom-2 left-2 text-[10px] font-bold text-sky-200/90 px-2 py-0.5 rounded bg-black/60">PLAY 01</figcaption>
+          </figure>
+          <figure class="pg-gallery-frame relative rounded-xl overflow-hidden aspect-video bg-pg-navy border border-white/10">
+            <img src="assets/images/screenshots/play_02.png" alt="플레이 화면 2" class="w-full h-full object-cover object-center opacity-90 hover:opacity-100 transition duration-300" width="1280" height="720" decoding="async">
+            <figcaption class="absolute bottom-2 left-2 text-[10px] font-bold text-sky-200/90 px-2 py-0.5 rounded bg-black/60">PLAY 02</figcaption>
+          </figure>
+          <figure class="pg-gallery-frame relative rounded-xl overflow-hidden aspect-video bg-pg-navy border border-white/10">
+            <img src="assets/images/screenshots/play_03.png" alt="플레이 화면 3" class="w-full h-full object-cover object-center opacity-90 hover:opacity-100 transition duration-300" width="1280" height="720" decoding="async">
+            <figcaption class="absolute bottom-2 left-2 text-[10px] font-bold text-sky-200/90 px-2 py-0.5 rounded bg-black/60">PLAY 03</figcaption>
+          </figure>
+          <figure class="pg-gallery-frame relative rounded-xl overflow-hidden aspect-video bg-pg-navy border border-white/10">
+            <img src="assets/images/screenshots/play_04.png" alt="플레이 화면 4" class="w-full h-full object-cover object-center opacity-90 hover:opacity-100 transition duration-300" width="1280" height="720" decoding="async">
+            <figcaption class="absolute bottom-2 left-2 text-[10px] font-bold text-sky-200/90 px-2 py-0.5 rounded bg-black/60">PLAY 04</figcaption>
+          </figure>
+          <figure class="pg-gallery-frame relative rounded-xl overflow-hidden aspect-video bg-pg-navy border border-white/10">
+            <img src="assets/images/screenshots/play_05.png" alt="플레이 화면 5" class="w-full h-full object-cover object-center opacity-90 hover:opacity-100 transition duration-300" width="1280" height="720" decoding="async">
+            <figcaption class="absolute bottom-2 left-2 text-[10px] font-bold text-sky-200/90 px-2 py-0.5 rounded bg-black/60">PLAY 05</figcaption>
+          </figure>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="reserve" class="py-24 md:py-32 px-4 sm:px-6 scroll-mt-24">
+    <div class="max-w-3xl mx-auto text-center">
+      <h2 class="text-3xl md:text-4xl font-black mb-4">사전등록 준비중</h2>
+          <p class="text-gray-300 text-base md:text-lg mb-10 leading-relaxed">
+      현재 더 나은 모험을 위해 서비스 제작중에 있습니다.<br class="hidden sm:block">
+      곧 정식 사전등록 페이지로 찾아뵙겠습니다. 조금만 기다려 주세요!
+    </p>
+    <div class="max-w-md mx-auto">
+      <div class="card-blur rounded-2xl p-8 border border-white/10 opacity-80">
+        <p class="text-gray-400 font-medium">사전등록 서비스 준비 중입니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+  <footer class="py-16 md:py-20 text-center text-gray-600 text-xs md:text-sm border-t border-white/5">
+    <p class="mb-2 font-semibold text-gray-500">© 2026 <span class="text-gray-400">MANAMUHAN STUDIO</span> · Project Glyph</p>
+    <p>Game Studio : Manamuhan Studio</p>
+    <p>Business : pys_0109@naver.com, clus0109@gmail.com</p>
+    <div class="mt-6">
+      <a href="/" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-white/15 text-gray-400 hover:text-white hover:border-white/30 transition text-xs font-bold tracking-wider">
+        ↑ UTOBIT
+      </a>
+    </div>
+  </footer>
+
+  <div id="pg-char-modal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 bg-black/75 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="pg-char-modal-title">
+    <div class="card-blur max-w-md w-full rounded-2xl border border-sky-500/30 shadow-pg-glow p-6 md:p-8 relative transition-all duration-300 pg-ease scale-95 opacity-0" id="pg-char-modal-panel">
+      <button type="button" id="pg-char-modal-close" class="absolute top-4 right-4 w-10 h-10 rounded-full border border-white/15 hover:bg-white/10 flex items-center justify-center text-lg z-10" aria-label="닫기">×</button>
+      <h3 id="pg-char-modal-title" class="text-2xl font-black text-white mb-1"></h3>
+      <p id="pg-char-modal-role" class="text-sky-400 text-sm font-bold tracking-wider mb-2"></p>
+      <p class="text-[10px] text-gray-500 mb-4">스테이터스 6종 · 상한 500 기준</p>
+      <div id="pg-char-modal-stats" class="space-y-3"></div>
+    </div>
+  </div>
+
+  <div id="pg-hero-concept-modal" class="fixed inset-0 z-[110] hidden items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md" role="dialog" aria-modal="true" aria-labelledby="pg-hero-concept-name">
+    <div class="card-blur max-w-lg w-full max-h-[min(92vh,720px)] rounded-2xl border border-sky-500/35 shadow-pg-glow overflow-hidden flex flex-col relative transition-all duration-300 pg-ease scale-95 opacity-0" id="pg-hero-concept-panel">
+      <button type="button" id="pg-hero-concept-close" class="absolute top-3 right-3 z-20 w-10 h-10 rounded-full border border-white/20 bg-black/40 hover:bg-white/10 flex items-center justify-center text-lg text-white" aria-label="닫기">×</button>
+      <div class="relative w-full aspect-[3/4] sm:aspect-[4/5] max-h-[min(42vh,340px)] shrink-0 bg-black overflow-hidden">
+        <img id="pg-hero-concept-img" src="" alt="" class="absolute inset-0 w-full h-full object-cover object-top" width="600" height="800" decoding="async">
+      </div>
+      <div class="p-4 sm:p-5 overflow-y-auto flex-1 min-h-0 border-t border-white/10">
+        <h3 id="pg-hero-concept-name" class="text-xl sm:text-2xl font-black text-white mb-1"></h3>
+        <p class="text-sky-400 text-xs font-bold tracking-wider mb-2"><span class="text-gray-500 font-normal mr-2">칭호</span><span id="pg-hero-concept-title"></span></p>
+        <p id="pg-hero-concept-archetype" class="inline-block text-[10px] font-bold px-2 py-0.5 rounded-full bg-sky-500/15 text-sky-300 border border-sky-500/30 mb-3"></p>
+        <blockquote id="pg-hero-concept-quote" class="text-sm text-gray-300 leading-relaxed border-l-2 border-sky-500/50 pl-3 py-1 mb-5 italic"></blockquote>
+        <p class="text-[10px] font-bold text-gray-500 tracking-widest mb-2">스테이터스 (상한 500 기준 예시)</p>
+        <div id="pg-hero-concept-stats" class="space-y-2.5"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  (function (global) {
+    "use strict";
+
+    var STAT_MAX = 500;
+
+    var CONCEPT_HEROES = [
+      {
+        img: "assets/images/characters/Character/Hero1.jpg",
+        name: "산사요",
+        title: "청소부",
+        quote: "제가 뭘 모으는지는,,, 비밀이에요.",
+        archetype: "마법형",
+        stats: [
+          { label: "근력", value: 95 },
+          { label: "민첩", value: 195 },
+          { label: "마력", value: 418 },
+          { label: "지능", value: 302 },
+          { label: "행운", value: 248 },
+          { label: "서사", value: 268 },
+        ],
+      },
+      {
+        img: "assets/images/characters/Character/Hero2.png",
+        name: "시에르",
+        title: "세계의 정원",
+        quote: "시에르, 오늘부터 당신의 정원을 가꿀 정원사 시에르에요.",
+        archetype: "마법형",
+        stats: [
+          { label: "근력", value: 88 },
+          { label: "민첩", value: 208 },
+          { label: "마력", value: 432 },
+          { label: "지능", value: 318 },
+          { label: "행운", value: 276 },
+          { label: "서사", value: 298 },
+        ],
+      },
+      {
+        img: "assets/images/characters/Character/Hero3.jpg",
+        name: "이세라",
+        title: "기록관리관",
+        quote: "......",
+        archetype: "지원형",
+        stats: [
+          { label: "근력", value: 108 },
+          { label: "민첩", value: 165 },
+          { label: "마력", value: 268 },
+          { label: "지능", value: 352 },
+          { label: "행운", value: 288 },
+          { label: "서사", value: 398 },
+        ],
+      },
+    ];
+
+    var CHARACTERS = [
+      { name: "Zeo", role: "A17 · 전승 캐릭터 · 근접", stats: [
+        { label: "근력", value: 382 }, { label: "민첩", value: 318 },
+        { label: "마력", value: 242 }, { label: "지능", value: 268 },
+        { label: "행운", value: 291 }, { label: "서사", value: 256 },
+      ]},
+      { name: "Savior", role: "A30 · 전승 캐릭터 · 보호", stats: [
+        { label: "근력", value: 208 }, { label: "민첩", value: 236 },
+        { label: "마력", value: 352 }, { label: "지능", value: 312 },
+        { label: "행운", value: 302 }, { label: "서사", value: 338 },
+      ]},
+      { name: "Destroyer", role: "A29 · 전승 캐릭터 · 광역", stats: [
+        { label: "근력", value: 418 }, { label: "민첩", value: 276 },
+        { label: "마력", value: 308 }, { label: "지능", value: 262 },
+        { label: "행운", value: 274 }, { label: "서사", value: 248 },
+      ]},
+      { name: "Necro", role: "A24 · 전승 캐릭터 · 소환", stats: [
+        { label: "근력", value: 178 }, { label: "민첩", value: 224 },
+        { label: "마력", value: 412 }, { label: "지능", value: 358 },
+        { label: "행운", value: 286 }, { label: "서사", value: 322 },
+      ]},
+      { name: "Magician", role: "A04 · 전승 캐릭터 · 마법", stats: [
+        { label: "근력", value: 162 }, { label: "민첩", value: 248 },
+        { label: "마력", value: 438 }, { label: "지능", value: 396 },
+        { label: "행운", value: 272 }, { label: "서사", value: 308 },
+      ]},
+    ];
+
+    function qs(sel, root) { return (root || document).querySelector(sel); }
+    function qsa(sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); }
+
+    function initTabs() {
+      var buttons = qsa(".pg-tab-btn");
+      var panels = {
+        world: qs("#pg-panel-world"),
+        characters: qs("#pg-panel-characters"),
+        content: qs("#pg-panel-content"),
+        system: qs("#pg-panel-system"),
+      };
+      var active = "characters";
+
+      function setActiveTab(name) {
+        if (!panels[name] || name === active) return;
+        var outgoing = panels[active];
+        var incoming = panels[name];
+        outgoing.classList.remove("is-active");
+        outgoing.classList.add("is-hidden");
+        outgoing.setAttribute("hidden", "");
+        incoming.removeAttribute("hidden");
+        incoming.classList.remove("is-hidden");
+        void incoming.offsetWidth;
+        incoming.classList.add("is-active");
+        active = name;
+        buttons.forEach(function (btn) {
+          var t = btn.getAttribute("data-tab");
+          var on = t === name;
+          btn.setAttribute("aria-selected", on ? "true" : "false");
+          if (on) {
+            btn.classList.add("bg-sky-500/20", "text-sky-300", "border-sky-500/40");
+            btn.classList.remove("text-gray-400", "border-transparent");
+          } else {
+            btn.classList.remove("bg-sky-500/20", "text-sky-300", "border-sky-500/40");
+            btn.classList.add("text-gray-400", "border-transparent");
+          }
+        });
+      }
+
+      buttons.forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          setActiveTab(btn.getAttribute("data-tab"));
+        });
+      });
+    }
+
+    function initCharacterModal() {
+      var modal = qs("#pg-char-modal");
+      var panel = qs("#pg-char-modal-panel");
+      var titleEl = qs("#pg-char-modal-title");
+      var roleEl = qs("#pg-char-modal-role");
+      var statsEl = qs("#pg-char-modal-stats");
+      var closeBtn = qs("#pg-char-modal-close");
+
+      function renderStats(stats) {
+        statsEl.innerHTML = "";
+        stats.forEach(function (s) {
+          var cap = s.max != null ? s.max : STAT_MAX;
+          var pct = Math.min(100, Math.round((s.value / cap) * 100));
+          var row = document.createElement("div");
+          row.innerHTML =
+            '<div class="flex justify-between text-xs text-gray-400 mb-1"><span>' + s.label + '</span><span class="text-white font-mono tabular-nums">' + s.value + " / " + cap + "</span></div>" +
+            '<div class="h-2 rounded-full bg-white/10 overflow-hidden"><div class="h-full rounded-full bg-gradient-to-r from-sky-600 to-sky-400 pg-ease transition-all duration-700" style="width:0%"></div></div>';
+          statsEl.appendChild(row);
+          var bar = row.querySelector("div > div > div");
+          requestAnimationFrame(function () { bar.style.width = pct + "%"; });
+        });
+      }
+
+      function open(index) {
+        var c = CHARACTERS[index];
+        if (!c) return;
+        titleEl.textContent = c.name;
+        roleEl.textContent = c.role;
+        renderStats(c.stats);
+        modal.classList.remove("hidden");
+        modal.classList.add("flex");
+        document.body.style.overflow = "hidden";
+        panel.style.transition = "opacity 0.35s cubic-bezier(0.22,1,0.36,1), transform 0.35s cubic-bezier(0.22,1,0.36,1)";
+        panel.style.opacity = "0";
+        panel.style.transform = "scale(0.96) translateY(8px)";
+        requestAnimationFrame(function () {
+          panel.style.opacity = "1";
+          panel.style.transform = "scale(1) translateY(0)";
+        });
+      }
+
+      function close() {
+        panel.style.opacity = "0";
+        panel.style.transform = "scale(0.96) translateY(8px)";
+        setTimeout(function () {
+          modal.classList.add("hidden");
+          modal.classList.remove("flex");
+          document.body.style.overflow = "";
+        }, 280);
+      }
+
+      global._pgCloseCharModal = close;
+
+      qsa("[data-char-open]").forEach(function (el) {
+        el.addEventListener("click", function () {
+          open(parseInt(el.getAttribute("data-char-open"), 10));
+        });
+      });
+      closeBtn.addEventListener("click", close);
+      modal.addEventListener("click", function (e) { if (e.target === modal) close(); });
+    }
+
+    function initHeroConceptModal() {
+      var modal = qs("#pg-hero-concept-modal");
+      var panel = qs("#pg-hero-concept-panel");
+      var imgEl = qs("#pg-hero-concept-img");
+      var nameEl = qs("#pg-hero-concept-name");
+      var titleEl = qs("#pg-hero-concept-title");
+      var quoteEl = qs("#pg-hero-concept-quote");
+      var archEl = qs("#pg-hero-concept-archetype");
+      var statsEl = qs("#pg-hero-concept-stats");
+      var closeBtn = qs("#pg-hero-concept-close");
+      if (!modal || !panel) return;
+
+      function renderHeroStats(stats) {
+        statsEl.innerHTML = "";
+        stats.forEach(function (s) {
+          var pct = Math.min(100, Math.round((s.value / STAT_MAX) * 100));
+          var row = document.createElement("div");
+          row.innerHTML =
+            '<div class="flex justify-between text-[11px] text-gray-400 mb-0.5"><span>' + s.label + '</span><span class="text-white font-mono tabular-nums">' + s.value + " / " + STAT_MAX + "</span></div>" +
+            '<div class="h-1.5 rounded-full bg-white/10 overflow-hidden"><div class="h-full rounded-full bg-gradient-to-r from-sky-700 to-sky-400 pg-ease transition-all duration-700" style="width:0%"></div></div>';
+          statsEl.appendChild(row);
+          var bar = row.querySelector("div > div > div");
+          requestAnimationFrame(function () { bar.style.width = pct + "%"; });
+        });
+      }
+
+      function open(index) {
+        var h = CONCEPT_HEROES[index];
+        if (!h) return;
+        imgEl.src = h.img;
+        imgEl.alt = h.name + " 일러스트";
+        nameEl.textContent = h.name;
+        titleEl.textContent = h.title;
+        quoteEl.textContent = "「" + h.quote + "」";
+        archEl.textContent = h.archetype;
+        renderHeroStats(h.stats);
+        modal.classList.remove("hidden");
+        modal.classList.add("flex");
+        document.body.style.overflow = "hidden";
+        panel.style.transition = "opacity 0.35s cubic-bezier(0.22,1,0.36,1), transform 0.35s cubic-bezier(0.22,1,0.36,1)";
+        panel.style.opacity = "0";
+        panel.style.transform = "scale(0.96) translateY(8px)";
+        requestAnimationFrame(function () {
+          panel.style.opacity = "1";
+          panel.style.transform = "scale(1) translateY(0)";
+        });
+      }
+
+      function close() {
+        panel.style.opacity = "0";
+        panel.style.transform = "scale(0.96) translateY(8px)";
+        setTimeout(function () {
+          modal.classList.add("hidden");
+          modal.classList.remove("flex");
+          document.body.style.overflow = "";
+          imgEl.removeAttribute("src");
+        }, 280);
+      }
+
+      qsa("[data-hero-concept]").forEach(function (el) {
+        el.addEventListener("click", function () {
+          open(parseInt(el.getAttribute("data-hero-concept"), 10));
+        });
+      });
+      closeBtn.addEventListener("click", close);
+      modal.addEventListener("click", function (e) { if (e.target === modal) close(); });
+
+      global._pgCloseHeroConcept = close;
+    }
+
+    function initEscapeModals() {
+      document.addEventListener("keydown", function (e) {
+        if (e.key !== "Escape") return;
+        var hm = qs("#pg-hero-concept-modal");
+        if (hm && !hm.classList.contains("hidden")) {
+          if (global._pgCloseHeroConcept) global._pgCloseHeroConcept();
+          e.preventDefault();
+          return;
+        }
+        if (global._pgCloseCharModal) {
+          var cm = qs("#pg-char-modal");
+          if (cm && !cm.classList.contains("hidden")) {
+            global._pgCloseCharModal();
+            e.preventDefault();
+          }
+        }
+      });
+    }
+
+    function initGallery() {
+      var track = qs("#pg-gallery-track");
+      var prev = qs("#pg-gallery-prev");
+      var next = qs("#pg-gallery-next");
+      var dotsRoot = qs("#pg-gallery-dots");
+      if (!track || !prev || !next) return;
+      var pages = track.children.length;
+      var index = 0;
+
+      function go(i) {
+        index = (i + pages) % pages;
+        track.style.transform = "translateX(-" + index * 100 + "%)";
+        qsa("[data-dot]", dotsRoot).forEach(function (d, di) {
+          d.classList.toggle("bg-sky-500", di === index);
+          d.classList.toggle("bg-white/25", di !== index);
+        });
+      }
+
+      for (var d = 0; d < pages; d++) {
+        var dot = document.createElement("button");
+        dot.type = "button";
+        dot.setAttribute("data-dot", "");
+        dot.setAttribute("aria-label", "슬라이드 " + (d + 1));
+        dot.className = "w-2 h-2 rounded-full bg-white/25 transition pg-ease";
+        dot.addEventListener("click", function (di) { return function () { go(di); }; }(d));
+        dotsRoot.appendChild(dot);
+      }
+      go(0);
+      prev.addEventListener("click", function () { go(index - 1); });
+      next.addEventListener("click", function () { go(index + 1); });
+    }
+
+    function initNav() {
+      var toggle = qs("#pg-nav-toggle");
+      var links = qs("#pg-nav-links");
+      if (toggle && links) {
+        toggle.addEventListener("click", function () {
+          links.classList.toggle("max-md:hidden");
+          var expanded = !links.classList.contains("max-md:hidden");
+          toggle.setAttribute("aria-expanded", expanded ? "true" : "false");
+        });
+        qsa("a[href^='#']", links).forEach(function (a) {
+          a.addEventListener("click", function () {
+            if (window.matchMedia("(max-width: 767px)").matches) {
+              links.classList.add("max-md:hidden");
+              toggle.setAttribute("aria-expanded", "false");
+            }
+          });
+        });
+      }
+
+      var sections = ["game-info", "gallery", "reserve"];
+      var navLinks = qsa(".nav-link[data-nav]");
+      var map = {};
+      navLinks.forEach(function (a) { map[a.getAttribute("data-nav")] = a; });
+
+      if ("IntersectionObserver" in window) {
+        var obs = new IntersectionObserver(
+          function (entries) {
+            entries.forEach(function (en) {
+              if (!en.isIntersecting) return;
+              var id = en.target.id;
+              navLinks.forEach(function (l) { l.classList.remove("is-active"); });
+              if (map[id]) map[id].classList.add("is-active");
+            });
+          },
+          { rootMargin: "-45% 0px -45% 0px", threshold: 0 }
+        );
+        sections.forEach(function (id) {
+          var el = document.getElementById(id);
+          if (el) obs.observe(el);
+        });
+      }
+    }
+
+    function initForm() {
+      var form = qs("#pg-form-preorder");
+      if (!form) return;
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        var email = qs("#pg-email", form);
+        var payload = { email: email && email.value ? email.value.trim() : "", source: "landing-preorder" };
+        if (!payload.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payload.email)) {
+          alert("유효한 이메일을 입력해 주세요.");
+          return;
+        }
+        console.info("[preorder]", payload);
+        alert("데모: 제출되었습니다. 백엔드 연동 시 이 핸들러에서 저장하면 됩니다.");
+      });
+    }
+
+    function init() {
+      initTabs();
+      initCharacterModal();
+      initHeroConceptModal();
+      initEscapeModals();
+      initGallery();
+      initNav();
+      initForm();
+    }
+
+    global.ProjectGlyph = { init: init, version: "1.0.0" };
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", init);
+    } else {
+      init();
+    }
+  })(typeof window !== "undefined" ? window : this);
+  </script>
+</body>
+</html>

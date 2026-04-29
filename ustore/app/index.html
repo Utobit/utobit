@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>앱 정보 | UStore</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', 'Noto Sans KR', system-ui, sans-serif; background: #fff; color: #111827; min-height: 100vh; -webkit-font-smoothing: antialiased; }
+    .topbar { padding: 16px 28px; border-bottom: 1px solid #f3f4f6; }
+    .back-btn { display: inline-flex; align-items: center; gap: 6px; font-size: 0.8125rem; font-weight: 600; color: #6b7280; text-decoration: none; transition: color .15s; }
+    .back-btn:hover { color: #111827; }
+    .hero { max-width: 640px; margin: 0 auto; padding: 64px 28px 48px; text-align: center; }
+    .app-icon { width: 96px; height: 96px; border-radius: 22px; margin: 0 auto 24px; display: block; box-shadow: 0 4px 24px rgba(0,0,0,.1); object-fit: cover; }
+    .app-icon-placeholder { width: 96px; height: 96px; border-radius: 22px; margin: 0 auto 24px; background: #f3f4f6; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 24px rgba(0,0,0,.06); }
+    .badge-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 16px; }
+    .badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 20px; font-size: 0.72rem; font-weight: 700; }
+    .badge-green { background: #dcfce7; color: #166534; }
+    .badge-yellow { background: #fef3c7; color: #92400e; }
+    .badge-gray { background: #f3f4f6; color: #6b7280; }
+    .badge-dot { width: 6px; height: 6px; border-radius: 50%; }
+    .badge-green .badge-dot { background: #22c55e; }
+    .badge-yellow .badge-dot { background: #f59e0b; }
+    .app-name { font-size: 2.25rem; font-weight: 900; letter-spacing: -.04em; color: #111827; margin-bottom: 10px; }
+    .app-tagline { font-size: 1rem; color: #6b7280; margin-bottom: 36px; line-height: 1.8; }
+    .dl-title { font-size: 0.72rem; font-weight: 700; color: #9ca3af; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 14px; }
+    .dl-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; border-radius: 12px; font-size: 0.9rem; font-weight: 700; text-decoration: none; border: none; cursor: pointer; font-family: inherit; transition: opacity .15s, transform .1s; }
+    .btn:hover:not(.btn-disabled) { opacity: .88; transform: translateY(-1px); }
+    .btn-primary { background: #111827; color: #fff; }
+    .btn-outline { background: #fff; color: #111827; border: 1.5px solid #e5e7eb; }
+    .btn-disabled { background: #f3f4f6; color: #9ca3af; cursor: default; }
+    .section { max-width: 640px; margin: 0 auto; padding: 0 28px 48px; }
+    .section-title { font-size: 0.72rem; font-weight: 700; color: #9ca3af; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 16px; }
+    .feature-list { list-style: none; }
+    .feature-list li { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid #f9fafb; font-size: 0.9rem; color: #374151; line-height: 1.5; }
+    .feature-list li:last-child { border-bottom: none; }
+    .check { width: 18px; height: 18px; border-radius: 50%; background: #dcfce7; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+    .check svg { width: 10px; height: 10px; stroke: #16a34a; stroke-width: 2.5; }
+    footer { border-top: 1px solid #f3f4f6; padding: 24px 28px; text-align: center; font-size: 0.78rem; color: #9ca3af; }
+    footer a { color: #9ca3af; text-decoration: none; }
+    footer a:hover { color: #6b7280; }
+    #loading { padding: 120px 28px; text-align: center; color: #9ca3af; }
+    #error { padding: 120px 28px; text-align: center; color: #9ca3af; }
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="/ustore/" class="back-btn">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10 4L6 8l4 4"/>
+    </svg>
+    UStore
+  </a>
+</div>
+
+<div id="loading">불러오는 중...</div>
+<div id="error" style="display:none">앱 정보를 찾을 수 없습니다. <a href="/ustore/">UStore로 돌아가기</a></div>
+<div id="content" style="display:none"></div>
+
+<footer>
+  <p>© 2026 Utobit · <a href="mailto:clus0109@gmail.com">clus0109@gmail.com</a></p>
+</footer>
+
+<script>
+const slug = location.pathname.replace(/^\/ustore\//, '').replace(/\/$/, '');
+
+fetch('/ustore/apps.json')
+  .then(r => r.json())
+  .then(data => {
+    const app = data.apps.find(a => a.slug === slug);
+    document.getElementById('loading').style.display = 'none';
+    if (!app) { document.getElementById('error').style.display = ''; return; }
+    document.title = `${app.name} | UStore`;
+    renderApp(app);
+  })
+  .catch(() => {
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('error').style.display = '';
+  });
+
+function renderApp(app) {
+  const icon = app.icon
+    ? `<img class="app-icon" src="${app.icon}" alt="${app.name}">`
+    : `<div class="app-icon-placeholder"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>`;
+
+  const statusLabel = app.status === 'available' ? '출시됨' : app.status === 'beta' ? '베타' : '준비 중';
+  const statusBadge = app.status === 'available'
+    ? `<span class="badge badge-green"><span class="badge-dot"></span>${statusLabel}</span>`
+    : app.status === 'beta'
+    ? `<span class="badge badge-yellow"><span class="badge-dot"></span>${statusLabel}</span>`
+    : `<span class="badge badge-gray">${statusLabel}</span>`;
+
+  const versionBadge = app.version ? `<span class="badge badge-gray">v${app.version}</span>` : '';
+  const label = `${app.category === 'mobile' ? 'Mobile' : app.category === 'pc' ? 'PC' : 'Asset'} · ${app.subcategory}`;
+
+  const dl = app.download || {};
+  const buttons = [];
+  if (dl.msix) buttons.push(`<a href="${dl.msix}" class="btn btn-primary">직접 다운로드 (.msix)</a>`);
+  if (dl.pc)   buttons.push(`<a href="${dl.pc}" class="btn btn-primary">PC 다운로드</a>`);
+  if (dl.apk)  buttons.push(`<a href="${dl.apk}" class="btn btn-outline">Android APK</a>`);
+  if (dl.ms_store) buttons.push(`<a href="${dl.ms_store}" class="btn btn-outline" target="_blank">Microsoft Store</a>`);
+  if (dl.github) buttons.push(`<a href="${dl.github}" class="btn btn-outline" target="_blank">소스코드</a>`);
+  if (!buttons.length) buttons.push(`<span class="btn btn-disabled">출시 예정</span>`);
+
+  const features = (app.features || []).map(f => `<li>
+    <span class="check"><svg viewBox="0 0 12 12" fill="none"><polyline points="2 6 5 9 10 3"/></svg></span>${f}</li>`).join('');
+
+  document.getElementById('content').innerHTML = `
+    <section class="hero">
+      ${icon}
+      <div class="badge-row">${statusBadge}${versionBadge}<span class="badge badge-gray">${label}</span></div>
+      <h1 class="app-name">${app.name}</h1>
+      <p class="app-tagline">${app.tagline || app.description}</p>
+      <p class="dl-title">다운로드</p>
+      <div class="dl-row">${buttons.join('')}</div>
+    </section>
+    ${features ? `<section class="section"><p class="section-title">주요 기능</p><ul class="feature-list">${features}</ul></section>` : ''}
+  `;
+  document.getElementById('content').style.display = '';
+}
+</script>
+</body>
+</html>
