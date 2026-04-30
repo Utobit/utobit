@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DallaePCAgent</title>
+  <meta property="og:title" content="DallaePCAgent">
+  <meta property="og:description" content="모바일 연동 PC프로그램. Claude API 기반 개인용 Agent">
+  <meta property="og:url" content="https://utobit.net/ustore/da/">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', 'Noto Sans KR', system-ui, sans-serif;
+      background: #fff;
+      color: #111827;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* BACK NAV */
+    .topbar {
+      padding: 16px 28px;
+      border-bottom: 1px solid #f3f4f6;
+    }
+    .back-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 0.8125rem; font-weight: 600;
+      color: #6b7280; text-decoration: none;
+      transition: color .15s;
+    }
+    .back-btn:hover { color: #111827; }
+    .back-btn svg { width: 16px; height: 16px; }
+
+    /* HERO */
+    .hero {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 72px 28px 56px;
+      text-align: center;
+    }
+    .app-icon {
+      width: 96px; height: 96px;
+      border-radius: 22px;
+      margin: 0 auto 28px;
+      display: block;
+      box-shadow: 0 4px 24px rgba(0,0,0,.12);
+      object-fit: cover;
+    }
+    .app-name {
+      font-size: 2.25rem;
+      font-weight: 900;
+      letter-spacing: -.04em;
+      color: #111827;
+      margin-bottom: 12px;
+    }
+    .app-tagline {
+      font-size: 1rem;
+      color: #6b7280;
+      margin-bottom: 36px;
+      line-height: 1.8;
+    }
+    .dl-row {
+      display: flex; gap: 12px;
+      justify-content: center; flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 13px 28px;
+      border-radius: 12px;
+      font-size: 0.9375rem; font-weight: 700;
+      text-decoration: none; border: none;
+      cursor: pointer; font-family: inherit;
+      transition: opacity .15s, transform .1s;
+    }
+    .btn:hover { opacity: .88; transform: translateY(-1px); }
+    .btn-primary { background: #111827; color: #fff; }
+    .btn-outline { background: #fff; color: #111827; border: 1.5px solid #e5e7eb; }
+    .btn svg { width: 18px; height: 18px; }
+
+    /* SCREENSHOTS */
+    .screenshots {
+      padding: 0 28px 80px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .screenshot-frame {
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid #e5e7eb;
+      background: #f9fafb;
+      width: 100%;
+    }
+    .screenshot-frame img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .screenshot-spacer {
+      height: 200px;
+    }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid #f3f4f6;
+      padding: 24px 28px;
+      text-align: center;
+      font-size: 0.78rem;
+      color: #9ca3af;
+    }
+    footer a { color: #9ca3af; text-decoration: none; }
+    footer a:hover { color: #6b7280; }
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="/ustore/" class="back-btn">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10 4L6 8l4 4"/>
+    </svg>
+    UStore
+  </a>
+</div>
+
+<section class="hero">
+  <img class="app-icon" src="../../assets/dallae_icon.png" alt="DallaePCAgent">
+  <h1 class="app-name">DallaePCAgent</h1>
+  <p class="app-tagline">모바일 연동 PC프로그램.<br>Claude API 기반 개인용 Agent<br>데모 배포 예정</p>
+  <div class="dl-row">
+    <button class="btn btn-primary" onclick="dlPc()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
+      </svg>
+      PC 다운로드
+    </button>
+    <button class="btn btn-outline" onclick="dlApk()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="5" y="2" width="14" height="20" rx="2"/><circle cx="12" cy="17" r="1"/>
+      </svg>
+      Android APK
+    </button>
+  </div>
+</section>
+
+
+<footer>
+  <p>DallaePCAgent © 2026 Utobit · <a href="mailto:clus0109@gmail.com">clus0109@gmail.com</a></p>
+</footer>
+
+<script>
+  const PC_URL  = "https://github.com/Utobit/dallae-baepo-releases/raw/main/DallaePC.zip";
+  const APK_URL = "https://github.com/Utobit/dallae-baepo-releases/raw/main/DallaePC.apk";
+  function dlPc()  { window.location.href = PC_URL; }
+  function dlApk() { window.location.href = APK_URL; }
+</script>
+</body>
+</html>

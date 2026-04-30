@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Utobit</title>
+  <meta name="description" content="Utobit — DallaePCAgent, Manamuhan Studio, UStore를 운영하는 소프트웨어 스튜디오.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://utobit.net/">
+  <meta property="og:title" content="Utobit">
+  <meta property="og:description" content="DallaePCAgent, Manamuhan Studio, UStore를 운영하는 독립 소프트웨어 스튜디오.">
+  <meta property="og:image" content="https://utobit.net/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', 'Noto Sans KR', system-ui, sans-serif;
+      background: #fff;
+      color: #111827;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255,255,255,.9);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid #f3f4f6;
+      height: 60px;
+      display: flex; align-items: center;
+    }
+    .nav-inner {
+      width: 100%; max-width: 1080px;
+      margin: 0 auto; padding: 0 28px;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+    }
+    .nav-left  { display: flex; gap: 28px; }
+    .nav-right { display: flex; gap: 20px; justify-content: flex-end; align-items: center; }
+    .nav-link {
+      font-size: 0.875rem; font-weight: 500;
+      color: #374151; text-decoration: none;
+      transition: color .15s;
+      cursor: pointer; background: none; border: none; font-family: inherit;
+    }
+    .nav-link:hover { color: #111827; }
+    .nav-logo {
+      font-size: 1.5rem; font-weight: 900;
+      color: #111827; text-decoration: none;
+      letter-spacing: -.05em;
+      justify-self: center;
+    }
+    .nav-store-btn {
+      font-size: 0.8125rem; font-weight: 700;
+      background: #111827; color: #fff;
+      padding: 6px 16px; border-radius: 8px;
+      text-decoration: none;
+      transition: opacity .15s;
+    }
+    .nav-store-btn:hover { opacity: .85; }
+
+    /* ── MAIN ── */
+    main { max-width: 1080px; margin: 0 auto; padding: 64px 28px 0; }
+
+    .section-label {
+      font-size: 0.6875rem; font-weight: 700;
+      color: #374151; letter-spacing: .14em;
+      text-transform: uppercase; margin-bottom: 20px;
+    }
+
+    /* ── 3-EQUAL PRODUCT CARDS ── */
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 64px;
+    }
+    .pcard {
+      border: 1px solid #e5e7eb;
+      border-radius: 18px;
+      padding: 28px 24px 24px;
+      text-decoration: none;
+      color: inherit;
+      display: flex; flex-direction: column;
+      min-height: 220px;
+      position: relative; overflow: hidden;
+      transition: box-shadow .2s, border-color .2s;
+    }
+
+    /* INCUBATING PREVIEW OVERLAY */
+    .inc-preview {
+      position: absolute; inset: 0;
+      background: rgba(17, 24, 39, 0.92);
+      border-radius: 17px;
+      padding: 24px;
+      display: flex; flex-direction: column; justify-content: center;
+      opacity: 0; transform: translateY(6px);
+      transition: opacity .2s, transform .2s;
+      pointer-events: none;
+    }
+    div.pcard:hover .inc-preview {
+      opacity: 1; transform: translateY(0);
+    }
+    .inc-preview-label {
+      font-size: 0.6875rem; font-weight: 700;
+      color: #6b7280; letter-spacing: .1em;
+      text-transform: uppercase; margin-bottom: 10px;
+    }
+    .inc-preview-text {
+      font-size: 0.875rem; color: #e5e7eb; line-height: 1.65;
+    }
+    .pcard:hover {
+      box-shadow: 0 6px 28px rgba(0,0,0,.08);
+      border-color: #d1d5db;
+    }
+    .pcard-icon {
+      width: 56px; height: 56px;
+      border-radius: 14px;
+      margin-bottom: 18px;
+      object-fit: cover;
+      display: block;
+    }
+    .pcard-label {
+      font-size: 0.6875rem; font-weight: 700;
+      color: #9ca3af; letter-spacing: .1em;
+      text-transform: uppercase; margin-bottom: 6px;
+    }
+    .pcard-name {
+      font-size: 1.125rem; font-weight: 800;
+      color: #111827; letter-spacing: -.03em;
+      margin-bottom: 8px;
+    }
+    .pcard-desc {
+      font-size: 0.8125rem; color: #374151;
+      line-height: 1.6; flex: 1;
+    }
+
+    /* ── INCUBATING CARDS ── */
+    .inc-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 80px;
+    }
+    .inc-card {
+      border: 1px solid #f3f4f6;
+      background: #fafafa;
+      border-radius: 16px;
+      padding: 22px 20px;
+      display: flex; flex-direction: column;
+    }
+    .inc-icon {
+      width: 44px; height: 44px;
+      border-radius: 11px;
+      margin-bottom: 14px;
+      object-fit: cover;
+    }
+    .inc-type {
+      font-size: 0.6875rem; font-weight: 700;
+      color: #9ca3af; letter-spacing: .1em;
+      text-transform: uppercase; margin-bottom: 4px;
+    }
+    .inc-name {
+      font-size: 0.9375rem; font-weight: 700;
+      color: #111827; letter-spacing: -.02em;
+    }
+    .inc-desc {
+      font-size: 0.78rem; color: #6b7280;
+      margin-top: 6px; line-height: 1.5;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid #f3f4f6;
+      padding: 36px 28px;
+      max-width: 1080px; margin: 0 auto;
+      display: flex; justify-content: space-between;
+      align-items: center; flex-wrap: wrap; gap: 12px;
+    }
+    .footer-copy { font-size: 0.78rem; color: #9ca3af; }
+    .footer-links { display: flex; gap: 20px; }
+    .footer-links a {
+      font-size: 0.78rem; color: #6b7280;
+      text-decoration: none; transition: color .15s;
+    }
+    .footer-links a:hover { color: #111827; }
+
+    /* ── INFORMATION OVERLAY ── */
+    .overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,.4);
+      z-index: 200; backdrop-filter: blur(6px);
+      align-items: center; justify-content: center; padding: 24px;
+    }
+    .overlay.open { display: flex; }
+    .overlay-box {
+      background: #fff;
+      border-radius: 20px;
+      padding: 48px 44px;
+      max-width: 560px; width: 100%;
+      box-shadow: 0 24px 64px rgba(0,0,0,.15);
+      position: relative;
+    }
+    .overlay-label {
+      font-size: 0.6875rem; font-weight: 700;
+      color: #9ca3af; letter-spacing: .12em;
+      text-transform: uppercase; margin-bottom: 12px;
+    }
+    .overlay-msg {
+      font-size: 0.9375rem; color: #374151;
+      line-height: 1.85;
+    }
+    .overlay-close {
+      position: absolute; top: 16px; right: 16px;
+      background: #f3f4f6; border: none;
+      width: 32px; height: 32px; border-radius: 50%;
+      cursor: pointer; font-size: 1rem; color: #6b7280;
+      display: flex; align-items: center; justify-content: center;
+      transition: background .15s;
+    }
+    .overlay-close:hover { background: #e5e7eb; }
+
+    @media (max-width: 700px) {
+      .grid-3, .inc-grid { grid-template-columns: 1fr; }
+      .nav-left .nav-link:first-child { display: none; }
+      .nav-logo { font-size: 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-left">
+      <button class="nav-link" onclick="openInfo()">Information</button>
+      <a href="ms/" class="nav-link">Studio</a>
+    </div>
+    <a href="/" class="nav-logo">UTOBIT</a>
+    <div class="nav-right">
+      <a href="ustore/da/" class="nav-link">Agent</a>
+      <a href="ustore/" class="nav-store-btn">UStore</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+
+  <!-- Services -->
+  <p class="section-label">Services</p>
+  <div class="grid-3">
+
+    <a href="ustore/da/" class="pcard">
+      <img class="pcard-icon" src="assets/dallae_icon.png" alt="DallaePCAgent">
+      <p class="pcard-label">PC · Agent</p>
+      <h3 class="pcard-name">DallaePCAgent</h3>
+      <p class="pcard-desc">모바일-PC연동 개인 Agent<br>데모 배포 예정</p>
+    </a>
+
+    <a href="ustore/" class="pcard">
+      <div class="pcard-icon" style="background:#f3f4f6;display:flex;align-items:center;justify-content:center;">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/>
+        </svg>
+      </div>
+      <p class="pcard-label">Store</p>
+      <h3 class="pcard-name">UStore</h3>
+      <p class="pcard-desc">PC 에이전트 및 소프트웨어 스토어</p>
+    </a>
+
+    <a href="ms/" class="pcard">
+      <div class="pcard-icon" style="background:#f3f4f6;display:flex;align-items:center;justify-content:center;">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+        </svg>
+      </div>
+      <p class="pcard-label">Game Studio</p>
+      <h3 class="pcard-name">Manamuhan Studio</h3>
+      <p class="pcard-desc">Project Glyph — 수집형 RPG 개발 중</p>
+    </a>
+
+  </div>
+
+  <!-- Now Incubating -->
+  <p class="section-label">Now Incubating</p>
+  <div class="grid-3">
+
+    <div class="pcard">
+      <img class="pcard-icon" src="assets/dallae_icon.png" alt="DallaePCAgent">
+      <p class="pcard-label">PC · Agent</p>
+      <h3 class="pcard-name">DallaePCAgent</h3>
+      <p class="pcard-desc">AI 기반 PC / 모바일 / Home(예정) Agent</p>
+      <div class="inc-preview">
+        <p class="inc-preview-label">데모 배포 예정</p>
+        <p class="inc-preview-text">모바일 연동 PC프로그램.<br>Claude API 기반 개인용 Agent.</p>
+      </div>
+    </div>
+
+    <div class="pcard">
+      <img class="pcard-icon" src="assets/choice_icon.png" alt="Choice">
+      <p class="pcard-label">App</p>
+      <h3 class="pcard-name">Choice</h3>
+      <p class="pcard-desc">Google Play 등록 준비 중</p>
+      <div class="inc-preview">
+        <p class="inc-preview-label">준비중</p>
+        <p class="inc-preview-text">Google Play 등록을 준비하고 있습니다.<br>곧 만나보실 수 있습니다.</p>
+      </div>
+    </div>
+
+    <div class="pcard">
+      <img class="pcard-icon" src="assets/dokgeo_icon.png" alt="독거청년">
+      <p class="pcard-label">App</p>
+      <h3 class="pcard-name">독거청년</h3>
+      <p class="pcard-desc">개발 중</p>
+      <div class="inc-preview">
+        <p class="inc-preview-label">개발중</p>
+        <p class="inc-preview-text">현재 개발을 진행하고 있습니다.<br>출시 일정은 추후 공개됩니다.</p>
+      </div>
+    </div>
+
+  </div>
+
+</main>
+
+<footer>
+  <span class="footer-copy">© 2026 Utobit &nbsp;·&nbsp; 문의 : clus0109@gmail.com</span>
+  <nav class="footer-links">
+    <a href="privacy/">개인정보처리방침</a>
+  </nav>
+</footer>
+
+<!-- Information Overlay -->
+<div class="overlay" id="infoOverlay" onclick="closeInfo(event)">
+  <div class="overlay-box">
+    <button class="overlay-close" onclick="closeInfo()">✕</button>
+    <p class="overlay-label">Utobit</p>
+    <p class="overlay-msg">
+      Utobit를 찾아주셔서 감사합니다.<br><br>
+      Utobit는 AI시대에 직접 참여하는 사업자입니다.<br><br>
+      현재 가벼운 소프트웨어를 중심으로, 실생활 편의도구를 제공하려고 하며, 홈페이지 내 UStore에서 만나보실 수 있습니다.<br><br>
+      일반적인 규모의 생산성 증진을 목표로 하며, 쉽고 가벼운 프로그램을 지향합니다.<br><br>
+      상업성 프로젝트로는 AI가 탑재된 게임을 개발해 제공할 계획이며, 1개 스튜디오(Manamuhan Studio)에서 개발을 이어가고 있습니다.<br><br>
+      Utobit가 제공하는 서비스를 이용하세요!<br>더 많은 시간을 확보하시게 되실 겁니다.<br><br>
+      Utobit 대표 드림.
+    </p>
+  </div>
+</div>
+
+<script>
+  function openInfo() { document.getElementById('infoOverlay').classList.add('open'); }
+  function closeInfo(e) {
+    if (!e || e.target === document.getElementById('infoOverlay')) {
+      document.getElementById('infoOverlay').classList.remove('open');
+    }
+  }
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeInfo(); });
+</script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+[build]
+  publish = "."
+
+# utobit.org → utobit.net
+[[redirects]]
+  from = "https://utobit.org/*"
+  to   = "https://utobit.net/:splat"
+  status = 301
+  force  = true
+
+# 구 da/ustore/ 경로 (legacy)
+[[redirects]]
+  from = "/da/ustore/*"
+  to   = "/ustore/:splat"
+  status = 301
+  force  = true
+
+# /da/ → /ustore/da/
+[[redirects]]
+  from = "/da/"
+  to   = "/ustore/da/"
+  status = 301
+  force  = true
+
+# apps.json CORS (브라우저 fetch 허용)
+[[headers]]
+  for = "/ustore/apps.json"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+    Cache-Control = "public, max-age=300"
+
+# 앱 상세 페이지 — 파일 없는 slug는 템플릿으로 서빙 (200 rewrite)
+[[redirects]]
+  from = "/ustore/:slug"
+  to   = "/ustore/app/index.html"
+  status = 200
+
+# 404 fallback
+[[redirects]]
+  from = "/*"
+  to   = "/404.html"
+  status = 404

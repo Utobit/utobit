@@ -1,0 +1,70 @@
+{
+  "version": 1,
+  "updated": "2026-04-30",
+  "apps": [
+    {
+      "slug": "worktimer",
+      "name": "WorkTimer",
+      "category": "pc",
+      "subcategory": "Assist",
+      "version": "1.0.2",
+      "status": "available",
+      "icon": null,
+      "description": "업무 시간을 자동으로 기록하는 PC 타이머. 마우스 움직임을 감지해 작업 구간을 저장합니다.",
+      "tagline": "조용히, 자동으로 기록합니다",
+      "tags": ["productivity", "timer", "work"],
+      "detail_url": "/ustore/worktimer/",
+      "download": {
+        "msix": "https://github.com/Utobit/WorkTimer/releases/download/v1.0.2/WorkTimer.msix",
+        "ms_store": null,
+        "github": "https://github.com/Utobit/WorkTimer"
+      },
+      "features": [
+        "마우스 활동 감지로 자동 구간 기록",
+        "월간·일간 시계 뷰",
+        "작업 시간 통계 및 내보내기",
+        "다크모드 지원",
+        "60초 자동 저장 (비정상 종료 복구)"
+      ],
+      "requirements": "Windows 10 / 11 (x64)",
+      "screenshots": []
+    },
+    {
+      "slug": "da",
+      "name": "DallaePCAgent",
+      "category": "pc",
+      "subcategory": "Agent",
+      "version": null,
+      "status": "beta",
+      "icon": "/assets/dallae_icon.png",
+      "description": "모바일 연동 PC 에이전트. Claude API 기반으로 동작합니다.",
+      "tagline": "모바일과 PC를 잇는 AI 에이전트",
+      "tags": ["ai", "agent", "productivity"],
+      "detail_url": "/ustore/da/",
+      "download": {
+        "pc": "https://github.com/Utobit/dallae-baepo-releases/raw/main/DallaePC.zip",
+        "apk": "https://github.com/Utobit/dallae-baepo-releases/raw/main/DallaePC.apk"
+      },
+      "features": [],
+      "requirements": "Windows 10 / 11",
+      "screenshots": ["/ustore/da/screenshots/s1.png"]
+    },
+    {
+      "slug": "choice",
+      "name": "Choice",
+      "category": "mobile",
+      "subcategory": "App",
+      "version": null,
+      "status": "coming_soon",
+      "icon": "/assets/choice_icon.png",
+      "description": "Google Play 등록 준비 중.",
+      "tagline": "간단한 선택을 도와주는 앱",
+      "tags": ["utility"],
+      "detail_url": "/ustore/choice/",
+      "download": {},
+      "features": [],
+      "requirements": "Android 8.0+",
+      "screenshots": []
+    }
+  ]
+}

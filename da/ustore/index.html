@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ko" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>U Store | Utobit</title>
+  <meta name="description" content="U Store — Utobit이 검증한 PC 소프트웨어 모음.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://utobit.net/da/ustore/">
+  <meta property="og:title" content="U Store | Utobit">
+  <meta property="og:description" content="Utobit이 검증한 PC 소프트웨어를 한 곳에서.">
+  <meta property="og:image" content="https://utobit.net/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: "Noto Sans KR", sans-serif; background-color: #050a15; color: #e2e8f0; }
+    .glow-text { text-shadow: 0 0 20px rgba(55,169,255,0.75), 0 0 48px rgba(55,169,255,0.35); }
+    .card-blur { backdrop-filter: blur(14px); background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); }
+  </style>
+</head>
+<body class="overflow-x-hidden antialiased">
+
+  <nav class="fixed w-full z-50 border-b border-white/10 bg-black/55 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <a href="/" class="text-xl font-extrabold tracking-tighter text-gray-400 hover:text-white transition">UTOBIT</a>
+      <span class="text-xl font-extrabold tracking-tighter glow-text">U Store</span>
+      <a href="/da/" class="text-sm text-gray-400 hover:text-sky-400 transition">← DallaePC</a>
+    </div>
+  </nav>
+
+  <header class="relative pt-32 pb-20 flex flex-col items-center text-center px-4">
+    <p class="text-sky-400 tracking-[0.25em] text-xs font-bold mb-4 opacity-80">SOFTWARE STORE</p>
+    <h1 class="text-5xl sm:text-6xl font-black mb-4 tracking-tighter glow-text">U Store</h1>
+    <p class="text-gray-400 text-base md:text-lg max-w-xl mx-auto">Utobit이 검증한 PC 소프트웨어를 한 곳에서.</p>
+  </header>
+
+  <section class="pb-32 px-4 sm:px-6">
+    <div class="max-w-5xl mx-auto">
+      <!-- DallaePCAgent -->
+      <div class="card-blur rounded-3xl p-8 mb-6 border border-sky-500/20">
+        <div class="flex flex-col md:flex-row md:items-center gap-6">
+          <div class="flex-1">
+            <p class="text-sky-400 text-xs font-bold tracking-widest mb-2">PC · AI AGENT</p>
+            <h3 class="text-2xl font-black text-white mb-2">DallaePCAgent</h3>
+            <p class="text-gray-400 text-sm leading-relaxed">모바일에서 음성으로 PC를 제어하는 AI 에이전트. Claude 기반 자연어 처리.</p>
+          </div>
+          <div class="shrink-0">
+            <a href="/da/" class="block px-8 py-3 bg-sky-600 hover:bg-sky-500 text-white font-bold rounded-full transition text-center text-sm">자세히 보기</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- WorkTimer -->
+      <div class="card-blur rounded-3xl p-8 mb-6 border border-blue-500/20">
+        <div class="flex flex-col md:flex-row md:items-center gap-6">
+          <div class="flex-1">
+            <p class="text-blue-400 text-xs font-bold tracking-widest mb-2">PC · PRODUCTIVITY</p>
+            <h3 class="text-2xl font-black text-white mb-2">WorkTimer</h3>
+            <p class="text-gray-400 text-sm leading-relaxed mb-3">PC 작업 시간을 자동으로 기록하는 트레이 앱. 키보드·마우스 입력을 감지해 24시간 원형 시계와 월간 캘린더로 시각화합니다.</p>
+            <div class="flex flex-wrap gap-2">
+              <span class="text-xs bg-white/5 border border-white/10 rounded-full px-3 py-1 text-gray-400">자동 기록</span>
+              <span class="text-xs bg-white/5 border border-white/10 rounded-full px-3 py-1 text-gray-400">월간 캘린더</span>
+              <span class="text-xs bg-white/5 border border-white/10 rounded-full px-3 py-1 text-gray-400">일간 시계</span>
+              <span class="text-xs bg-white/5 border border-white/10 rounded-full px-3 py-1 text-gray-400">다크모드</span>
+              <span class="text-xs bg-white/5 border border-white/10 rounded-full px-3 py-1 text-gray-400">v1.0.2 · Windows</span>
+            </div>
+          </div>
+          <div class="shrink-0 flex flex-col gap-3">
+            <a href="https://github.com/Utobit/LInaAi/releases/download/worktimer-v1.0.2/WorkTimer.msix"
+               class="block px-8 py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-full transition text-center text-sm">
+              다운로드 (.msix)
+            </a>
+            <a href="https://github.com/Utobit/LInaAi/tree/main/Assist/WorkTimer"
+               class="block px-8 py-3 bg-white/5 hover:bg-white/10 text-gray-300 font-bold rounded-full transition text-center text-sm border border-white/10">
+              GitHub 소스
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Coming Soon -->
+      <div class="card-blur rounded-3xl p-8 border border-white/5 opacity-50 text-center">
+        <p class="text-gray-500 text-sm">더 많은 소프트웨어가 추가될 예정입니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="py-16 text-center text-gray-600 text-xs border-t border-white/5">
+    <p class="mb-2 font-semibold text-gray-500">© 2026 <span class="text-gray-400">UTOBIT</span> · U Store</p>
+    <a href="/privacy/" class="hover:text-gray-400 transition">개인정보처리방침</a>
+  </footer>
+
+</body>
+</html>
