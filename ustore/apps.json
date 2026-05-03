@@ -1,7 +1,34 @@
 {
   "version": 1,
-  "updated": "2026-04-30",
+  "updated": "2026-05-03",
   "apps": [
+    {
+      "slug": "colorscrap",
+      "name": "ColorScrap",
+      "category": "pc",
+      "subcategory": "Assist",
+      "version": "1.0.2.0",
+      "status": "beta",
+      "icon": "/ustore/colorscrap/icon.svg",
+      "description": "화면 어디서나 색상 캡처, 브라우저 링크 저장. 단축키 하나로 팔레트에 누적합니다.",
+      "tagline": "색상과 링크를 즉시 수집합니다",
+      "tags": ["design", "utility", "color", "productivity"],
+      "detail_url": "/ustore/colorscrap/",
+      "download": {
+        "exe": "https://github.com/Utobit/ColorScrap/releases/latest/download/ColorScrap.exe",
+        "github": "https://github.com/Utobit/ColorScrap"
+      },
+      "features": [
+        "Alt+C 단축키로 화면 어디서나 색상 캡처",
+        "Alt+L로 활성 브라우저 URL + 타이틀 저장",
+        "클릭 → 클립보드 복사, 드래그 → 붙여넣기",
+        "최근 10개 팔레트 자동 관리",
+        "단축키 자유 변경 가능",
+        "트레이 상주, 시스템 리소스 최소 사용"
+      ],
+      "requirements": "Windows 10 / 11 (x64)",
+      "screenshots": []
+    },
     {
       "slug": "worktimer",
       "name": "WorkTimer",
