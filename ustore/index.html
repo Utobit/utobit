@@ -8,6 +8,14 @@
   <meta property="og:description" content="Utobit에서 만든 앱을 직접 받아보세요.">
   <meta property="og:url" content="https://utobit.net/ustore/">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+  <!-- GA4: G-XXXXXXXXXX 자리에 실제 Measurement ID 입력 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -220,7 +228,7 @@ function render() {
     const label = `${app.category === 'mobile' ? 'Mobile' : app.category === 'pc' ? 'PC' : 'Asset'} · ${app.subcategory}`;
     const version = app.version ? `v${app.version}` : '';
 
-    return `<a href="${app.detail_url}" class="store-card">
+    return `<a href="${app.detail_url}" class="store-card" onclick="gtag('event','app_click',{app_slug:'${app.slug}',app_name:'${app.name}'})">
       ${icon}
       <div class="card-meta">
         <span class="card-label">${label}</span>

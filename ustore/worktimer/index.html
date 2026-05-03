@@ -8,6 +8,13 @@
   <meta property="og:description" content="업무 시간을 자동으로 기록하는 PC 타이머. 마우스 활동 감지, 월간·일간 뷰, 다크모드 지원.">
   <meta property="og:url" content="https://utobit.net/ustore/worktimer/">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -168,7 +175,8 @@
     <p class="dl-title">다운로드</p>
     <div class="dl-row">
       <a id="btn-exe" href="https://github.com/Utobit/WorkTimer/releases/download/v1.0.1/WorkTimer.exe"
-         class="btn btn-primary">
+         class="btn btn-primary"
+         onclick="gtag('event','download',{app_name:'worktimer',download_type:'exe'})">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
           <polyline points="7 10 12 15 17 10"/>

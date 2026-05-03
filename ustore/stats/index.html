@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UStore Stats</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', 'Noto Sans KR', system-ui, sans-serif;
+      background: #f9fafb; color: #111827;
+      min-height: 100vh; -webkit-font-smoothing: antialiased;
+    }
+
+    .topbar {
+      background: #fff; padding: 16px 28px;
+      border-bottom: 1px solid #f3f4f6;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .topbar-title { font-size: 0.9rem; font-weight: 700; color: #111827; }
+    .back-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 0.8rem; font-weight: 600;
+      color: #6b7280; text-decoration: none; transition: color .15s;
+    }
+    .back-btn:hover { color: #111827; }
+
+    .page { max-width: 780px; margin: 0 auto; padding: 32px 24px; }
+
+    .section-label {
+      font-size: 0.7rem; font-weight: 700;
+      color: #9ca3af; letter-spacing: .1em;
+      text-transform: uppercase; margin-bottom: 12px;
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 12px; margin-bottom: 32px;
+    }
+    .stat-card {
+      background: #fff; border: 1px solid #e5e7eb;
+      border-radius: 14px; padding: 20px 22px;
+    }
+    .stat-card-name {
+      font-size: 0.78rem; font-weight: 600;
+      color: #6b7280; margin-bottom: 6px;
+    }
+    .stat-card-value {
+      font-size: 2rem; font-weight: 800;
+      color: #111827; letter-spacing: -.04em;
+      line-height: 1;
+    }
+    .stat-card-sub {
+      font-size: 0.72rem; color: #9ca3af; margin-top: 6px;
+    }
+    .stat-loading { color: #d1d5db; }
+
+    .release-table {
+      width: 100%; border-collapse: collapse;
+      background: #fff; border-radius: 12px;
+      overflow: hidden; border: 1px solid #e5e7eb;
+      margin-bottom: 32px;
+    }
+    .release-table th {
+      font-size: 0.72rem; font-weight: 700;
+      color: #9ca3af; letter-spacing: .05em;
+      text-transform: uppercase;
+      padding: 12px 16px; text-align: left;
+      border-bottom: 1px solid #f3f4f6;
+      background: #f9fafb;
+    }
+    .release-table td {
+      padding: 11px 16px; font-size: 0.85rem;
+      color: #374151; border-bottom: 1px solid #f9fafb;
+    }
+    .release-table tr:last-child td { border-bottom: none; }
+    .tag-badge {
+      display: inline-block;
+      font-size: 0.72rem; font-weight: 700;
+      background: #f3f4f6; color: #374151;
+      padding: 2px 8px; border-radius: 6px;
+    }
+    .dl-count { font-weight: 700; color: #111827; }
+
+    .ext-links { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 40px; }
+    .ext-btn {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 10px 18px; border-radius: 10px;
+      font-size: 0.85rem; font-weight: 600;
+      text-decoration: none; transition: opacity .15s;
+    }
+    .ext-btn:hover { opacity: .82; }
+    .ext-btn-ga { background: #e8f0fe; color: #1a56db; }
+    .ext-btn-gh { background: #f3f4f6; color: #374151; }
+    .ext-btn svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+    .error-text { font-size: 0.82rem; color: #ef4444; margin-top: 6px; }
+
+    @media (max-width: 480px) {
+      .page { padding: 24px 16px; }
+      .stat-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <span class="topbar-title">UStore Stats</span>
+  <a href="/ustore/" class="back-btn">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10 4L6 8l4 4"/>
+    </svg>
+    UStore
+  </a>
+</div>
+
+<div class="page">
+
+  <div style="margin-bottom:28px;">
+    <p class="section-label">외부 분석</p>
+    <div class="ext-links">
+      <a href="https://analytics.google.com/" target="_blank" rel="noopener" class="ext-btn ext-btn-ga">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        Google Analytics
+      </a>
+      <a href="https://github.com/Utobit" target="_blank" rel="noopener" class="ext-btn ext-btn-gh">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+        GitHub (Utobit)
+      </a>
+    </div>
+  </div>
+
+  <div style="margin-bottom:12px; display:flex; align-items:center; justify-content:space-between;">
+    <p class="section-label" style="margin-bottom:0;">다운로드 합산 (GitHub Releases)</p>
+    <span id="last-updated" style="font-size:0.72rem;color:#9ca3af;"></span>
+  </div>
+
+  <div class="stat-grid" id="summary-grid">
+    <div class="stat-card">
+      <p class="stat-card-name">ColorScrap</p>
+      <p class="stat-card-value stat-loading" id="cs-total">—</p>
+      <p class="stat-card-sub" id="cs-sub">불러오는 중...</p>
+    </div>
+    <div class="stat-card">
+      <p class="stat-card-name">WorkTimer</p>
+      <p class="stat-card-value stat-loading" id="wt-total">—</p>
+      <p class="stat-card-sub" id="wt-sub">불러오는 중...</p>
+    </div>
+    <div class="stat-card">
+      <p class="stat-card-name">전체 다운로드</p>
+      <p class="stat-card-value stat-loading" id="all-total">—</p>
+      <p class="stat-card-sub">GitHub Releases 합산</p>
+    </div>
+  </div>
+
+  <p class="section-label">릴리즈별 상세 — ColorScrap</p>
+  <table class="release-table" id="cs-table">
+    <thead>
+      <tr>
+        <th>태그</th>
+        <th>출시일</th>
+        <th>다운로드</th>
+      </tr>
+    </thead>
+    <tbody id="cs-tbody">
+      <tr><td colspan="3" style="color:#9ca3af;font-size:0.82rem;">불러오는 중...</td></tr>
+    </tbody>
+  </table>
+
+  <p class="section-label">릴리즈별 상세 — WorkTimer</p>
+  <table class="release-table" id="wt-table">
+    <thead>
+      <tr>
+        <th>태그</th>
+        <th>출시일</th>
+        <th>다운로드</th>
+      </tr>
+    </thead>
+    <tbody id="wt-tbody">
+      <tr><td colspan="3" style="color:#9ca3af;font-size:0.82rem;">불러오는 중...</td></tr>
+    </tbody>
+  </table>
+
+</div>
+
+<script>
+const REPOS = [
+  { slug: 'ColorScrap', totalId: 'cs-total', subId: 'cs-sub', tbodyId: 'cs-tbody' },
+  { slug: 'WorkTimer',  totalId: 'wt-total', subId: 'wt-sub', tbodyId: 'wt-tbody' },
+];
+
+function fmt(n) { return n.toLocaleString('ko-KR'); }
+function fmtDate(iso) {
+  if (!iso) return '—';
+  return iso.slice(0, 10);
+}
+
+async function fetchReleases(repo) {
+  const res = await fetch(`https://api.github.com/repos/Utobit/${repo}/releases?per_page=20`);
+  if (!res.ok) throw new Error(`${res.status}`);
+  return res.json();
+}
+
+let grandTotal = 0;
+let loaded = 0;
+
+async function loadRepo(cfg) {
+  try {
+    const releases = await fetchReleases(cfg.slug);
+    let total = 0;
+    const rows = [];
+    for (const r of releases) {
+      let count = r.assets.reduce((s, a) => s + a.download_count, 0);
+      total += count;
+      rows.push({ tag: r.tag_name, date: r.published_at, count });
+    }
+
+    document.getElementById(cfg.totalId).textContent = fmt(total);
+    document.getElementById(cfg.totalId).classList.remove('stat-loading');
+    document.getElementById(cfg.subId).textContent = `${releases.length}개 릴리즈`;
+
+    const tbody = document.getElementById(cfg.tbodyId);
+    if (rows.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="3" style="color:#9ca3af;font-size:0.82rem;">릴리즈 없음</td></tr>';
+    } else {
+      tbody.innerHTML = rows.map(r =>
+        `<tr>
+          <td><span class="tag-badge">${r.tag}</span></td>
+          <td>${fmtDate(r.date)}</td>
+          <td><span class="dl-count">${fmt(r.count)}</span></td>
+        </tr>`
+      ).join('');
+    }
+
+    grandTotal += total;
+  } catch (e) {
+    document.getElementById(cfg.totalId).textContent = 'ERR';
+    document.getElementById(cfg.subId).innerHTML = `<span class="error-text">오류: ${e.message}</span>`;
+    document.getElementById(cfg.tbodyId).innerHTML =
+      `<tr><td colspan="3" class="error-text">GitHub API 호출 실패 (${e.message})</td></tr>`;
+  }
+
+  loaded++;
+  if (loaded === REPOS.length) {
+    const el = document.getElementById('all-total');
+    el.textContent = fmt(grandTotal);
+    el.classList.remove('stat-loading');
+    document.getElementById('last-updated').textContent = '업데이트: ' + new Date().toLocaleTimeString('ko-KR');
+  }
+}
+
+REPOS.forEach(loadRepo);
+</script>
+</body>
+</html>

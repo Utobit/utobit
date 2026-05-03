@@ -8,6 +8,13 @@
   <meta property="og:description" content="화면 어디서나 색상 캡처, 브라우저 링크 저장. 단축키 하나로 팔레트에 누적합니다.">
   <meta property="og:url" content="https://utobit.net/ustore/colorscrap/">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -164,7 +171,8 @@
     <p class="dl-title">다운로드</p>
     <div class="dl-row">
       <a href="https://github.com/Utobit/ColorScrap/releases/latest/download/ColorScrap.exe"
-         class="btn btn-primary">
+         class="btn btn-primary"
+         onclick="gtag('event','download',{app_name:'colorscrap',download_type:'exe'})">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
           <polyline points="7 10 12 15 17 10"/>
