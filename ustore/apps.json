@@ -10,8 +10,8 @@
       "version": "1.0.2.0",
       "status": "available",
       "icon": "/ustore/colorscrap/icon.svg",
-      "description": "화면 어디서나 색상 캡처, 브라우저 링크 저장. 단축키 하나로 팔레트에 누적합니다.",
-      "tagline": "색상과 링크를 즉시 수집합니다",
+      "description": "색상코드와 링크를 수집해 팔레트를 채워 재사용이 용이합니다.",
+      "tagline": "트레이에서 동작하는 프로그램입니다",
       "tags": ["design", "utility", "color", "productivity"],
       "detail_url": "/ustore/colorscrap/",
       "download": {
