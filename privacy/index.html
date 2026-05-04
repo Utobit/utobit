@@ -5,6 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>개인정보처리방침 | Utobit</title>
   <meta name="description" content="Utobit 서비스 개인정보처리방침">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-F49QE1MMT8"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-F49QE1MMT8');
+  </script>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -37,7 +44,7 @@
 
 <main>
   <h1>개인정보처리방침</h1>
-  <span class="date">최종 수정일: 2026-04-28</span>
+  <span class="date">최종 수정일: 2026-05-03</span>
 
   <h2>1. 개인정보처리자</h2>
   <p>Utobit (이메일: clus0109@gmail.com)</p>
@@ -47,6 +54,12 @@
   <ul>
     <li>앱 내 입력 텍스트 (AI 응답 생성 목적으로 외부 API에 전송)</li>
     <li>앱 내 사용 로그 (기기 내 로컬 저장)</li>
+  </ul>
+  <p>Choice 앱 로그인 이용 시 아래 정보가 수집될 수 있습니다.</p>
+  <ul>
+    <li>Google 계정: 이름, 이메일 주소 (본인 식별 및 서비스 제공)</li>
+    <li>카카오 계정: 닉네임, 이메일 주소 (선택, 본인 식별 및 서비스 제공)</li>
+    <li>비로그인 이용 시: 임의 생성 식별자 (기기 내 저장)</li>
   </ul>
   <p>UStore 이용 시 아래 정보가 추가로 수집될 수 있습니다.</p>
   <ul>
@@ -58,19 +71,22 @@
   <ul>
     <li>AI 응답 생성 (Claude API, Gemini API, OpenAI API 경유)</li>
     <li>앱 기능 제공 및 오류 진단</li>
+    <li>Choice 앱: 로그인 및 투표 서비스 제공</li>
     <li>UStore: 회원 관리 및 환불 처리</li>
   </ul>
 
   <h2>4. 개인정보의 보유 및 이용 기간</h2>
   <p>입력 텍스트는 API 응답 완료 후 별도로 저장되지 않습니다.<br>
   로컬 로그는 사용자가 앱을 삭제하면 함께 삭제됩니다.<br>
+  로그인 정보는 앱 내 로그아웃 시 즉시 삭제됩니다.<br>
   UStore 회원 정보는 회원 탈퇴 시 지체 없이 파기합니다.</p>
 
   <h2>5. 제3자 제공</h2>
-  <p>서비스 제공을 위해 아래 외부 서비스에 입력 텍스트가 전송될 수 있습니다.</p>
+  <p>서비스 제공을 위해 아래 외부 서비스에 입력 텍스트 또는 계정 정보가 전송될 수 있습니다.</p>
   <ul>
     <li>Anthropic (Claude API) — <a href="https://www.anthropic.com/privacy" target="_blank">개인정보처리방침</a></li>
-    <li>Google (Gemini API) — <a href="https://policies.google.com/privacy" target="_blank">개인정보처리방침</a></li>
+    <li>Google (Gemini API, Google 로그인, Firebase) — <a href="https://policies.google.com/privacy" target="_blank">개인정보처리방침</a></li>
+    <li>Kakao (카카오 로그인) — <a href="https://www.kakao.com/policy/privacy" target="_blank">개인정보처리방침</a></li>
     <li>OpenAI (OpenAI API) — <a href="https://openai.com/policies/privacy-policy" target="_blank">개인정보처리방침</a></li>
   </ul>
   <p>그 외 제3자에게 개인정보를 제공하지 않습니다.</p>
