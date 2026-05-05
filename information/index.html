@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Information — Utobit</title>
+  <meta name="description" content="Utobit는 AI 시대에 직접 참여하는 소프트웨어 사업자입니다.">
+  <link rel="canonical" href="https://utobit.net/information/">
+  <script>
+    (function() {
+      var t = localStorage.getItem('theme') || 'light';
+      document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-F93QE1MMT8"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-F93QE1MMT8');
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #fff;
+      --bg-soft: #f9fafb;
+      --border: #e5e7eb;
+      --border-strip: #f3f4f6;
+      --text: #111827;
+      --text-secondary: #374151;
+      --text-muted: #6b7280;
+      --text-dim: #9ca3af;
+      --nav-bg: rgba(255,255,255,.9);
+      --toggle-bg: #f3f4f6;
+      --toggle-color: #6b7280;
+    }
+    [data-theme="dark"] {
+      --bg: #0d1117;
+      --bg-soft: #161b22;
+      --border: #21262d;
+      --border-strip: #161b22;
+      --text: #f0f6fc;
+      --text-secondary: #c9d1d9;
+      --text-muted: #8b949e;
+      --text-dim: #6e7681;
+      --nav-bg: rgba(13,17,23,.92);
+      --toggle-bg: #21262d;
+      --toggle-color: #c9d1d9;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', 'Noto Sans KR', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      transition: background .2s, color .2s;
+    }
+
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--nav-bg);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-strip);
+      height: 60px;
+      display: flex; align-items: center;
+    }
+    .nav-inner {
+      width: 100%; max-width: 1080px;
+      margin: 0 auto; padding: 0 28px;
+      display: flex; align-items: center;
+      justify-content: space-between;
+    }
+    .nav-right { display: flex; gap: 20px; align-items: center; }
+    .nav-link {
+      font-size: 0.875rem; font-weight: 500;
+      color: var(--text-muted); text-decoration: none;
+      transition: color .15s;
+    }
+    .nav-link:hover, .nav-link.active { color: var(--text); }
+    .nav-logo {
+      font-size: 1rem; font-weight: 900;
+      color: var(--text); text-decoration: none;
+      letter-spacing: -.03em;
+    }
+    .theme-toggle {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      background: var(--toggle-bg);
+      border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--toggle-color);
+      transition: background .15s;
+    }
+    .theme-toggle:hover { background: var(--border); }
+
+    main {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 72px 28px 96px;
+    }
+
+    .page-label {
+      font-size: 0.6875rem; font-weight: 700;
+      color: var(--text-dim); letter-spacing: .16em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .page-title {
+      font-size: 2rem; font-weight: 900;
+      color: var(--text); letter-spacing: -.04em;
+      line-height: 1.2;
+      margin-bottom: 48px;
+    }
+
+    .info-section {
+      margin-bottom: 48px;
+    }
+    .info-section h2 {
+      font-size: 0.75rem; font-weight: 700;
+      color: var(--text-dim); letter-spacing: .14em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .info-section p {
+      font-size: 0.9375rem;
+      color: var(--text-secondary);
+      line-height: 1.85;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border-strip);
+      margin: 0 0 48px;
+    }
+
+    .info-list {
+      list-style: none;
+      display: flex; flex-direction: column; gap: 16px;
+    }
+    .info-list li {
+      display: flex; gap: 16px; align-items: flex-start;
+    }
+    .info-list .li-icon {
+      width: 36px; height: 36px;
+      border-radius: 9px;
+      background: var(--bg-soft);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+    .info-list .li-body {}
+    .info-list .li-title {
+      font-size: 0.9rem; font-weight: 700;
+      color: var(--text); margin-bottom: 3px;
+    }
+    .info-list .li-desc {
+      font-size: 0.8rem; color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .contact-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 600;
+      border-bottom: 1px solid var(--border);
+      transition: border-color .15s, color .15s;
+    }
+    .contact-link:hover {
+      color: var(--text);
+      border-color: var(--text-muted);
+    }
+
+    footer {
+      border-top: 1px solid var(--border-strip);
+      padding: 36px 28px;
+      max-width: 1080px; margin: 0 auto;
+      display: flex; justify-content: space-between;
+      align-items: center; flex-wrap: wrap; gap: 12px;
+    }
+    .footer-copy { font-size: 0.78rem; color: var(--text-dim); }
+    .footer-links { display: flex; gap: 20px; }
+    .footer-links a {
+      font-size: 0.78rem; color: var(--text-muted);
+      text-decoration: none; transition: color .15s;
+    }
+    .footer-links a:hover { color: var(--text); }
+
+    @media (max-width: 600px) {
+      .page-title { font-size: 1.5rem; }
+      main { padding: 48px 20px 72px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">UTOBIT</a>
+    <div class="nav-right">
+      <a href="/" class="nav-link">UStore</a>
+      <a href="/studio/" class="nav-link">Studio</a>
+      <a href="/agents/" class="nav-link">Agent</a>
+      <a href="/information/" class="nav-link active">Information</a>
+      <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="다크모드 전환">
+        <svg id="iconSun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+          <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+          <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+        <svg id="iconMoon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <p class="page-label">About</p>
+  <h1 class="page-title">Utobit</h1>
+
+  <div class="info-section">
+    <p>
+      Utobit는 AI 시대에 직접 참여하는 소프트웨어 사업자입니다.<br><br>
+      가볍고 실용적인 도구를 중심으로, 일상의 반복 작업을 줄이는 프로그램을 만듭니다.
+      모든 도구는 UStore를 통해 무료로 제공됩니다.<br><br>
+      상업 프로젝트로는 AI가 탑재된 게임을 개발 중이며,
+      Manamuhan Studio 레이블로 출시할 예정입니다.
+    </p>
+  </div>
+
+  <hr class="divider">
+
+  <div class="info-section">
+    <h2>What we make</h2>
+    <ul class="info-list">
+      <li>
+        <div class="li-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
+          </svg>
+        </div>
+        <div class="li-body">
+          <p class="li-title">UStore — PC 유틸리티</p>
+          <p class="li-desc">WorkTimer, ColorScrap, ImageResizer, QRGen 등 일상 편의 도구를 무료 배포합니다. Windows 10 / 11 대상.</p>
+        </div>
+      </li>
+      <li>
+        <div class="li-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/>
+          </svg>
+        </div>
+        <div class="li-body">
+          <p class="li-title">Mobile Apps</p>
+          <p class="li-desc">Choice 등 모바일 앱을 Google Play를 통해 출시 예정입니다.</p>
+        </div>
+      </li>
+      <li>
+        <div class="li-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+          </svg>
+        </div>
+        <div class="li-body">
+          <p class="li-title">Manamuhan Studio — AI 게임</p>
+          <p class="li-desc">AI가 탑재된 수집형 RPG를 개발 중입니다. Project Glyph를 준비하고 있습니다.</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <hr class="divider">
+
+  <div class="info-section">
+    <h2>Contact</h2>
+    <p>문의 사항은 이메일로 연락해 주세요.<br>
+    <a href="mailto:clus0109@gmail.com" class="contact-link">clus0109@gmail.com</a></p>
+  </div>
+
+  <div class="info-section">
+    <h2>사업자 정보</h2>
+    <p style="font-size:0.875rem; line-height:2; color:var(--text-muted);">
+      상호: 유토비트 &nbsp;|&nbsp; 사업자등록번호: 598-01-03840
+    </p>
+  </div>
+</main>
+
+<footer>
+  <span class="footer-copy">© 2026 Utobit &nbsp;·&nbsp; 문의 : clus0109@gmail.com</span>
+  <nav class="footer-links">
+    <a href="/privacy/">개인정보처리방침</a>
+  </nav>
+</footer>
+
+<script>
+function toggleTheme() {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  const next = isDark ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+  updateThemeIcon(next);
+}
+function updateThemeIcon(theme) {
+  const isDark = (theme || document.documentElement.getAttribute('data-theme')) === 'dark';
+  document.getElementById('iconSun').style.display = isDark ? 'block' : 'none';
+  document.getElementById('iconMoon').style.display = isDark ? 'none' : 'block';
+}
+updateThemeIcon();
+</script>
+</body>
+</html>

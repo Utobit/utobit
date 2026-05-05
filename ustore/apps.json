@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-05-03",
+  "updated": "2026-05-06",
   "apps": [
     {
       "slug": "colorscrap",
@@ -10,8 +10,8 @@
       "version": "1.0.2.0",
       "status": "available",
       "icon": "/ustore/colorscrap/icon.svg",
-      "description": "색상 캡처 도구. 트레이에서 작동합니다.",
       "tagline": "색상 캡처 도구. 트레이에서 작동합니다.",
+      "description": "화면 어디서나 Alt+C 한 번으로 색상을 캡처하고 팔레트를 관리합니다. Alt+L로 브라우저 URL도 저장할 수 있으며, 클릭하면 클립보드 복사, 드래그하면 즉시 붙여넣기됩니다.",
       "tags": ["design", "utility", "color", "productivity"],
       "detail_url": "/ustore/colorscrap/",
       "download": {
@@ -37,8 +37,8 @@
       "version": "1.0.1.2",
       "status": "available",
       "icon": "/ustore/worktimer/icon_1.png",
-      "description": "PC 작업시간 자동 기록.",
       "tagline": "PC 작업시간 자동 기록.",
+      "description": "마우스 활동을 감지해 작업 구간을 자동으로 기록합니다. 월간·일간 타임라인 뷰와 통계를 제공하며, 비정상 종료 시에도 60초 자동 저장으로 데이터를 복구합니다.",
       "tags": ["productivity", "timer", "work"],
       "detail_url": "/ustore/worktimer/",
       "download": {
@@ -64,8 +64,8 @@
       "version": "1.0.1.0",
       "status": "available",
       "icon": "/ustore/imageresizer/icon.png",
-      "description": "이미지 스케일 변환기.",
       "tagline": "이미지 스케일 변환기.",
+      "description": "크기 조정·비율 크롭·마스크 합성 3가지 모드를 지원합니다. 드래그 앤 드롭과 배치 처리, 원본·결과 나란히 미리보기로 빠르게 작업할 수 있습니다.",
       "tags": ["image", "resize", "utility", "productivity"],
       "detail_url": "/ustore/imageresizer/",
       "download": {
@@ -91,8 +91,8 @@
       "version": null,
       "status": "beta",
       "icon": "/assets/dallae_icon.png",
-      "description": "모바일과 PC를 연결하는 AI 에이전트.",
       "tagline": "모바일과 PC를 연결하는 AI 에이전트.",
+      "description": "모바일 앱으로 PC를 음성·텍스트로 제어합니다. Claude AI 기반으로 파일 관리, 웹 검색, 앱 실행 등 복합 작업을 처리하며 집 밖에서도 PC에 명령을 내릴 수 있습니다.",
       "tags": ["ai", "agent", "productivity"],
       "detail_url": "/ustore/da/",
       "download": {
@@ -111,8 +111,8 @@
       "version": "1.0.0.0",
       "status": "available",
       "icon": "/ustore/qrgen/icon.png",
-      "description": "QR 자동생성기.",
       "tagline": "QR 자동생성기.",
+      "description": "텍스트나 URL을 QR 코드로 즉시 변환합니다. 브라우저 URL을 자동 감지해 복사만 해도 자동 입력되며, PNG 파일 저장과 클립보드 이미지 복사를 지원합니다.",
       "tags": ["utility", "qr", "share"],
       "detail_url": "/ustore/qrgen/",
       "download": {
@@ -135,8 +135,8 @@
       "version": "1.0.0.0",
       "status": "available",
       "icon": "/ustore/batchrename/icon.png",
-      "description": "파일명 변경툴.",
       "tagline": "파일명 변경툴.",
+      "description": "드래그 앤 드롭으로 여러 파일을 한 번에 이름 변경합니다. 번호·날짜·접두사·텍스트 치환을 실시간 미리보기로 확인한 뒤 적용할 수 있습니다.",
       "tags": ["utility", "file", "rename"],
       "detail_url": "/ustore/batchrename/",
       "download": {
@@ -158,8 +158,8 @@
       "version": "1.0.0.0",
       "status": "available",
       "icon": "/ustore/winpin/icon.png",
-      "description": "브라우저 핀, 투명도 슬라이더.",
       "tagline": "브라우저 핀, 투명도 슬라이더.",
+      "description": "창을 항상 위에 고정하고 투명도를 실시간으로 조절합니다. 창 전환 시 해당 창의 현재 투명도를 자동으로 반영해 여러 창을 동시에 관리할 수 있습니다.",
       "tags": ["utility", "window", "productivity"],
       "detail_url": "/ustore/winpin/",
       "download": {
@@ -182,9 +182,9 @@
       "version": null,
       "status": "coming_soon",
       "icon": "/assets/choice_icon.png",
-      "description": "선택시간 단축 앱.",
       "tagline": "선택시간 단축 앱.",
-      "tags": ["utility"],
+      "description": "여러 선택지 중 하나를 빠르게 결정할 수 있는 소셜 투표 앱입니다. 투표방 생성·참여·실시간 결과 확인을 지원하며 카카오·구글 로그인으로 친구와 함께 결정할 수 있습니다.",
+      "tags": ["utility", "social", "vote"],
       "detail_url": "/ustore/choice/",
       "download": {},
       "features": [],
