@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,29 +7,45 @@
   <meta property="og:title" content="DallaePCAgent">
   <meta property="og:description" content="모바일 연동 PC프로그램. Claude API 기반 개인용 Agent">
   <meta property="og:url" content="https://utobit.net/ustore/da/">
+  <script>(function(){var t=localStorage.getItem('theme')||'light';document.documentElement.setAttribute('data-theme',t);})();</script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --bg: #fff; --bg-soft: #f9fafb; --bg-soft2: #f3f4f6;
+      --border: #e5e7eb; --border-strip: #f3f4f6;
+      --text: #111827; --text-secondary: #374151;
+      --text-muted: #6b7280; --text-dim: #9ca3af;
+      --btn-dark-bg: #111827; --btn-dark-text: #fff;
+    }
+    [data-theme="dark"] {
+      --bg: #0d1117; --bg-soft: #161b22; --bg-soft2: #21262d;
+      --border: #21262d; --border-strip: #161b22;
+      --text: #f0f6fc; --text-secondary: #c9d1d9;
+      --text-muted: #8b949e; --text-dim: #6e7681;
+      --btn-dark-bg: #f0f6fc; --btn-dark-text: #0d1117;
+    }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: 'Inter', 'Noto Sans KR', system-ui, sans-serif;
-      background: #fff;
-      color: #111827;
+      background: var(--bg);
+      color: var(--text);
       min-height: 100vh;
       -webkit-font-smoothing: antialiased;
+      transition: background .2s, color .2s;
     }
 
     /* BACK NAV */
     .topbar {
       padding: 16px 28px;
-      border-bottom: 1px solid #f3f4f6;
+      border-bottom: 1px solid var(--border-strip);
     }
     .back-btn {
       display: inline-flex; align-items: center; gap: 6px;
       font-size: 0.8125rem; font-weight: 600;
-      color: #6b7280; text-decoration: none;
+      color: var(--text-muted); text-decoration: none;
       transition: color .15s;
     }
-    .back-btn:hover { color: #111827; }
+    .back-btn:hover { color: var(--text); }
     .back-btn svg { width: 16px; height: 16px; }
 
     /* HERO */
@@ -51,12 +67,12 @@
       font-size: 2.25rem;
       font-weight: 900;
       letter-spacing: -.04em;
-      color: #111827;
+      color: var(--text);
       margin-bottom: 12px;
     }
     .app-tagline {
       font-size: 1rem;
-      color: #6b7280;
+      color: var(--text-muted);
       margin-bottom: 36px;
       line-height: 1.8;
     }
@@ -74,8 +90,8 @@
       transition: opacity .15s, transform .1s;
     }
     .btn:hover { opacity: .88; transform: translateY(-1px); }
-    .btn-primary { background: #111827; color: #fff; }
-    .btn-outline { background: #fff; color: #111827; border: 1.5px solid #e5e7eb; }
+    .btn-primary { background: var(--btn-dark-bg); color: var(--btn-dark-text); }
+    .btn-outline { background: var(--bg); color: var(--text); border: 1.5px solid var(--border); }
     .btn svg { width: 18px; height: 18px; }
 
     /* SCREENSHOTS */
@@ -87,8 +103,8 @@
     .screenshot-frame {
       border-radius: 16px;
       overflow: hidden;
-      border: 1px solid #e5e7eb;
-      background: #f9fafb;
+      border: 1px solid var(--border);
+      background: var(--bg-soft);
       width: 100%;
     }
     .screenshot-frame img {
@@ -102,14 +118,14 @@
 
     /* FOOTER */
     footer {
-      border-top: 1px solid #f3f4f6;
+      border-top: 1px solid var(--border-strip);
       padding: 24px 28px;
       text-align: center;
       font-size: 0.78rem;
-      color: #9ca3af;
+      color: var(--text-dim);
     }
-    footer a { color: #9ca3af; text-decoration: none; }
-    footer a:hover { color: #6b7280; }
+    footer a { color: var(--text-dim); text-decoration: none; }
+    footer a:hover { color: var(--text-muted); }
   </style>
 </head>
 <body>
@@ -153,6 +169,10 @@
   const APK_URL = "https://github.com/Utobit/dallae-baepo-releases/raw/main/DallaePC.apk";
   function dlPc()  { window.location.href = PC_URL; }
   function dlApk() { window.location.href = APK_URL; }
+</script>
+
+<script>
+function toggleTheme(){var d=document.documentElement,n=d.getAttribute('data-theme')==='dark'?'light':'dark';d.setAttribute('data-theme',n);localStorage.setItem('theme',n);}
 </script>
 </body>
 </html>

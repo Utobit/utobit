@@ -1,48 +1,63 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>앱 정보 | UStore</title>
+  <script>(function(){var t=localStorage.getItem('theme')||'light';document.documentElement.setAttribute('data-theme',t);})();</script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --bg: #fff; --bg-soft: #f9fafb; --bg-soft2: #f3f4f6;
+      --border: #e5e7eb; --border-strip: #f3f4f6;
+      --text: #111827; --text-secondary: #374151;
+      --text-muted: #6b7280; --text-dim: #9ca3af;
+      --btn-dark-bg: #111827; --btn-dark-text: #fff;
+    }
+    [data-theme="dark"] {
+      --bg: #0d1117; --bg-soft: #161b22; --bg-soft2: #21262d;
+      --border: #21262d; --border-strip: #161b22;
+      --text: #f0f6fc; --text-secondary: #c9d1d9;
+      --text-muted: #8b949e; --text-dim: #6e7681;
+      --btn-dark-bg: #f0f6fc; --btn-dark-text: #0d1117;
+    }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Inter', 'Noto Sans KR', system-ui, sans-serif; background: #fff; color: #111827; min-height: 100vh; -webkit-font-smoothing: antialiased; }
-    .topbar { padding: 16px 28px; border-bottom: 1px solid #f3f4f6; }
-    .back-btn { display: inline-flex; align-items: center; gap: 6px; font-size: 0.8125rem; font-weight: 600; color: #6b7280; text-decoration: none; transition: color .15s; }
-    .back-btn:hover { color: #111827; }
+    body { font-family: 'Inter', 'Noto Sans KR', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; -webkit-font-smoothing: antialiased; }
+    .topbar { padding: 16px 28px; border-bottom: 1px solid var(--border-strip); }
+    .back-btn { display: inline-flex; align-items: center; gap: 6px; font-size: 0.8125rem; font-weight: 600; color: var(--text-muted); text-decoration: none; transition: color .15s; }
+    .back-btn:hover { color: var(--text); }
     .hero { max-width: 640px; margin: 0 auto; padding: 64px 28px 48px; text-align: center; }
     .app-icon { width: 96px; height: 96px; border-radius: 22px; margin: 0 auto 24px; display: block; box-shadow: 0 4px 24px rgba(0,0,0,.1); object-fit: cover; }
-    .app-icon-placeholder { width: 96px; height: 96px; border-radius: 22px; margin: 0 auto 24px; background: #f3f4f6; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 24px rgba(0,0,0,.06); }
+    .app-icon-placeholder { width: 96px; height: 96px; border-radius: 22px; margin: 0 auto 24px; background: var(--bg-soft2); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 24px rgba(0,0,0,.06); }
     .badge-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 16px; }
     .badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 20px; font-size: 0.72rem; font-weight: 700; }
     .badge-green { background: #dcfce7; color: #166534; }
     .badge-yellow { background: #fef3c7; color: #92400e; }
-    .badge-gray { background: #f3f4f6; color: #6b7280; }
+    .badge-gray { background: var(--bg-soft2); color: var(--text-muted); }
     .badge-dot { width: 6px; height: 6px; border-radius: 50%; }
     .badge-green .badge-dot { background: #22c55e; }
     .badge-yellow .badge-dot { background: #f59e0b; }
-    .app-name { font-size: 2.25rem; font-weight: 900; letter-spacing: -.04em; color: #111827; margin-bottom: 10px; }
-    .app-tagline { font-size: 1rem; color: #6b7280; margin-bottom: 36px; line-height: 1.8; }
-    .dl-title { font-size: 0.72rem; font-weight: 700; color: #9ca3af; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 14px; }
+    .app-name { font-size: 2.25rem; font-weight: 900; letter-spacing: -.04em; color: var(--text); margin-bottom: 10px; }
+    .app-tagline { font-size: 1rem; color: var(--text-muted); margin-bottom: 36px; line-height: 1.8; }
+    .dl-title { font-size: 0.72rem; font-weight: 700; color: var(--text-dim); letter-spacing: .1em; text-transform: uppercase; margin-bottom: 14px; }
     .dl-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
     .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; border-radius: 12px; font-size: 0.9rem; font-weight: 700; text-decoration: none; border: none; cursor: pointer; font-family: inherit; transition: opacity .15s, transform .1s; }
     .btn:hover:not(.btn-disabled) { opacity: .88; transform: translateY(-1px); }
-    .btn-primary { background: #111827; color: #fff; }
-    .btn-outline { background: #fff; color: #111827; border: 1.5px solid #e5e7eb; }
-    .btn-disabled { background: #f3f4f6; color: #9ca3af; cursor: default; }
+    .btn-primary { background: var(--btn-dark-bg); color: var(--btn-dark-text); }
+    .btn-outline { background: var(--bg); color: var(--text); border: 1.5px solid var(--border); }
+    .btn-disabled { background: var(--bg-soft2); color: var(--text-dim); cursor: default; }
     .section { max-width: 640px; margin: 0 auto; padding: 0 28px 48px; }
-    .section-title { font-size: 0.72rem; font-weight: 700; color: #9ca3af; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 16px; }
+    .section-title { font-size: 0.72rem; font-weight: 700; color: var(--text-dim); letter-spacing: .1em; text-transform: uppercase; margin-bottom: 16px; }
     .feature-list { list-style: none; }
-    .feature-list li { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid #f9fafb; font-size: 0.9rem; color: #374151; line-height: 1.5; }
+    .feature-list li { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border-strip); font-size: 0.9rem; color: var(--text-secondary); line-height: 1.5; }
     .feature-list li:last-child { border-bottom: none; }
     .check { width: 18px; height: 18px; border-radius: 50%; background: #dcfce7; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
     .check svg { width: 10px; height: 10px; stroke: #16a34a; stroke-width: 2.5; }
-    footer { border-top: 1px solid #f3f4f6; padding: 24px 28px; text-align: center; font-size: 0.78rem; color: #9ca3af; }
-    footer a { color: #9ca3af; text-decoration: none; }
-    footer a:hover { color: #6b7280; }
-    #loading { padding: 120px 28px; text-align: center; color: #9ca3af; }
-    #error { padding: 120px 28px; text-align: center; color: #9ca3af; }
+    footer { border-top: 1px solid var(--border-strip); padding: 24px 28px; text-align: center; font-size: 0.78rem; color: var(--text-dim); }
+    footer a { color: var(--text-dim); text-decoration: none; }
+    footer a:hover { color: var(--text-muted); }
+    #loading { padding: 120px 28px; text-align: center; color: var(--text-dim); }
+    #error { padding: 120px 28px; text-align: center; color: var(--text-dim); }
   </style>
 </head>
 <body>
@@ -121,6 +136,10 @@ function renderApp(app) {
   `;
   document.getElementById('content').style.display = '';
 }
+</script>
+
+<script>
+function toggleTheme(){var d=document.documentElement,n=d.getAttribute('data-theme')==='dark'?'light':'dark';d.setAttribute('data-theme',n);localStorage.setItem('theme',n);}
 </script>
 </body>
 </html>

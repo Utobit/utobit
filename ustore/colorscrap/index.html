@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +7,7 @@
   <meta property="og:title" content="ColorScrap — Utobit">
   <meta property="og:description" content="색상코드와 링크를 캡처해 재사용이 용이하게 합니다. 트레이에서 동작하는 프로그램입니다.">
   <meta property="og:url" content="https://utobit.net/ustore/colorscrap/">
+  <script>(function(){var t=localStorage.getItem('theme')||'light';document.documentElement.setAttribute('data-theme',t);})();</script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-F93QE1MMT8"></script>
   <script>
@@ -16,20 +17,34 @@
     gtag('config', 'G-F93QE1MMT8');
   </script>
   <style>
+    :root {
+      --bg: #fff; --bg-soft: #f9fafb; --bg-soft2: #f3f4f6;
+      --border: #e5e7eb; --border-strip: #f3f4f6;
+      --text: #111827; --text-secondary: #374151;
+      --text-muted: #6b7280; --text-dim: #9ca3af;
+      --btn-dark-bg: #111827; --btn-dark-text: #fff;
+    }
+    [data-theme="dark"] {
+      --bg: #0d1117; --bg-soft: #161b22; --bg-soft2: #21262d;
+      --border: #21262d; --border-strip: #161b22;
+      --text: #f0f6fc; --text-secondary: #c9d1d9;
+      --text-muted: #8b949e; --text-dim: #6e7681;
+      --btn-dark-bg: #f0f6fc; --btn-dark-text: #0d1117;
+    }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: 'Inter', 'Noto Sans KR', system-ui, sans-serif;
-      background: #fff; color: #111827;
+      background: var(--bg); color: var(--text);
       min-height: 100vh; -webkit-font-smoothing: antialiased;
     }
 
-    .topbar { padding: 16px 28px; border-bottom: 1px solid #f3f4f6; }
+    .topbar { padding: 16px 28px; border-bottom: 1px solid var(--border-strip); }
     .back-btn {
       display: inline-flex; align-items: center; gap: 6px;
       font-size: 0.8125rem; font-weight: 600;
-      color: #6b7280; text-decoration: none; transition: color .15s;
+      color: var(--text-muted); text-decoration: none; transition: color .15s;
     }
-    .back-btn:hover { color: #111827; }
+    .back-btn:hover { color: var(--text); }
 
     .hero { max-width: 640px; margin: 0 auto; padding: 64px 28px 48px; text-align: center; }
 
@@ -37,7 +52,7 @@
       width: 96px; height: 96px; border-radius: 22px;
       margin: 0 auto 24px; display: block;
       box-shadow: 0 4px 24px rgba(0,0,0,.08);
-      background: #fff;
+      background: var(--bg);
     }
 
     .badge-row {
@@ -50,16 +65,16 @@
       font-size: 0.72rem; font-weight: 700;
     }
     .badge-amber { background: #fef3c7; color: #92400e; }
-    .badge-gray  { background: #f3f4f6; color: #6b7280; }
+    .badge-gray  { background: var(--bg-soft2); color: var(--text-muted); }
     .badge-dot   { width: 6px; height: 6px; border-radius: 50%; background: #f59e0b; }
 
-    .app-name { font-size: 2.25rem; font-weight: 900; letter-spacing: -.04em; color: #111827; margin-bottom: 10px; }
-    .app-tagline { font-size: 1rem; color: #6b7280; margin-bottom: 36px; line-height: 1.8; }
+    .app-name { font-size: 2.25rem; font-weight: 900; letter-spacing: -.04em; color: var(--text); margin-bottom: 10px; }
+    .app-tagline { font-size: 1rem; color: var(--text-muted); margin-bottom: 36px; line-height: 1.8; }
 
     .dl-section { margin-bottom: 48px; }
     .dl-title {
       font-size: 0.72rem; font-weight: 700;
-      color: #9ca3af; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 14px;
+      color: var(--text-dim); letter-spacing: .1em; text-transform: uppercase; margin-bottom: 14px;
     }
     .dl-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
     .btn {
@@ -70,9 +85,9 @@
       transition: opacity .15s, transform .1s;
     }
     .btn:hover:not(.btn-disabled) { opacity: .88; transform: translateY(-1px); }
-    .btn-primary  { background: #111827; color: #fff; }
-    .btn-outline  { background: #fff; color: #111827; border: 1.5px solid #e5e7eb; }
-    .btn-disabled { background: #f3f4f6; color: #9ca3af; cursor: default; }
+    .btn-primary  { background: var(--btn-dark-bg); color: var(--btn-dark-text); }
+    .btn-outline  { background: var(--bg); color: var(--text); border: 1.5px solid var(--border); }
+    .btn-disabled { background: var(--bg-soft2); color: var(--text-dim); cursor: default; }
     .btn svg { width: 17px; height: 17px; flex-shrink: 0; }
 
     .hotkey-grid {
@@ -80,32 +95,32 @@
       gap: 10px; margin-bottom: 0;
     }
     .hotkey-card {
-      border: 1px solid #f3f4f6; border-radius: 12px;
+      border: 1px solid var(--border-strip); border-radius: 12px;
       padding: 14px 16px; text-align: left;
     }
     .hotkey-key {
       display: inline-block;
       font-size: 0.75rem; font-weight: 700;
-      background: #111827; color: #fff;
+      background: var(--btn-dark-bg); color: var(--btn-dark-text);
       padding: 3px 10px; border-radius: 6px;
       letter-spacing: .02em; margin-bottom: 8px;
       font-family: 'Inter', monospace;
     }
-    .hotkey-desc { font-size: 0.85rem; color: #374151; }
+    .hotkey-desc { font-size: 0.85rem; color: var(--text-secondary); }
 
-    .divider { border: none; border-top: 1px solid #f3f4f6; margin: 0 auto 48px; max-width: 640px; }
+    .divider { border: none; border-top: 1px solid var(--border-strip); margin: 0 auto 48px; max-width: 640px; }
 
     .section { max-width: 640px; margin: 0 auto; padding: 0 28px 48px; }
     .section-title {
       font-size: 0.72rem; font-weight: 700;
-      color: #9ca3af; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 16px;
+      color: var(--text-dim); letter-spacing: .1em; text-transform: uppercase; margin-bottom: 16px;
     }
 
     .feature-list { list-style: none; }
     .feature-list li {
       display: flex; align-items: flex-start; gap: 10px;
-      padding: 10px 0; border-bottom: 1px solid #f9fafb;
-      font-size: 0.9rem; color: #374151; line-height: 1.5;
+      padding: 10px 0; border-bottom: 1px solid var(--border-strip);
+      font-size: 0.9rem; color: var(--text-secondary); line-height: 1.5;
     }
     .feature-list li:last-child { border-bottom: none; }
     .check {
@@ -117,19 +132,19 @@
 
     .info-grid {
       display: grid; grid-template-columns: 1fr 1fr;
-      gap: 1px; background: #f3f4f6;
+      gap: 1px; background: var(--border-strip);
       border-radius: 12px; overflow: hidden;
     }
-    .info-cell { background: #fff; padding: 16px 20px; }
-    .info-label { font-size: 0.72rem; color: #9ca3af; margin-bottom: 4px; font-weight: 600; }
-    .info-value { font-size: 0.875rem; color: #111827; font-weight: 600; }
+    .info-cell { background: var(--bg); padding: 16px 20px; }
+    .info-label { font-size: 0.72rem; color: var(--text-dim); margin-bottom: 4px; font-weight: 600; }
+    .info-value { font-size: 0.875rem; color: var(--text); font-weight: 600; }
 
     footer {
-      border-top: 1px solid #f3f4f6; padding: 24px 28px;
-      text-align: center; font-size: 0.78rem; color: #9ca3af;
+      border-top: 1px solid var(--border-strip); padding: 24px 28px;
+      text-align: center; font-size: 0.78rem; color: var(--text-dim);
     }
-    footer a { color: #9ca3af; text-decoration: none; }
-    footer a:hover { color: #6b7280; }
+    footer a { color: var(--text-dim); text-decoration: none; }
+    footer a:hover { color: var(--text-muted); }
 
     @media (max-width: 480px) {
       .hero { padding: 48px 16px 36px; }
@@ -213,7 +228,7 @@
       <p class="hotkey-desc">팔레트 열기 / 닫기 (토글)</p>
     </div>
   </div>
-  <p style="font-size:0.8rem;color:#9ca3af;margin-top:12px;">모든 단축키는 앱 설정에서 변경할 수 있습니다.</p>
+  <p style="font-size:0.8rem;color:var(--text-dim);margin-top:12px;">모든 단축키는 앱 설정에서 변경할 수 있습니다.</p>
 </section>
 
 <section class="section">
@@ -283,5 +298,9 @@
   </p>
 </footer>
 
+
+<script>
+function toggleTheme(){var d=document.documentElement,n=d.getAttribute('data-theme')==='dark'?'light':'dark';d.setAttribute('data-theme',n);localStorage.setItem('theme',n);}
+</script>
 </body>
 </html>

@@ -1,36 +1,51 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>UStore Stats</title>
+  <script>(function(){var t=localStorage.getItem('theme')||'light';document.documentElement.setAttribute('data-theme',t);})();</script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --bg: #fff; --bg-soft: #f9fafb; --bg-soft2: #f3f4f6;
+      --border: #e5e7eb; --border-strip: #f3f4f6;
+      --text: #111827; --text-secondary: #374151;
+      --text-muted: #6b7280; --text-dim: #9ca3af;
+      --btn-dark-bg: #111827; --btn-dark-text: #fff;
+    }
+    [data-theme="dark"] {
+      --bg: #0d1117; --bg-soft: #161b22; --bg-soft2: #21262d;
+      --border: #21262d; --border-strip: #161b22;
+      --text: #f0f6fc; --text-secondary: #c9d1d9;
+      --text-muted: #8b949e; --text-dim: #6e7681;
+      --btn-dark-bg: #f0f6fc; --btn-dark-text: #0d1117;
+    }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: 'Inter', 'Noto Sans KR', system-ui, sans-serif;
-      background: #f9fafb; color: #111827;
+      background: var(--bg-soft); color: var(--text);
       min-height: 100vh; -webkit-font-smoothing: antialiased;
     }
 
     .topbar {
-      background: #fff; padding: 16px 28px;
-      border-bottom: 1px solid #f3f4f6;
+      background: var(--bg); padding: 16px 28px;
+      border-bottom: 1px solid var(--border-strip);
       display: flex; align-items: center; justify-content: space-between;
     }
-    .topbar-title { font-size: 0.9rem; font-weight: 700; color: #111827; }
+    .topbar-title { font-size: 0.9rem; font-weight: 700; color: var(--text); }
     .back-btn {
       display: inline-flex; align-items: center; gap: 6px;
       font-size: 0.8rem; font-weight: 600;
-      color: #6b7280; text-decoration: none; transition: color .15s;
+      color: var(--text-muted); text-decoration: none; transition: color .15s;
     }
-    .back-btn:hover { color: #111827; }
+    .back-btn:hover { color: var(--text); }
 
     .page { max-width: 780px; margin: 0 auto; padding: 32px 24px; }
 
     .section-label {
       font-size: 0.7rem; font-weight: 700;
-      color: #9ca3af; letter-spacing: .1em;
+      color: var(--text-dim); letter-spacing: .1em;
       text-transform: uppercase; margin-bottom: 12px;
     }
 
@@ -40,49 +55,49 @@
       gap: 12px; margin-bottom: 32px;
     }
     .stat-card {
-      background: #fff; border: 1px solid #e5e7eb;
+      background: var(--bg); border: 1px solid var(--border);
       border-radius: 14px; padding: 20px 22px;
     }
     .stat-card-name {
       font-size: 0.78rem; font-weight: 600;
-      color: #6b7280; margin-bottom: 6px;
+      color: var(--text-muted); margin-bottom: 6px;
     }
     .stat-card-value {
       font-size: 2rem; font-weight: 800;
-      color: #111827; letter-spacing: -.04em;
+      color: var(--text); letter-spacing: -.04em;
       line-height: 1;
     }
     .stat-card-sub {
-      font-size: 0.72rem; color: #9ca3af; margin-top: 6px;
+      font-size: 0.72rem; color: var(--text-dim); margin-top: 6px;
     }
-    .stat-loading { color: #d1d5db; }
+    .stat-loading { color: var(--border); }
 
     .release-table {
       width: 100%; border-collapse: collapse;
-      background: #fff; border-radius: 12px;
-      overflow: hidden; border: 1px solid #e5e7eb;
+      background: var(--bg); border-radius: 12px;
+      overflow: hidden; border: 1px solid var(--border);
       margin-bottom: 32px;
     }
     .release-table th {
       font-size: 0.72rem; font-weight: 700;
-      color: #9ca3af; letter-spacing: .05em;
+      color: var(--text-dim); letter-spacing: .05em;
       text-transform: uppercase;
       padding: 12px 16px; text-align: left;
-      border-bottom: 1px solid #f3f4f6;
-      background: #f9fafb;
+      border-bottom: 1px solid var(--border-strip);
+      background: var(--bg-soft);
     }
     .release-table td {
       padding: 11px 16px; font-size: 0.85rem;
-      color: #374151; border-bottom: 1px solid #f9fafb;
+      color: var(--text-secondary); border-bottom: 1px solid var(--border-strip);
     }
     .release-table tr:last-child td { border-bottom: none; }
     .tag-badge {
       display: inline-block;
       font-size: 0.72rem; font-weight: 700;
-      background: #f3f4f6; color: #374151;
+      background: var(--bg-soft2); color: var(--text-secondary);
       padding: 2px 8px; border-radius: 6px;
     }
-    .dl-count { font-weight: 700; color: #111827; }
+    .dl-count { font-weight: 700; color: var(--text); }
 
     .ext-links { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 40px; }
     .ext-btn {
@@ -93,7 +108,7 @@
     }
     .ext-btn:hover { opacity: .82; }
     .ext-btn-ga { background: #e8f0fe; color: #1a56db; }
-    .ext-btn-gh { background: #f3f4f6; color: #374151; }
+    .ext-btn-gh { background: var(--bg-soft2); color: var(--text-secondary); }
     .ext-btn svg { width: 16px; height: 16px; flex-shrink: 0; }
 
     .error-text { font-size: 0.82rem; color: #ef4444; margin-top: 6px; }
@@ -134,7 +149,7 @@
 
   <div style="margin-bottom:12px; display:flex; align-items:center; justify-content:space-between;">
     <p class="section-label" style="margin-bottom:0;">다운로드 합산 (GitHub Releases)</p>
-    <span id="last-updated" style="font-size:0.72rem;color:#9ca3af;"></span>
+    <span id="last-updated" style="font-size:0.72rem;color:var(--text-dim);"></span>
   </div>
 
   <div class="stat-grid" id="summary-grid">
@@ -165,7 +180,7 @@
       </tr>
     </thead>
     <tbody id="cs-tbody">
-      <tr><td colspan="3" style="color:#9ca3af;font-size:0.82rem;">불러오는 중...</td></tr>
+      <tr><td colspan="3" style="color:var(--text-dim);font-size:0.82rem;">불러오는 중...</td></tr>
     </tbody>
   </table>
 
@@ -179,7 +194,7 @@
       </tr>
     </thead>
     <tbody id="wt-tbody">
-      <tr><td colspan="3" style="color:#9ca3af;font-size:0.82rem;">불러오는 중...</td></tr>
+      <tr><td colspan="3" style="color:var(--text-dim);font-size:0.82rem;">불러오는 중...</td></tr>
     </tbody>
   </table>
 
@@ -223,7 +238,7 @@ async function loadRepo(cfg) {
 
     const tbody = document.getElementById(cfg.tbodyId);
     if (rows.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="3" style="color:#9ca3af;font-size:0.82rem;">릴리즈 없음</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="3" style="color:var(--text-dim);font-size:0.82rem;">릴리즈 없음</td></tr>';
     } else {
       tbody.innerHTML = rows.map(r =>
         `<tr>
@@ -252,6 +267,10 @@ async function loadRepo(cfg) {
 }
 
 REPOS.forEach(loadRepo);
+</script>
+
+<script>
+function toggleTheme(){var d=document.documentElement,n=d.getAttribute('data-theme')==='dark'?'light':'dark';d.setAttribute('data-theme',n);localStorage.setItem('theme',n);}
 </script>
 </body>
 </html>

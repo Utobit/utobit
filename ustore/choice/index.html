@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,21 +7,36 @@
   <meta property="og:title" content="Choice">
   <meta property="og:description" content="Google Play 등록 준비 중인 모바일 앱">
   <meta property="og:url" content="https://utobit.net/ustore/choice/">
+  <script>(function(){var t=localStorage.getItem('theme')||'light';document.documentElement.setAttribute('data-theme',t);})();</script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --bg: #fff; --bg-soft: #f9fafb; --bg-soft2: #f3f4f6;
+      --border: #e5e7eb; --border-strip: #f3f4f6;
+      --text: #111827; --text-secondary: #374151;
+      --text-muted: #6b7280; --text-dim: #9ca3af;
+      --btn-dark-bg: #111827; --btn-dark-text: #fff;
+    }
+    [data-theme="dark"] {
+      --bg: #0d1117; --bg-soft: #161b22; --bg-soft2: #21262d;
+      --border: #21262d; --border-strip: #161b22;
+      --text: #f0f6fc; --text-secondary: #c9d1d9;
+      --text-muted: #8b949e; --text-dim: #6e7681;
+      --btn-dark-bg: #f0f6fc; --btn-dark-text: #0d1117;
+    }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: 'Inter', 'Noto Sans KR', system-ui, sans-serif;
-      background: #fff; color: #111827;
+      background: var(--bg); color: var(--text);
       min-height: 100vh; -webkit-font-smoothing: antialiased;
     }
-    .topbar { padding: 16px 28px; border-bottom: 1px solid #f3f4f6; }
+    .topbar { padding: 16px 28px; border-bottom: 1px solid var(--border-strip); }
     .back-btn {
       display: inline-flex; align-items: center; gap: 6px;
       font-size: 0.8125rem; font-weight: 600;
-      color: #6b7280; text-decoration: none; transition: color .15s;
+      color: var(--text-muted); text-decoration: none; transition: color .15s;
     }
-    .back-btn:hover { color: #111827; }
+    .back-btn:hover { color: var(--text); }
     .back-btn svg { width: 16px; height: 16px; }
     .hero {
       max-width: 640px; margin: 0 auto;
@@ -34,24 +49,24 @@
     }
     .app-name {
       font-size: 2.25rem; font-weight: 900;
-      letter-spacing: -.04em; color: #111827; margin-bottom: 12px;
+      letter-spacing: -.04em; color: var(--text); margin-bottom: 12px;
     }
     .app-tagline {
-      font-size: 1rem; color: #6b7280;
+      font-size: 1rem; color: var(--text-muted);
       margin-bottom: 36px; line-height: 1.8;
     }
     .status-badge {
       display: inline-block;
       padding: 10px 28px; border-radius: 12px;
       font-size: 0.9375rem; font-weight: 700;
-      background: #f3f4f6; color: #9ca3af;
+      background: var(--bg-soft2); color: var(--text-dim);
     }
     footer {
-      border-top: 1px solid #f3f4f6; padding: 24px 28px;
-      text-align: center; font-size: 0.78rem; color: #9ca3af;
+      border-top: 1px solid var(--border-strip); padding: 24px 28px;
+      text-align: center; font-size: 0.78rem; color: var(--text-dim);
     }
-    footer a { color: #9ca3af; text-decoration: none; }
-    footer a:hover { color: #6b7280; }
+    footer a { color: var(--text-dim); text-decoration: none; }
+    footer a:hover { color: var(--text-muted); }
   </style>
 </head>
 <body>
@@ -76,5 +91,9 @@
   <p>Choice © 2026 Utobit · <a href="mailto:clus0109@gmail.com">clus0109@gmail.com</a></p>
 </footer>
 
+
+<script>
+function toggleTheme(){var d=document.documentElement,n=d.getAttribute('data-theme')==='dark'?'light':'dark';d.setAttribute('data-theme',n);localStorage.setItem('theme',n);}
+</script>
 </body>
 </html>
