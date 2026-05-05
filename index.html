@@ -42,12 +42,10 @@
     .nav-inner {
       width: 100%; max-width: 1080px;
       margin: 0 auto; padding: 0 28px;
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
-      align-items: center;
+      display: flex; align-items: center;
+      justify-content: space-between;
     }
-    .nav-left  { display: flex; gap: 28px; }
-    .nav-right { display: flex; gap: 20px; justify-content: flex-end; align-items: center; }
+    .nav-right { display: flex; gap: 20px; align-items: center; }
     .nav-link {
       font-size: 0.875rem; font-weight: 500;
       color: #374151; text-decoration: none;
@@ -56,128 +54,150 @@
     }
     .nav-link:hover { color: #111827; }
     .nav-logo {
-      font-size: 1.5rem; font-weight: 900;
+      font-size: 1rem; font-weight: 900;
       color: #111827; text-decoration: none;
-      letter-spacing: -.05em;
-      justify-self: center;
+      letter-spacing: -.03em;
     }
-    .nav-store-btn {
-      font-size: 0.8125rem; font-weight: 700;
-      background: #111827; color: #fff;
-      padding: 6px 16px; border-radius: 8px;
-      text-decoration: none;
-      transition: opacity .15s;
+    .nav-ustore {
+      font-size: 0.8125rem; font-weight: 800;
+      color: #111827; letter-spacing: -.01em;
     }
-    .nav-store-btn:hover { opacity: .85; }
 
-    /* ── MAIN ── */
-    main { max-width: 1080px; margin: 0 auto; padding: 64px 28px 0; }
+    /* ── MAIN LAYOUT ── */
+    main { max-width: 1080px; margin: 0 auto; padding: 56px 28px 0; }
 
     .section-label {
       font-size: 0.6875rem; font-weight: 700;
       color: #374151; letter-spacing: .14em;
-      text-transform: uppercase; margin-bottom: 20px;
+      text-transform: uppercase;
     }
 
-    /* ── 3-EQUAL PRODUCT CARDS ── */
-    .grid-3 {
+    /* ── SEARCH ── */
+    .search-wrap {
+      width: 100%; max-width: 400px;
+      margin: 0 auto 28px;
+    }
+    .search-wrap input {
+      width: 100%;
+      padding: 10px 18px;
+      border: 1px solid #e5e7eb; border-radius: 12px;
+      font-size: 0.875rem; font-family: inherit;
+      background: #f9fafb; color: #111827;
+      outline: none; transition: border-color .15s;
+    }
+    .search-wrap input:focus { border-color: #9ca3af; background: #fff; }
+    .search-wrap input::placeholder { color: #9ca3af; }
+
+    /* ── APP CARDS ── */
+    .app-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: 16px;
       margin-bottom: 64px;
     }
-    .pcard {
+    .app-card {
       border: 1px solid #e5e7eb;
-      border-radius: 18px;
-      padding: 28px 24px 24px;
-      text-decoration: none;
-      color: inherit;
+      border-radius: 16px;
+      padding: 22px;
+      text-decoration: none; color: inherit;
       display: flex; flex-direction: column;
-      min-height: 220px;
-      position: relative; overflow: hidden;
       transition: box-shadow .2s, border-color .2s;
     }
-
-    /* INCUBATING PREVIEW OVERLAY */
-    .inc-preview {
-      position: absolute; inset: 0;
-      background: rgba(17, 24, 39, 0.92);
-      border-radius: 17px;
-      padding: 24px;
-      display: flex; flex-direction: column; justify-content: center;
-      opacity: 0; transform: translateY(6px);
-      transition: opacity .2s, transform .2s;
-      pointer-events: none;
-    }
-    div.pcard:hover .inc-preview {
-      opacity: 1; transform: translateY(0);
-    }
-    .inc-preview-label {
-      font-size: 0.6875rem; font-weight: 700;
-      color: #6b7280; letter-spacing: .1em;
-      text-transform: uppercase; margin-bottom: 10px;
-    }
-    .inc-preview-text {
-      font-size: 0.875rem; color: #e5e7eb; line-height: 1.65;
-    }
-    .pcard:hover {
-      box-shadow: 0 6px 28px rgba(0,0,0,.08);
+    .app-card:hover {
+      box-shadow: 0 4px 20px rgba(0,0,0,.07);
       border-color: #d1d5db;
     }
-    .pcard-icon {
-      width: 56px; height: 56px;
-      border-radius: 14px;
-      margin-bottom: 18px;
+    .app-icon {
+      width: 52px; height: 52px;
+      border-radius: 13px;
       object-fit: cover;
+      margin-bottom: 16px;
       display: block;
     }
-    .pcard-label {
-      font-size: 0.6875rem; font-weight: 700;
-      color: #9ca3af; letter-spacing: .1em;
-      text-transform: uppercase; margin-bottom: 6px;
+    .app-icon-placeholder {
+      width: 52px; height: 52px; border-radius: 13px;
+      background: #f3f4f6; margin-bottom: 16px;
+      display: flex; align-items: center; justify-content: center;
     }
-    .pcard-name {
-      font-size: 1.125rem; font-weight: 800;
-      color: #111827; letter-spacing: -.03em;
+    .app-name-row {
+      display: flex; align-items: baseline; gap: 6px;
+      margin-bottom: 4px;
+    }
+    .app-name {
+      font-size: 1rem; font-weight: 800;
+      color: #111827; letter-spacing: -.02em;
+    }
+    .app-cat {
+      font-size: 0.6875rem; font-weight: 700;
+      color: #9ca3af; letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .app-tagline {
+      font-size: 0.8rem; font-weight: 600;
+      color: #4b5563;
       margin-bottom: 8px;
     }
-    .pcard-desc {
-      font-size: 0.8125rem; color: #374151;
+    .app-desc {
+      font-size: 0.78rem; color: #6b7280;
       line-height: 1.6; flex: 1;
+      margin-bottom: 18px;
+    }
+    .app-footer {
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .app-version { font-size: 0.72rem; color: #9ca3af; }
+    .app-btn {
+      font-size: 0.78rem; font-weight: 600;
+      padding: 6px 14px; border-radius: 8px;
+    }
+    .app-btn-dark { background: #111827; color: #fff; }
+    .app-btn-beta { background: #fef3c7; color: #92400e; }
+    .app-btn-soon { background: #f3f4f6; color: #9ca3af; }
+
+    .app-grid-empty {
+      grid-column: 1/-1;
+      text-align: center; padding: 60px 0;
+      color: #9ca3af; font-size: 0.875rem;
     }
 
-    /* ── INCUBATING CARDS ── */
-    .inc-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-      margin-bottom: 80px;
+    /* ── SERVICES STRIP ── */
+    .services-strip {
+      border-top: 1px solid #f3f4f6;
+      padding: 40px 0 72px;
     }
-    .inc-card {
-      border: 1px solid #f3f4f6;
-      background: #fafafa;
-      border-radius: 16px;
-      padding: 22px 20px;
-      display: flex; flex-direction: column;
+    .services-strip .section-label { margin-bottom: 20px; }
+    .services-row {
+      display: flex; gap: 16px; flex-wrap: wrap;
     }
-    .inc-icon {
-      width: 44px; height: 44px;
-      border-radius: 11px;
-      margin-bottom: 14px;
-      object-fit: cover;
+    .svc-card {
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 20px 22px;
+      text-decoration: none; color: inherit;
+      display: flex; align-items: center; gap: 14px;
+      flex: 1; min-width: 220px;
+      transition: box-shadow .2s, border-color .2s;
     }
-    .inc-type {
-      font-size: 0.6875rem; font-weight: 700;
-      color: #9ca3af; letter-spacing: .1em;
-      text-transform: uppercase; margin-bottom: 4px;
+    .svc-card:hover {
+      box-shadow: 0 4px 16px rgba(0,0,0,.06);
+      border-color: #d1d5db;
     }
-    .inc-name {
+    .svc-icon {
+      width: 44px; height: 44px; border-radius: 11px;
+      object-fit: cover; flex-shrink: 0;
+    }
+    .svc-icon-box {
+      width: 44px; height: 44px; border-radius: 11px;
+      background: #f3f4f6; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .svc-name {
       font-size: 0.9375rem; font-weight: 700;
       color: #111827; letter-spacing: -.02em;
     }
-    .inc-desc {
-      font-size: 0.78rem; color: #6b7280;
-      margin-top: 6px; line-height: 1.5;
+    .svc-desc {
+      font-size: 0.75rem; color: #6b7280;
+      margin-top: 2px;
     }
 
     /* ── FOOTER ── */
@@ -232,7 +252,7 @@
     .overlay-close:hover { background: #e5e7eb; }
 
     @media (max-width: 700px) {
-      .grid-3, .inc-grid { grid-template-columns: 1fr; }
+      .app-grid { grid-template-columns: 1fr; }
       .nav-left .nav-link:first-child { display: none; }
       .nav-logo { font-size: 1.25rem; }
     }
@@ -240,96 +260,56 @@
 </head>
 <body>
 
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;">Utobit — PC·모바일 앱 스토어, UStore</h1>
+
 <nav>
   <div class="nav-inner">
-    <div class="nav-left">
-      <button class="nav-link" onclick="openInfo()">Information</button>
-      <a href="ms/" class="nav-link">Studio</a>
-    </div>
     <a href="/" class="nav-logo">UTOBIT</a>
     <div class="nav-right">
-      <a href="ustore/da/" class="nav-link">Agent</a>
-      <a href="ustore/" class="nav-store-btn">UStore</a>
+      <span class="nav-ustore">UStore</span>
+      <a href="studio/" class="nav-link">Studio</a>
+      <a href="agents/" class="nav-link">Agent</a>
     </div>
   </div>
 </nav>
 
 <main>
 
-  <h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;">Utobit — PC·모바일 앱 스토어, UStore</h1>
-
-  <!-- Services -->
-  <p class="section-label">Services</p>
-  <div class="grid-3">
-
-    <a href="ustore/da/" class="pcard">
-      <img class="pcard-icon" src="assets/dallae_icon.png" alt="DallaePCAgent">
-      <p class="pcard-label">PC · Agent</p>
-      <h3 class="pcard-name">DallaePCAgent</h3>
-      <p class="pcard-desc">모바일-PC연동 개인 Agent<br>데모 배포 예정</p>
-    </a>
-
-    <a href="ustore/" class="pcard">
-      <div class="pcard-icon" style="background:#f3f4f6;display:flex;align-items:center;justify-content:center;">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/>
-        </svg>
-      </div>
-      <p class="pcard-label">Store</p>
-      <h3 class="pcard-name">UStore</h3>
-      <p class="pcard-desc">PC 에이전트 및 소프트웨어 스토어</p>
-    </a>
-
-    <a href="ms/" class="pcard">
-      <div class="pcard-icon" style="background:#f3f4f6;display:flex;align-items:center;justify-content:center;">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-        </svg>
-      </div>
-      <p class="pcard-label">Game Studio</p>
-      <h3 class="pcard-name">Manamuhan Studio</h3>
-      <p class="pcard-desc">Project Glyph — 수집형 RPG 개발 중</p>
-    </a>
-
+  <!-- Search -->
+  <div class="search-wrap">
+    <input type="search" id="searchInput" placeholder="앱 검색..." oninput="filterApps()">
   </div>
 
-  <!-- Now Incubating -->
-  <p class="section-label">Now Incubating</p>
-  <div class="grid-3">
+  <div id="app-grid" class="app-grid">
+    <p class="app-grid-empty">앱 목록을 불러오는 중...</p>
+  </div>
 
-    <div class="pcard">
-      <img class="pcard-icon" src="assets/dallae_icon.png" alt="DallaePCAgent">
-      <p class="pcard-label">PC · Agent</p>
-      <h3 class="pcard-name">DallaePCAgent</h3>
-      <p class="pcard-desc">AI 기반 PC / 모바일 / Home(예정) Agent</p>
-      <div class="inc-preview">
-        <p class="inc-preview-label">데모 배포 예정</p>
-        <p class="inc-preview-text">모바일 연동 PC프로그램.<br>Claude API 기반 개인용 Agent.</p>
-      </div>
+  <!-- Other Services -->
+  <div class="services-strip">
+    <p class="section-label">Also from Utobit</p>
+    <div class="services-row" style="margin-top:20px;">
+
+      <a href="ustore/da/" class="svc-card">
+        <img class="svc-icon" src="assets/dallae_icon.png" alt="DallaePCAgent">
+        <div>
+          <p class="svc-name">DallaePCAgent</p>
+          <p class="svc-desc">모바일-PC 연동 개인 AI Agent</p>
+        </div>
+      </a>
+
+      <a href="ms/pg/" class="svc-card">
+        <div class="svc-icon-box">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+          </svg>
+        </div>
+        <div>
+          <p class="svc-name">Project Glyph</p>
+          <p class="svc-desc">마나무한 스튜디오 — 수집형 RPG 개발 중</p>
+        </div>
+      </a>
+
     </div>
-
-    <div class="pcard">
-      <img class="pcard-icon" src="assets/choice_icon.png" alt="Choice">
-      <p class="pcard-label">App</p>
-      <h3 class="pcard-name">Choice</h3>
-      <p class="pcard-desc">Google Play 등록 준비 중</p>
-      <div class="inc-preview">
-        <p class="inc-preview-label">준비중</p>
-        <p class="inc-preview-text">Google Play 등록을 준비하고 있습니다.<br>곧 만나보실 수 있습니다.</p>
-      </div>
-    </div>
-
-    <div class="pcard">
-      <img class="pcard-icon" src="assets/dokgeo_icon.png" alt="독거청년">
-      <p class="pcard-label">App</p>
-      <h3 class="pcard-name">독거청년</h3>
-      <p class="pcard-desc">개발 중</p>
-      <div class="inc-preview">
-        <p class="inc-preview-label">개발중</p>
-        <p class="inc-preview-text">현재 개발을 진행하고 있습니다.<br>출시 일정은 추후 공개됩니다.</p>
-      </div>
-    </div>
-
   </div>
 
 </main>
@@ -359,13 +339,66 @@
 </div>
 
 <script>
-  function openInfo() { document.getElementById('infoOverlay').classList.add('open'); }
-  function closeInfo(e) {
-    if (!e || e.target === document.getElementById('infoOverlay')) {
-      document.getElementById('infoOverlay').classList.remove('open');
-    }
+let allApps = [];
+
+fetch('/ustore/apps.json')
+  .then(r => r.json())
+  .then(data => { allApps = data.apps; renderApps(allApps); })
+  .catch(() => {
+    document.getElementById('app-grid').innerHTML = '<p class="app-grid-empty">앱 목록을 불러오지 못했습니다.</p>';
+  });
+
+function filterApps() {
+  const q = (document.getElementById('searchInput').value || '').toLowerCase();
+  const filtered = q
+    ? allApps.filter(a => a.name.toLowerCase().includes(q) || a.description.toLowerCase().includes(q))
+    : allApps;
+  renderApps(filtered);
+}
+
+function renderApps(apps) {
+  const grid = document.getElementById('app-grid');
+
+  const icon = app => app.icon
+    ? `<img class="app-icon" src="${app.icon}" alt="${app.name}">`
+    : `<div class="app-icon-placeholder"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/></svg></div>`;
+
+  const catLabel = app => app.category === 'mobile' ? 'Mobile' : app.category === 'pc' ? 'PC' : 'Asset';
+
+  const btn = app => {
+    if (app.status === 'available') return `<span class="app-btn app-btn-dark">상세보기</span>`;
+    if (app.status === 'beta')      return `<span class="app-btn app-btn-beta">베타</span>`;
+    return `<span class="app-btn app-btn-soon">출시 예정</span>`;
+  };
+
+  if (!apps.length) {
+    grid.innerHTML = '<p class="app-grid-empty">검색 결과가 없습니다.</p>';
+    return;
   }
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeInfo(); });
+
+  grid.innerHTML = apps.map(app => `
+    <a href="${app.detail_url}" class="app-card" onclick="gtag('event','app_click',{app_slug:'${app.slug}',app_name:'${app.name}'})">
+      ${icon(app)}
+      <div class="app-name-row">
+        <span class="app-name">${app.name}</span>
+        <span class="app-cat">· ${catLabel(app)}</span>
+      </div>
+      <p class="app-desc">${app.description}</p>
+      <div class="app-footer">
+        <span class="app-version">${app.version ? `v${app.version}` : ''}</span>
+        ${btn(app)}
+      </div>
+    </a>
+  `).join('');
+}
+
+function openInfo() { document.getElementById('infoOverlay').classList.add('open'); }
+function closeInfo(e) {
+  if (!e || e.target === document.getElementById('infoOverlay')) {
+    document.getElementById('infoOverlay').classList.remove('open');
+  }
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeInfo(); });
 </script>
 </body>
 </html>

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agents — Utobit</title>
+  <meta name="description" content="Utobit이 만든 AI 에이전트.">
+  <link rel="canonical" href="https://utobit.net/agents/">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-F93QE1MMT8"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-F93QE1MMT8');
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', 'Noto Sans KR', system-ui, sans-serif;
+      background: #fff; color: #111827;
+      -webkit-font-smoothing: antialiased;
+    }
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255,255,255,.9);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid #f3f4f6;
+      height: 60px; display: flex; align-items: center;
+    }
+    .nav-inner {
+      width: 100%; max-width: 1080px;
+      margin: 0 auto; padding: 0 28px;
+      display: flex; align-items: center;
+      justify-content: space-between;
+    }
+    .nav-right { display: flex; gap: 20px; align-items: center; }
+    .nav-link {
+      font-size: 0.875rem; font-weight: 500;
+      color: #374151; text-decoration: none;
+      transition: color .15s;
+      cursor: pointer; background: none; border: none; font-family: inherit;
+    }
+    .nav-link:hover { color: #111827; }
+    .nav-link.active { color: #111827; font-weight: 700; }
+    .nav-logo {
+      font-size: 1rem; font-weight: 900;
+      color: #111827; text-decoration: none;
+      letter-spacing: -.03em;
+    }
+
+    main {
+      max-width: 1080px; margin: 0 auto;
+      padding: 56px 28px 80px;
+    }
+
+    .page-label {
+      font-size: 0.6875rem; font-weight: 700;
+      color: #374151; letter-spacing: .14em;
+      text-transform: uppercase; margin-bottom: 28px;
+    }
+
+    .agent-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .agent-card {
+      border: 1px solid #e5e7eb; border-radius: 16px;
+      padding: 24px; text-decoration: none; color: inherit;
+      display: flex; flex-direction: column;
+      transition: box-shadow .2s, border-color .2s;
+    }
+    .agent-card:hover {
+      box-shadow: 0 4px 20px rgba(0,0,0,.07);
+      border-color: #d1d5db;
+    }
+    .agent-icon {
+      width: 52px; height: 52px; border-radius: 13px;
+      object-fit: cover; margin-bottom: 16px; display: block;
+    }
+    .agent-name-row {
+      display: flex; align-items: baseline; gap: 6px;
+      margin-bottom: 8px;
+    }
+    .agent-name {
+      font-size: 1rem; font-weight: 800;
+      color: #111827; letter-spacing: -.02em;
+    }
+    .agent-cat {
+      font-size: 0.6875rem; font-weight: 700;
+      color: #9ca3af; letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .agent-desc {
+      font-size: 0.78rem; color: #6b7280;
+      line-height: 1.6; flex: 1; margin-bottom: 18px;
+    }
+    .agent-footer {
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .agent-status {
+      font-size: 0.72rem; color: #9ca3af;
+    }
+    .agent-btn {
+      font-size: 0.78rem; font-weight: 600;
+      padding: 6px 14px; border-radius: 8px;
+    }
+    .agent-btn-beta { background: #fef3c7; color: #92400e; }
+    .agent-btn-soon { background: #f3f4f6; color: #9ca3af; }
+
+    /* 준비중 슬롯 */
+    .agent-slot {
+      border: 1px dashed #e5e7eb; border-radius: 16px;
+      padding: 24px;
+      display: flex; align-items: center; justify-content: center;
+      min-height: 160px;
+      color: #d1d5db;
+      font-size: 0.78rem; font-weight: 500;
+      letter-spacing: .06em;
+    }
+
+    footer {
+      border-top: 1px solid #f3f4f6;
+      padding: 36px 28px;
+      max-width: 1080px; margin: 0 auto;
+      display: flex; justify-content: space-between;
+      align-items: center;
+    }
+    .footer-copy { font-size: 0.78rem; color: #9ca3af; }
+
+    @media (max-width: 700px) {
+      .agent-grid { grid-template-columns: 1fr; }
+      .nav-logo { font-size: 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">UTOBIT</a>
+    <div class="nav-right">
+      <a href="/" class="nav-link">UStore</a>
+      <a href="../studio/" class="nav-link">Studio</a>
+      <a href="." class="nav-link active">Agent</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <p class="page-label">Agent</p>
+
+  <div class="agent-grid">
+
+    <a href="/ustore/da/" class="agent-card">
+      <img class="agent-icon" src="/assets/dallae_icon.png" alt="DallaePCAgent">
+      <div class="agent-name-row">
+        <span class="agent-name">DallaePCAgent</span>
+        <span class="agent-cat">· PC</span>
+      </div>
+      <p class="agent-desc">모바일과 PC를 연결하는 AI 에이전트.</p>
+      <div class="agent-footer">
+        <span class="agent-status">Beta</span>
+        <span class="agent-btn agent-btn-beta">베타</span>
+      </div>
+    </a>
+
+    <div class="agent-slot">준비 중</div>
+    <div class="agent-slot">준비 중</div>
+
+  </div>
+</main>
+
+<footer>
+  <span class="footer-copy">© 2026 Utobit</span>
+</footer>
+
+</body>
+</html>
