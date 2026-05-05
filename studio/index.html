@@ -1,11 +1,17 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Studio — Utobit</title>
   <meta name="description" content="Utobit 산하 스튜디오.">
   <link rel="canonical" href="https://utobit.net/studio/">
+  <script>
+    (function() {
+      var t = localStorage.getItem('theme') || 'light';
+      document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-F93QE1MMT8"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -15,17 +21,57 @@
   </script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --bg: #fff;
+      --bg-soft: #f3f4f6;
+      --border: #e5e7eb;
+      --border-hover: #d1d5db;
+      --border-strip: #f3f4f6;
+      --border-dashed: #e5e7eb;
+      --text: #111827;
+      --text-secondary: #374151;
+      --text-muted: #6b7280;
+      --text-dim: #9ca3af;
+      --text-placeholder: #d1d5db;
+      --nav-bg: rgba(255,255,255,.9);
+      --shadow-hover: rgba(0,0,0,.07);
+      --btn-bg: #111827;
+      --btn-text: #fff;
+      --toggle-bg: #f3f4f6;
+      --toggle-color: #6b7280;
+    }
+    [data-theme="dark"] {
+      --bg: #0d1117;
+      --bg-soft: #21262d;
+      --border: #21262d;
+      --border-hover: #30363d;
+      --border-strip: #161b22;
+      --border-dashed: #30363d;
+      --text: #f0f6fc;
+      --text-secondary: #c9d1d9;
+      --text-muted: #8b949e;
+      --text-dim: #6e7681;
+      --text-placeholder: #30363d;
+      --nav-bg: rgba(13,17,23,.92);
+      --shadow-hover: rgba(0,0,0,.35);
+      --btn-bg: #f0f6fc;
+      --btn-text: #0d1117;
+      --toggle-bg: #21262d;
+      --toggle-color: #c9d1d9;
+    }
+
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: 'Inter', 'Noto Sans KR', system-ui, sans-serif;
-      background: #fff; color: #111827;
+      background: var(--bg); color: var(--text);
       -webkit-font-smoothing: antialiased;
+      transition: background .2s, color .2s;
     }
     nav {
       position: sticky; top: 0; z-index: 100;
-      background: rgba(255,255,255,.9);
+      background: var(--nav-bg);
       backdrop-filter: blur(12px);
-      border-bottom: 1px solid #f3f4f6;
+      border-bottom: 1px solid var(--border-strip);
       height: 60px; display: flex; align-items: center;
     }
     .nav-inner {
@@ -37,48 +83,55 @@
     .nav-right { display: flex; gap: 20px; align-items: center; }
     .nav-link {
       font-size: 0.875rem; font-weight: 500;
-      color: #374151; text-decoration: none;
+      color: var(--text-muted); text-decoration: none;
       transition: color .15s;
     }
-    .nav-link:hover { color: #111827; }
-    .nav-link.active { color: #111827; font-weight: 700; }
+    .nav-link:hover { color: var(--text); }
+    .nav-link.active { color: var(--text); font-weight: 700; }
     .nav-logo {
       font-size: 1rem; font-weight: 900;
-      color: #111827; text-decoration: none;
+      color: var(--text); text-decoration: none;
       letter-spacing: -.03em;
     }
+    .theme-toggle {
+      width: 32px; height: 32px; border-radius: 8px;
+      background: var(--toggle-bg); border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--toggle-color); transition: background .15s;
+      flex-shrink: 0;
+    }
+    .theme-toggle:hover { background: var(--border-hover); }
 
     main {
       max-width: 1080px; margin: 0 auto;
       padding: 56px 28px 80px;
     }
-
     .page-label {
       font-size: 0.6875rem; font-weight: 700;
-      color: #374151; letter-spacing: .14em;
+      color: var(--text-secondary); letter-spacing: .14em;
       text-transform: uppercase; margin-bottom: 28px;
     }
-
     .studio-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: 16px;
     }
-
     .studio-card {
-      border: 1px solid #e5e7eb; border-radius: 16px;
+      border: 1px solid var(--border); border-radius: 16px;
+      background: var(--bg);
       padding: 24px; text-decoration: none; color: inherit;
       display: flex; flex-direction: column;
-      transition: box-shadow .2s, border-color .2s;
+      transition: box-shadow .2s, border-color .2s, background .2s;
     }
     .studio-card:hover {
-      box-shadow: 0 4px 20px rgba(0,0,0,.07);
-      border-color: #d1d5db;
+      box-shadow: 0 4px 20px var(--shadow-hover);
+      border-color: var(--border-hover);
     }
     .studio-icon-box {
       width: 52px; height: 52px; border-radius: 13px;
-      background: #f3f4f6; margin-bottom: 16px;
+      background: var(--bg-soft); margin-bottom: 16px;
       display: flex; align-items: center; justify-content: center;
+      color: var(--text-muted);
     }
     .studio-name-row {
       display: flex; align-items: baseline; gap: 6px;
@@ -86,45 +139,42 @@
     }
     .studio-name {
       font-size: 1rem; font-weight: 800;
-      color: #111827; letter-spacing: -.02em;
+      color: var(--text); letter-spacing: -.02em;
     }
     .studio-cat {
       font-size: 0.6875rem; font-weight: 700;
-      color: #9ca3af; letter-spacing: .08em;
+      color: var(--text-dim); letter-spacing: .08em;
       text-transform: uppercase;
     }
     .studio-desc {
-      font-size: 0.78rem; color: #6b7280;
+      font-size: 0.78rem; color: var(--text-muted);
       line-height: 1.6; flex: 1; margin-bottom: 18px;
     }
     .studio-footer {
       display: flex; align-items: center; justify-content: space-between;
     }
-    .studio-status { font-size: 0.72rem; color: #9ca3af; }
+    .studio-status { font-size: 0.72rem; color: var(--text-dim); }
     .studio-btn {
       font-size: 0.78rem; font-weight: 600;
       padding: 6px 14px; border-radius: 8px;
-      background: #111827; color: #fff;
+      background: var(--btn-bg); color: var(--btn-text);
     }
-
     .studio-slot {
-      border: 1px dashed #e5e7eb; border-radius: 16px;
+      border: 1px dashed var(--border-dashed); border-radius: 16px;
       padding: 24px;
       display: flex; align-items: center; justify-content: center;
       min-height: 160px;
-      color: #d1d5db;
+      color: var(--text-placeholder);
       font-size: 0.78rem; font-weight: 500;
       letter-spacing: .06em;
     }
-
     footer {
-      border-top: 1px solid #f3f4f6;
+      border-top: 1px solid var(--border-strip);
       padding: 36px 28px;
       max-width: 1080px; margin: 0 auto;
-      display: flex; justify-content: space-between;
-      align-items: center;
+      display: flex; justify-content: space-between; align-items: center;
     }
-    .footer-copy { font-size: 0.78rem; color: #9ca3af; }
+    .footer-copy { font-size: 0.78rem; color: var(--text-dim); }
 
     @media (max-width: 700px) {
       .studio-grid { grid-template-columns: 1fr; }
@@ -141,18 +191,29 @@
       <a href="/" class="nav-link">UStore</a>
       <a href="." class="nav-link active">Studio</a>
       <a href="../agents/" class="nav-link">Agent</a>
+      <a href="../information/" class="nav-link">Information</a>
+      <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="다크모드 전환">
+        <svg id="iconSun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+          <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+          <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+        <svg id="iconMoon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      </button>
     </div>
   </div>
 </nav>
 
 <main>
   <p class="page-label">Studio</p>
-
   <div class="studio-grid">
 
     <a href="/ms/pg/" class="studio-card">
       <div class="studio-icon-box">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
         </svg>
       </div>
@@ -177,5 +238,20 @@
   <span class="footer-copy">© 2026 Utobit</span>
 </footer>
 
+<script>
+function toggleTheme() {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  const next = isDark ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+  updateThemeIcon(next);
+}
+function updateThemeIcon(theme) {
+  const isDark = (theme || document.documentElement.getAttribute('data-theme')) === 'dark';
+  document.getElementById('iconSun').style.display = isDark ? 'block' : 'none';
+  document.getElementById('iconMoon').style.display = isDark ? 'none' : 'block';
+}
+updateThemeIcon();
+</script>
 </body>
 </html>
