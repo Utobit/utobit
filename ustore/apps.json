@@ -175,6 +175,87 @@
       "screenshots": []
     },
     {
+      "slug": "quicknote",
+      "name": "QuickNote",
+      "category": "pc",
+      "subcategory": "Assist",
+      "version": "1.0.1.0",
+      "status": "available",
+      "icon": "/ustore/quicknote/icon.png",
+      "tagline": "트레이 메모장. 노트를 .txt 파일로 로컬 저장합니다.",
+      "description": "트레이에서 바로 열리는 메모장입니다. 노트는 개별 .txt 파일로 Documents에 저장되며, ≡ 버튼으로 목록을 팝업해 빠르게 전환할 수 있습니다. 삭제 시 _trash 폴더로 자동 백업됩니다.",
+      "tags": ["note", "utility", "productivity"],
+      "detail_url": "/ustore/quicknote/",
+      "download": {
+        "exe": "https://github.com/Utobit/QuickNote/releases/latest/download/QuickNote.exe",
+        "github": "https://github.com/Utobit/QuickNote"
+      },
+      "features": [
+        "노트를 개별 .txt 파일로 로컬 저장 (Documents/QuickNotes)",
+        "실시간 자동저장 + Ctrl+S 즉시 저장",
+        "≡ 목록 팝업으로 다중 노트 빠른 전환",
+        "8방향(상하좌우+모서리) 드래그 크기 조절",
+        "핀 고정 시 이동·크기조절 잠금",
+        "삭제 시 _trash 폴더 자동 백업",
+        "저장 폴더 자유 지정 가능"
+      ],
+      "requirements": "Windows 10 / 11 (x64)",
+      "screenshots": []
+    },
+    {
+      "slug": "screenruler",
+      "name": "ScreenRuler",
+      "category": "pc",
+      "subcategory": "Assist",
+      "version": "1.0.1.0",
+      "status": "available",
+      "icon": "/ustore/screenruler/icon.png",
+      "tagline": "화면 오버레이 픽셀 자.",
+      "description": "화면 위에 반투명 픽셀 자를 띄웁니다. S/L/W/R/C 키로 스케일·길이·폭·각도·컬러를 마우스로 실시간 조절하며, Enter로 확정·Esc로 원복합니다.",
+      "tags": ["design", "utility", "measure"],
+      "detail_url": "/ustore/screenruler/",
+      "download": {
+        "exe": "https://github.com/Utobit/ScreenRuler/releases/latest/download/ScreenRuler.exe",
+        "github": "https://github.com/Utobit/ScreenRuler"
+      },
+      "features": [
+        "화면 오버레이 반투명 픽셀 자 (항상 위에 고정)",
+        "S=스케일(0.1×~40×) / L=길이 / W=폭 / R=각도 마우스 조절",
+        "방향키·숫자키(1~9)로 스케일 직접 입력",
+        "R 모드: 자유 회전 후 Enter 확정 / Esc 원복",
+        "C 키로 5가지 컬러 테마 순환",
+        "0px 기준점 고정 각도·길이 조절"
+      ],
+      "requirements": "Windows 10 / 11 (x64)",
+      "screenshots": []
+    },
+    {
+      "slug": "pomodoro",
+      "name": "Pomodoro",
+      "category": "pc",
+      "subcategory": "Assist",
+      "version": "1.0.0.0",
+      "status": "available",
+      "icon": "/ustore/pomodoro/icon.png",
+      "tagline": "포모도로 타이머. 일일 집중 통계 기록.",
+      "description": "25분 집중 / 5분 휴식 사이클로 집중력을 관리합니다. 일일 달성 통계를 8칸 프로그레스 바로 시각화하고, 집중·휴식 시간을 자유롭게 설정할 수 있습니다.",
+      "tags": ["productivity", "timer", "focus"],
+      "detail_url": "/ustore/pomodoro/",
+      "download": {
+        "exe": "https://github.com/Utobit/Pomodoro/releases/latest/download/Pomodoro.exe",
+        "github": "https://github.com/Utobit/Pomodoro"
+      },
+      "features": [
+        "25분 집중 → 5분 휴식 → 4사이클 긴 휴식 자동 전환",
+        "일일 달성 통계 8칸 프로그레스 바",
+        "집중·짧은 휴식·긴 휴식 시간 자유 설정",
+        "단계별 컬러 테마 (집중/휴식/긴휴식)",
+        "날짜별 통계 JSON 누적 저장"
+      ],
+      "requirements": "Windows 10 / 11 (x64)",
+      "screenshots": []
+    },
+    {
       "slug": "choice",
       "name": "Choice",
       "category": "mobile",
