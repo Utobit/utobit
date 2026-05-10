@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-05-06",
+  "updated": "2026-05-10",
   "apps": [
     {
       "slug": "colorscrap",
@@ -251,6 +251,35 @@
         "집중·짧은 휴식·긴 휴식 시간 자유 설정",
         "단계별 컬러 테마 (집중/휴식/긴휴식)",
         "날짜별 통계 JSON 누적 저장"
+      ],
+      "requirements": "Windows 10 / 11 (x64)",
+      "screenshots": []
+    },
+    {
+      "slug": "starpdf",
+      "name": "StarPDF",
+      "category": "pc",
+      "subcategory": "Utility",
+      "version": "1.2.0.0",
+      "status": "available",
+      "icon": "/ustore/starpdf/icon.svg",
+      "tagline": "국내 특화 PDF 도구",
+      "description": "병합·분할·압축·회전·변환·워터마크·메타데이터 7가지 FREE 기능과 한글 OCR·PDF 비교·민감정보 삭제 등 SPECIAL 기능을 제공합니다.",
+      "tags": ["pdf", "utility", "ocr", "productivity"],
+      "detail_url": "/ustore/starpdf/",
+      "download": {
+        "exe": "https://github.com/Utobit/LInaAi/releases/download/starpdf-v1.2.0/StarPDF.exe"
+      },
+      "features": [
+        "PDF 병합 / 분할 / 압축 / 회전",
+        "PDF ↔ 이미지 변환",
+        "워터마크 추가 및 메타데이터 편집",
+        "한글 OCR — 스캔 문서 텍스트 추출",
+        "PDF 비교 — 버전 간 차이 시각화",
+        "민감정보 삭제 — 주민번호·계좌번호 자동 감지",
+        "폼 자동 채우기 — Excel/CSV → PDF 양식",
+        "세금계산서 파싱 — 구조화 데이터 추출",
+        "AI 요약 / AI Q&A / 계약서 분석 (Claude API)"
       ],
       "requirements": "Windows 10 / 11 (x64)",
       "screenshots": []

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+  <rect width="96" height="96" rx="22" fill="#1A2744"/>
+  <!-- PDF document shape -->
+  <rect x="20" y="14" width="40" height="52" rx="4" fill="#fff" opacity="0.15"/>
+  <rect x="20" y="14" width="40" height="52" rx="4" fill="none" stroke="#fff" stroke-width="2" opacity="0.4"/>
+  <!-- Fold corner -->
+  <path d="M48 14 L60 26 L48 26 Z" fill="#fff" opacity="0.25"/>
+  <path d="M48 14 L60 26 L48 26" stroke="#fff" stroke-width="1.5" opacity="0.4" fill="none"/>
+  <!-- Lines inside doc -->
+  <line x1="28" y1="36" x2="52" y2="36" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+  <line x1="28" y1="44" x2="52" y2="44" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+  <line x1="28" y1="52" x2="44" y2="52" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+  <!-- Star badge -->
+  <circle cx="68" cy="68" r="18" fill="#F59E0B"/>
+  <polygon points="68,56 71,64 80,64 73,70 76,78 68,73 60,78 63,70 56,64 65,64" fill="#fff"/>
+</svg>

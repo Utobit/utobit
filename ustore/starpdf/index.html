@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StarPDF | UStore</title>
+  <meta property="og:title" content="StarPDF — Utobit">
+  <meta property="og:description" content="병합·분할·OCR·비교·민감정보 삭제까지. 국내 특화 PDF 도구.">
+  <meta property="og:url" content="https://utobit.net/ustore/starpdf/">
+  <script>(function(){var t=localStorage.getItem('theme')||'light';document.documentElement.setAttribute('data-theme',t);})();</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-F93QE1MMT8"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-F93QE1MMT8');
+  </script>
+  <style>
+    :root {
+      --bg: #fff; --bg-soft: #f9fafb; --bg-soft2: #f3f4f6;
+      --border: #e5e7eb; --border-strip: #f3f4f6;
+      --text: #111827; --text-secondary: #374151;
+      --text-muted: #6b7280; --text-dim: #9ca3af;
+      --btn-dark-bg: #111827; --btn-dark-text: #fff;
+    }
+    [data-theme="dark"] {
+      --bg: #0d1117; --bg-soft: #161b22; --bg-soft2: #21262d;
+      --border: #21262d; --border-strip: #161b22;
+      --text: #f0f6fc; --text-secondary: #c9d1d9;
+      --text-muted: #8b949e; --text-dim: #6e7681;
+      --btn-dark-bg: #f0f6fc; --btn-dark-text: #0d1117;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', 'Noto Sans KR', system-ui, sans-serif;
+      background: var(--bg); color: var(--text);
+      min-height: 100vh; -webkit-font-smoothing: antialiased;
+    }
+
+    .topbar { padding: 16px 28px; border-bottom: 1px solid var(--border-strip); }
+    .back-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 0.8125rem; font-weight: 600;
+      color: var(--text-muted); text-decoration: none; transition: color .15s;
+    }
+    .back-btn:hover { color: var(--text); }
+
+    .hero { max-width: 640px; margin: 0 auto; padding: 64px 28px 48px; text-align: center; }
+    .app-icon {
+      width: 96px; height: 96px; border-radius: 22px;
+      margin: 0 auto 24px; display: block;
+      box-shadow: 0 4px 24px rgba(0,0,0,.12);
+    }
+    .badge-row {
+      display: flex; align-items: center; justify-content: center;
+      gap: 8px; margin-bottom: 16px;
+    }
+    .badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 3px 10px; border-radius: 20px;
+      font-size: 0.72rem; font-weight: 700;
+    }
+    .badge-green { background: #dcfce7; color: #166534; }
+    .badge-gray  { background: var(--bg-soft2); color: var(--text-muted); }
+    .badge-dot   { width: 6px; height: 6px; border-radius: 50%; background: #22c55e; }
+
+    .app-name { font-size: 2.25rem; font-weight: 900; letter-spacing: -.04em; color: var(--text); margin-bottom: 10px; }
+    .app-tagline { font-size: 1rem; color: var(--text-muted); margin-bottom: 36px; line-height: 1.8; }
+
+    .dl-section { margin-bottom: 48px; }
+    .dl-title {
+      font-size: 0.72rem; font-weight: 700;
+      color: var(--text-dim); letter-spacing: .1em; text-transform: uppercase; margin-bottom: 14px;
+    }
+    .dl-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 24px; border-radius: 12px;
+      font-size: 0.9rem; font-weight: 700;
+      text-decoration: none; border: none; cursor: pointer; font-family: inherit;
+      transition: opacity .15s, transform .1s;
+    }
+    .btn:hover { opacity: .88; transform: translateY(-1px); }
+    .btn-primary { background: var(--btn-dark-bg); color: var(--btn-dark-text); }
+    .btn-outline { background: var(--bg); color: var(--text); border: 1.5px solid var(--border); }
+    .btn svg { width: 17px; height: 17px; flex-shrink: 0; }
+
+    .divider { border: none; border-top: 1px solid var(--border-strip); margin: 0 auto 48px; max-width: 640px; }
+
+    .section { max-width: 640px; margin: 0 auto; padding: 0 28px 48px; }
+    .section-title {
+      font-size: 0.72rem; font-weight: 700;
+      color: var(--text-dim); letter-spacing: .1em; text-transform: uppercase; margin-bottom: 16px;
+    }
+
+    .tier-block { margin-bottom: 28px; }
+    .tier-label {
+      font-size: 0.75rem; font-weight: 800; letter-spacing: .06em;
+      text-transform: uppercase; margin-bottom: 8px;
+      display: inline-block; padding: 2px 10px; border-radius: 6px;
+    }
+    .tier-free    { background: #dbeafe; color: #1d4ed8; }
+    .tier-special { background: #fef3c7; color: #92400e; }
+    .tier-max     { background: #ede9fe; color: #6d28d9; }
+
+    .feature-list { list-style: none; }
+    .feature-list li {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 10px 0; border-bottom: 1px solid var(--border-strip);
+      font-size: 0.9rem; color: var(--text-secondary); line-height: 1.5;
+    }
+    .feature-list li:last-child { border-bottom: none; }
+    .check {
+      width: 18px; height: 18px; border-radius: 50%;
+      background: #dcfce7; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 1px;
+    }
+    .check svg { width: 10px; height: 10px; stroke: #16a34a; stroke-width: 2.5; }
+
+    .info-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 1px; background: var(--border-strip);
+      border-radius: 12px; overflow: hidden;
+    }
+    .info-cell { background: var(--bg); padding: 16px 20px; }
+    .info-label { font-size: 0.72rem; color: var(--text-dim); margin-bottom: 4px; font-weight: 600; }
+    .info-value { font-size: 0.875rem; color: var(--text); font-weight: 600; }
+
+    footer {
+      border-top: 1px solid var(--border-strip); padding: 24px 28px;
+      text-align: center; font-size: 0.78rem; color: var(--text-dim);
+    }
+    footer a { color: var(--text-dim); text-decoration: none; }
+    footer a:hover { color: var(--text-muted); }
+
+    @media (max-width: 480px) {
+      .hero { padding: 48px 16px 36px; }
+      .section, footer { padding-left: 16px; padding-right: 16px; }
+      .app-name { font-size: 1.75rem; }
+      .info-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="/" class="back-btn">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10 4L6 8l4 4"/>
+    </svg>
+    UStore
+  </a>
+</div>
+
+<section class="hero">
+  <img class="app-icon" src="icon.svg" alt="StarPDF">
+
+  <div class="badge-row">
+    <span class="badge badge-green"><span class="badge-dot"></span>출시됨</span>
+    <span class="badge badge-gray">v1.2.0.0</span>
+    <span class="badge badge-gray">PC · Utility</span>
+  </div>
+
+  <h1 class="app-name">StarPDF</h1>
+  <p class="app-tagline">병합·분할·OCR·비교·민감정보 삭제까지<br>국내 특화 PDF 도구</p>
+
+  <div class="dl-section">
+    <p class="dl-title">다운로드</p>
+    <div class="dl-row">
+      <a href="https://github.com/Utobit/LInaAi/releases/download/starpdf-v1.2.0/StarPDF.exe"
+         class="btn btn-primary"
+         onclick="gtag('event','download',{app_name:'starpdf',download_type:'exe'})">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        직접 다운로드 (.exe)
+      </a>
+    </div>
+    <p style="font-size:0.78rem;color:var(--text-dim);margin-top:12px;">Windows 10 / 11 (x64) · 약 97 MB</p>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section class="section">
+  <p class="section-title">기능</p>
+
+  <div class="tier-block">
+    <span class="tier-label tier-free">FREE</span>
+    <ul class="feature-list">
+      <li><span class="check"><svg viewBox="0 0 12 12" fill="none"><polyline points="2 6 5 9 10 3"/></svg></span>PDF 병합 — 여러 PDF를 하나로 합치기</li>
+      <li><span class="check"><svg viewBox="0 0 12 12" fill="none"><polyline points="2 6 5 9 10 3"/></svg></span>PDF 분할 — 페이지 범위별 분리</li>
+      <li><span class="check"><svg viewBox="0 0 12 12" fill="none"><polyline points="2 6 5 9 10 3"/></svg></span>PDF 압축 — 파일 크기 최적화</li>
+      <li><span class="check"><svg viewBox="0 0 12 12" fill="none"><polyline points="2 6 5 9 10 3"/></svg></span>PDF 회전 — 방향 보정</li>
+      <li><span class="check"><svg viewBox="0 0 12 12" fill="none"><polyline points="2 6 5 9 10 3"/></svg></span>PDF ↔ 이미지 변환 (JPG / PNG)</li>
+      <li><span class="check"><svg viewBox="0 0 12 12" fill="none"><polyline points="2 6 5 9 10 3"/></svg></span>워터마크 추가</li>
+      <li><span class="check"><svg viewBox="0 0 12 12" fill="none"><polyline points="2 6 5 9 10 3"/></svg></span>메타데이터 편집 — 제목·작성자·키워드</li>
+    </ul>
+  </div>
+
+  <div class="tier-block">
+    <span class="tier-label tier-special">⭐ SPECIAL</span>
+    <ul class="feature-list">
+      <li><span class="check"><svg viewBox="0 0 12 12" fill="none"><polyline points="2 6 5 9 10 3"/></svg></span>한글 OCR — 스캔 문서·이미지 PDF에서 텍스트 추출</li>
+      <li><span class="check"><svg viewBox="0 0 12 12" fill="none"><polyline points="2 6 5 9 10 3"/></svg></span>PDF 비교 — 두 버전 간 차이 시각화</li>
+      <li><span class="check"><svg viewBox="0 0 12 12" fill="none"><polyline points="2 6 5 9 10 3"/></svg></span>민감정보 삭제 — 주민번호·계좌번호 자동 감지 후 블랙박스 처리</li>
+      <li><span class="check"><svg viewBox="0 0 12 12" fill="none"><polyline points="2 6 5 9 10 3"/></svg></span>폼 자동 채우기 — Excel / CSV 데이터로 PDF 양식 일괄 입력</li>
+      <li><span class="check"><svg viewBox="0 0 12 12" fill="none"><polyline points="2 6 5 9 10 3"/></svg></span>세금계산서 파싱 — PDF → 구조화 데이터 추출</li>
+    </ul>
+  </div>
+
+  <div class="tier-block">
+    <span class="tier-label tier-max">🌟 MAX</span>
+    <ul class="feature-list">
+      <li><span class="check"><svg viewBox="0 0 12 12" fill="none"><polyline points="2 6 5 9 10 3"/></svg></span>AI 요약 — PDF 전체 내용 자동 요약 (Claude API)</li>
+      <li><span class="check"><svg viewBox="0 0 12 12" fill="none"><polyline points="2 6 5 9 10 3"/></svg></span>AI Q&A — PDF에 질문하고 AI가 답변</li>
+      <li><span class="check"><svg viewBox="0 0 12 12" fill="none"><polyline points="2 6 5 9 10 3"/></svg></span>계약서 분석 — 위험 조항·불공정 조건 자동 감지</li>
+    </ul>
+  </div>
+</section>
+
+<section class="section">
+  <p class="section-title">앱 정보</p>
+  <div class="info-grid">
+    <div class="info-cell">
+      <p class="info-label">버전</p>
+      <p class="info-value">1.2.0.0</p>
+    </div>
+    <div class="info-cell">
+      <p class="info-label">출시일</p>
+      <p class="info-value">2026-05-10</p>
+    </div>
+    <div class="info-cell">
+      <p class="info-label">OS</p>
+      <p class="info-value">Windows 10 / 11 (x64)</p>
+    </div>
+    <div class="info-cell">
+      <p class="info-label">라이선스</p>
+      <p class="info-value">비공개 (Private)</p>
+    </div>
+    <div class="info-cell">
+      <p class="info-label">설치 형식</p>
+      <p class="info-value">EXE (단일 파일)</p>
+    </div>
+    <div class="info-cell">
+      <p class="info-label">의존성</p>
+      <p class="info-value">없음 (독립 실행)</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>StarPDF © 2026 Utobit ·
+    <a href="mailto:clus0109@gmail.com">clus0109@gmail.com</a>
+  </p>
+</footer>
+
+<script>
+function toggleTheme(){var d=document.documentElement,n=d.getAttribute('data-theme')==='dark'?'light':'dark';d.setAttribute('data-theme',n);localStorage.setItem('theme',n);}
+</script>
+</body>
+</html>
