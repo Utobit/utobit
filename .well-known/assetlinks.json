@@ -1,0 +1,13 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.manamuhan.choice.app",
+      "sha256_cert_fingerprints": [
+        "D0:16:17:CF:67:B4:14:B7:1C:47:B0:F1:AE:6B:2E:0F:A0:0A:6B:B4:13:B4:68:DA:F5:4D:67:DC:08:50:B7:FD",
+        "BC:A1:40:F7:77:D2:0E:06:32:F1:54:E7:7A:92:A0:06:60:39:36:88:05:97:88:DD:00:1B:70:7B:4F:2D:62:46"
+      ]
+    }
+  }
+]

@@ -22,6 +22,14 @@
   status = 301
   force  = true
 
+# assetlinks.json — App Links 검증 (choice.utobit.net)
+[[headers]]
+  for = "/.well-known/assetlinks.json"
+  [headers.values]
+    Content-Type = "application/json"
+    Cache-Control = "public, max-age=3600"
+    Access-Control-Allow-Origin = "*"
+
 # apps.json CORS (브라우저 fetch 허용)
 [[headers]]
   for = "/ustore/apps.json"
@@ -33,6 +41,12 @@
 [[redirects]]
   from = "/ustore/:slug"
   to   = "/ustore/app/index.html"
+  status = 200
+
+# /room/* — choice.utobit.net 딥링크 fallback 페이지
+[[redirects]]
+  from = "/room/*"
+  to   = "/room/index.html"
   status = 200
 
 # 404 fallback
