@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>개인정보처리방침 | PLAYER</title>
+  <meta name="description" content="PLAYER(com.utobit.playerfinalraid) 개인정보처리방침">
+  <link rel="canonical" href="https://utobit.net/player/privacy/">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-F93QE1MMT8"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-F93QE1MMT8');
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: "Noto Sans KR", sans-serif; background: #fff; color: #111827; }
+    nav {
+      position: sticky; top: 0; z-index: 50;
+      background: #fff; border-bottom: 1px solid #f3f4f6;
+      padding: 0 24px; height: 56px;
+      display: flex; align-items: center; gap: 16px;
+    }
+    nav a.brand { font-size: 1rem; font-weight: 900; color: #111827; text-decoration: none; letter-spacing: -0.03em; }
+    nav .crumb { font-size: 0.85rem; color: #9ca3af; }
+    .subnav { display: flex; gap: 4px; margin-left: auto; }
+    .subnav a { font-size: 0.82rem; color: #6b7280; text-decoration: none; padding: 6px 10px; border-radius: 6px; }
+    .subnav a:hover { background: #f3f4f6; color: #111827; }
+    .subnav a.current { background: #111827; color: #fff; }
+    main { max-width: 720px; margin: 0 auto; padding: 56px 24px 80px; }
+    h1 { font-size: 1.6rem; font-weight: 800; margin-bottom: 6px; }
+    .date { font-size: 0.82rem; color: #9ca3af; margin-bottom: 12px; display: block; }
+    .notice { font-size: 0.8rem; color: #92400e; background: #fffbeb; border: 1px solid #fde68a; border-radius: 8px; padding: 10px 14px; margin-bottom: 40px; }
+    h2 { font-size: 0.95rem; font-weight: 700; color: #111827; margin-top: 32px; margin-bottom: 8px; }
+    p, li { font-size: 0.875rem; color: #374151; line-height: 1.8; }
+    ul { list-style: disc; padding-left: 1.5rem; margin: 8px 0 12px; }
+    table { width: 100%; border-collapse: collapse; margin: 12px 0 16px; font-size: 0.85rem; }
+    th, td { border: 1px solid #e5e7eb; padding: 8px 10px; text-align: left; vertical-align: top; }
+    th { background: #f9fafb; font-weight: 700; }
+    a { color: #2563eb; }
+    a:hover { text-decoration: underline; }
+    footer {
+      border-top: 1px solid #f3f4f6;
+      padding: 28px 24px; text-align: center;
+      font-size: 0.78rem; color: #9ca3af;
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="brand" href="/">UTOBIT</a>
+  <span class="crumb">/ PLAYER</span>
+  <div class="subnav">
+    <a class="current" href="/player/privacy/">개인정보처리방침</a>
+    <a href="/player/terms/">이용약관</a>
+    <a href="/player/refund/">청약철회</a>
+  </div>
+</nav>
+
+<main>
+  <h1>개인정보처리방침</h1>
+  <span class="date">최종 수정일: 2026-07-23</span>
+  <p class="notice">본 문서는 PLAYER(패키지명: com.utobit.playerfinalraid) 앱 전용 개인정보처리방침입니다. Utobit의 다른 서비스(Choice, UStore 등)와는 별도로 적용됩니다.</p>
+
+  <h2>1. 개인정보처리자</h2>
+  <p>Utobit (이메일: clus0109@gmail.com)</p>
+
+  <h2>2. 수집하는 개인정보 항목</h2>
+  <table>
+    <tr><th>구분</th><th>수집 항목</th><th>수집 방법</th></tr>
+    <tr><td>계정(로그인)</td><td>이메일, 표시 이름, 고유 사용자 식별자(UID)</td><td>Google 계정을 통한 Firebase Authentication</td></tr>
+    <tr><td>게임 진행 데이터</td><td>닉네임, 레벨, 경험치, 능력치, 보유 아이템·스킬, 재화(골드/마석/크리스탈), 전투기록, 클리어한 게이트 목록, 국가(기기 로케일 기반)</td><td>앱 내 플레이 중 서버(AWS)에 자동 저장</td></tr>
+    <tr><td>결제 정보</td><td>인앱 구매(크리스탈) 내역, 구매 토큰</td><td>Google Play 인앱결제를 통해 처리, 카드번호 등 결제수단 원본 정보는 수집하지 않음(Google Play가 직접 처리)</td></tr>
+    <tr><td>기기·센서 정보</td><td>신체활동(걸음 수) 권한</td><td>만보기 기반 게임 콘텐츠 제공 목적, 사용자 동의 시에만 수집</td></tr>
+    <tr><td>위치 정보</td><td>수집하지 않음 — 본 버전은 위치기반서비스(GPS)를 사용하지 않으며 지도는 고정 좌표로 표시됩니다.</td><td>-</td></tr>
+    <tr><td>광고 식별자</td><td>광고 SDK 연동 시 광고 식별자(Advertising ID)가 수집될 수 있습니다.</td><td>기기 OS 제공 광고 식별자</td></tr>
+  </table>
+
+  <h2>3. 개인정보의 이용 목적</h2>
+  <ul>
+    <li>회원 식별 및 게임 서비스 제공(로그인, 진행상황 저장·복구)</li>
+    <li>인앱 구매 처리 및 결제 검증, 부정거래 방지</li>
+    <li>만보기 연동 콘텐츠 제공(권한 동의 시)</li>
+    <li>서비스 오류 진단 및 개선</li>
+    <li>공지사항, 약관 변경 등 필수 안내</li>
+  </ul>
+
+  <h2>4. 개인정보의 보유 및 이용 기간</h2>
+  <p>회원 탈퇴 시 계정 및 게임 진행 데이터는 지체 없이 삭제됩니다. 단, 관련 법령(전자상거래법 등)에 따라 결제 기록은 일정 기간 별도 보관될 수 있습니다.</p>
+
+  <h2>5. 제3자 제공 및 처리위탁</h2>
+  <p>서비스 제공을 위해 아래 외부 서비스에 정보가 전송·처리될 수 있습니다.</p>
+  <ul>
+    <li>Google (Firebase Authentication, Google Play 결제·로그인) — <a href="https://policies.google.com/privacy" target="_blank">개인정보처리방침</a></li>
+    <li>Amazon Web Services (게임 데이터 서버 저장, 서울 리전) — <a href="https://aws.amazon.com/privacy/" target="_blank">개인정보처리방침</a></li>
+    <li>Mapbox (지도 렌더링 — 위치 미수집, 지도 표시 목적만) — <a href="https://www.mapbox.com/legal/privacy" target="_blank">개인정보처리방침</a></li>
+  </ul>
+  <p>위 목적 외 제3자에게 개인정보를 제공하지 않습니다.</p>
+
+  <h2>6. 이용자의 권리</h2>
+  <p>이용자는 앱 내 설정 메뉴에서 언제든 계정 삭제(회원 탈퇴)를 요청할 수 있으며, 개인정보 열람·정정·삭제 문의는 아래로 연락해 주세요.</p>
+  <ul><li>이메일: clus0109@gmail.com</li></ul>
+
+  <h2>7. 만 14세 미만 아동의 개인정보</h2>
+  <p>본 서비스는 만 14세 미만 아동을 주 대상으로 하지 않으며, 아동으로부터 고의로 개인정보를 수집하지 않습니다.</p>
+
+  <h2>8. 개인정보처리방침 변경</h2>
+  <p>본 방침은 법령·서비스 변경 시 개정될 수 있으며, 변경 시 본 페이지 및 앱 공지사항에 고지합니다.</p>
+</main>
+
+<footer>© 2026 UTOBIT · clus0109@gmail.com</footer>
+
+</body>
+</html>
