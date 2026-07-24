@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>moechat | UStore</title>
+  <meta property="og:title" content="moechat">
+  <meta property="og:description" content="내 컴퓨터에 사는 AI 캐릭터 동반자 — UStore 전용 출시 예정">
+  <meta property="og:url" content="https://utobit.net/ustore/moechat/">
+  <script>(function(){var t=localStorage.getItem('theme')||'light';document.documentElement.setAttribute('data-theme',t);})();</script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #fff; --bg-soft: #f9fafb; --bg-soft2: #f3f4f6;
+      --border: #e5e7eb; --border-strip: #f3f4f6;
+      --text: #111827; --text-secondary: #374151;
+      --text-muted: #6b7280; --text-dim: #9ca3af;
+      --btn-dark-bg: #111827; --btn-dark-text: #fff;
+    }
+    [data-theme="dark"] {
+      --bg: #0d1117; --bg-soft: #161b22; --bg-soft2: #21262d;
+      --border: #21262d; --border-strip: #161b22;
+      --text: #f0f6fc; --text-secondary: #c9d1d9;
+      --text-muted: #8b949e; --text-dim: #6e7681;
+      --btn-dark-bg: #f0f6fc; --btn-dark-text: #0d1117;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', 'Noto Sans KR', system-ui, sans-serif;
+      background: var(--bg); color: var(--text);
+      min-height: 100vh; -webkit-font-smoothing: antialiased;
+    }
+    .topbar { padding: 16px 28px; border-bottom: 1px solid var(--border-strip); }
+    .back-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 0.8125rem; font-weight: 600;
+      color: var(--text-muted); text-decoration: none; transition: color .15s;
+    }
+    .back-btn:hover { color: var(--text); }
+    .back-btn svg { width: 16px; height: 16px; }
+    .hero {
+      max-width: 640px; margin: 0 auto;
+      padding: 72px 28px 40px; text-align: center;
+    }
+    .app-icon {
+      width: 96px; height: 96px; border-radius: 22px;
+      margin: 0 auto 28px; display: block;
+      box-shadow: 0 4px 24px rgba(0,0,0,.12); object-fit: cover;
+    }
+    .app-name {
+      font-size: 2.25rem; font-weight: 900;
+      letter-spacing: -.04em; color: var(--text); margin-bottom: 12px;
+    }
+    .app-tagline {
+      font-size: 1rem; color: var(--text-muted);
+      margin-bottom: 32px; line-height: 1.8;
+    }
+    .status-badge {
+      display: inline-block;
+      padding: 10px 28px; border-radius: 12px;
+      font-size: 0.9375rem; font-weight: 700;
+      background: var(--bg-soft2); color: var(--text-dim);
+    }
+    .about {
+      max-width: 640px; margin: 0 auto;
+      padding: 8px 28px 64px;
+    }
+    .about p {
+      font-size: 0.95rem; line-height: 1.85;
+      color: var(--text-secondary); margin-bottom: 24px;
+    }
+    .feat-list { list-style: none; display: grid; gap: 10px; }
+    .feat-list li {
+      display: flex; gap: 10px; align-items: flex-start;
+      font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6;
+    }
+    .feat-list li::before {
+      content: ""; flex: 0 0 auto; width: 16px; height: 16px; margin-top: 3px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ff7eb6, #7c5cff);
+    }
+    footer {
+      border-top: 1px solid var(--border-strip); padding: 24px 28px;
+      text-align: center; font-size: 0.78rem; color: var(--text-dim);
+    }
+    footer a { color: var(--text-dim); text-decoration: none; }
+    footer a:hover { color: var(--text-muted); }
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="/" class="back-btn">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10 4L6 8l4 4"/>
+    </svg>
+    UStore
+  </a>
+</div>
+
+<section class="hero">
+  <img class="app-icon" src="icon.svg" alt="moechat">
+  <h1 class="app-name">moechat</h1>
+  <p class="app-tagline">PC · AI<br>내 컴퓨터에 사는 AI 캐릭터 동반자</p>
+  <span class="status-badge">출시 예정</span>
+</section>
+
+<section class="about">
+  <p>화면 한켠의 작은 동그라미. 누르면 나만의 캐릭터가 나와 1:1로 대화합니다.
+     이름·성격·말투·프로필 이미지를 직접 설정해 세상에 하나뿐인 챗봇을 만드세요.
+     <strong>UStore 전용</strong>으로 먼저 선보입니다.</p>
+  <ul class="feat-list">
+    <li>화면 오버레이 동그라미 → 클릭하면 캐릭터와 바로 대화</li>
+    <li>이름·성격·말투·첫인사·프로필 이미지로 나만의 캐릭터 제작</li>
+    <li>대화 내용 자동 저장 · 다시 열면 그대로 복원</li>
+    <li>기본 캐릭터 제공 + 무제한 커스텀</li>
+  </ul>
+</section>
+
+<footer>
+  <p>moechat © 2026 Utobit · <a href="mailto:clus0109@gmail.com">clus0109@gmail.com</a></p>
+</footer>
+
+<script>
+function toggleTheme(){var d=document.documentElement,n=d.getAttribute('data-theme')==='dark'?'light':'dark';d.setAttribute('data-theme',n);localStorage.setItem('theme',n);}
+</script>
+</body>
+</html>

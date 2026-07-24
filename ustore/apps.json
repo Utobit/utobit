@@ -1,7 +1,29 @@
 {
   "version": 1,
-  "updated": "2026-05-10",
+  "updated": "2026-07-25",
   "apps": [
+    {
+      "slug": "moechat",
+      "name": "moechat",
+      "category": "pc",
+      "subcategory": "AI",
+      "version": null,
+      "status": "coming_soon",
+      "icon": "/ustore/moechat/icon.svg",
+      "tagline": "내 컴퓨터에 사는 AI 캐릭터 동반자.",
+      "description": "화면 한켠의 작은 동그라미를 누르면 나만의 캐릭터가 나와 1:1로 대화합니다. 이름·성격·말투·프로필 이미지를 직접 설정해 나만의 챗봇을 만들 수 있습니다. UStore 전용 출시 예정.",
+      "tags": ["ai", "chat", "character", "companion"],
+      "detail_url": "/ustore/moechat/",
+      "download": {},
+      "features": [
+        "화면 오버레이 동그라미 → 클릭하면 캐릭터와 대화",
+        "이름·성격·말투·첫인사·프로필 이미지로 나만의 캐릭터 제작",
+        "대화 내용 자동 저장 · 다시 열면 그대로 복원",
+        "기본 캐릭터 제공 + 무제한 커스텀"
+      ],
+      "requirements": "Windows 10 / 11 (x64)",
+      "screenshots": []
+    },
     {
       "slug": "colorscrap",
       "name": "ColorScrap",
