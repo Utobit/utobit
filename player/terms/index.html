@@ -44,6 +44,18 @@
       padding: 28px 24px; text-align: center;
       font-size: 0.78rem; color: #9ca3af;
     }
+  
+    /* 모바일 가독성(2026-08-02): 내비 세로쓰기 붕괴·표 글자단위 줄바꿈 교정 */
+    .subnav a { white-space: nowrap; }
+    p, li, th, td { word-break: keep-all; overflow-wrap: break-word; }
+    @media (max-width: 640px) {
+      nav { padding: 0 12px; gap: 8px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      nav .crumb { white-space: nowrap; }
+      .subnav a { font-size: 0.78rem; padding: 6px 8px; }
+      main { padding: 36px 16px 64px; }
+      table { display: block; overflow-x: auto; }
+      th, td { min-width: 110px; font-size: 0.8rem; }
+    }
   </style>
 </head>
 <body>
