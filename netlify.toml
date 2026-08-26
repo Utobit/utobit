@@ -54,3 +54,9 @@
   from = "/*"
   to   = "/404.html"
   status = 404
+
+# /ys — 경력 소개(비공개 URL). 검색엔진 색인 금지
+[[headers]]
+  for = "/ys/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow, noarchive"

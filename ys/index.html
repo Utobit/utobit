@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>박영시 — 환경영향평가 · GIS</title>
+<link rel="icon" href="../assets/dallae_icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<style>
+  :root{
+    --bg:#0b1220; --bg2:#111a2e; --panel:#16213a; --line:#25314f;
+    --fg:#e8edf7; --muted:#94a3c0; --accent:#3ddc97; --accent2:#5aa9ff; --warn:#ffcc66;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;background:var(--bg);color:var(--fg);font-family:'Noto Sans KR','Inter',system-ui,sans-serif;overflow:hidden}
+  a{color:var(--accent2)}
+  #deck{position:fixed;inset:0;overflow:hidden}
+  .slide{position:absolute;inset:0;padding:5vh 6vw;display:flex;flex-direction:column;justify-content:center;
+    opacity:0;transform:translateX(60px);transition:opacity .45s ease,transform .45s ease;pointer-events:none;visibility:hidden}
+  .slide.active{opacity:1;transform:none;pointer-events:auto;visibility:visible}
+  .slide.prev{transform:translateX(-60px)}
+  .kicker{font:600 .85rem/1 'Inter',sans-serif;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+  h1{font-size:clamp(2.2rem,5vw,4.2rem);font-weight:900;line-height:1.1;letter-spacing:-.02em}
+  h2{font-size:clamp(1.6rem,3.2vw,2.6rem);font-weight:800;letter-spacing:-.01em;margin-bottom:22px}
+  h3{font-size:1.1rem;font-weight:700;color:var(--fg)}
+  p,li{font-size:clamp(.95rem,1.25vw,1.15rem);line-height:1.7;color:var(--muted)}
+  .sub{font-size:clamp(1rem,1.6vw,1.4rem);color:var(--muted);margin-top:10px}
+  .grid{display:grid;gap:18px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px 22px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  .chip{font-size:.85rem;padding:5px 11px;border-radius:999px;border:1px solid var(--line);background:var(--bg2);color:var(--fg)}
+  .chip.acc{border-color:var(--accent);color:var(--accent)}
+  .stat{font:800 clamp(2rem,4vw,3.2rem)/1 'Inter',sans-serif;color:var(--accent)}
+  .stat small{font:600 .9rem 'Noto Sans KR',sans-serif;color:var(--muted);display:block;margin-top:8px}
+  /* 진행/네비 */
+  #bar{position:fixed;left:0;top:0;height:3px;background:var(--accent);width:0;z-index:20;transition:width .3s}
+  #nav{position:fixed;right:18px;bottom:16px;display:flex;gap:8px;align-items:center;z-index:20;font:600 .8rem 'Inter',sans-serif;color:var(--muted)}
+  #nav button{background:var(--panel);border:1px solid var(--line);color:var(--fg);width:36px;height:36px;border-radius:10px;cursor:pointer;font-size:1rem}
+  #nav button:hover{border-color:var(--accent)}
+  #dots{position:fixed;left:18px;bottom:20px;display:flex;gap:6px;z-index:20}
+  #dots i{width:8px;height:8px;border-radius:50%;background:var(--line);cursor:pointer;display:block}
+  #dots i.on{background:var(--accent)}
+  #hint{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);font-size:.75rem;color:var(--muted);z-index:20;opacity:.7}
+  /* 표지 */
+  .cover{display:grid;grid-template-columns:auto 1fr;gap:5vw;align-items:center}
+  .cover img{width:clamp(140px,16vw,220px);border-radius:16px;border:2px solid var(--line);box-shadow:0 20px 60px rgba(0,0,0,.5)}
+  /* 타임라인 */
+  .tl{border-left:2px solid var(--line);padding-left:26px;display:grid;gap:16px}
+  .tl div{position:relative}
+  .tl div::before{content:"";position:absolute;left:-33px;top:9px;width:12px;height:12px;border-radius:50%;background:var(--accent);border:3px solid var(--bg)}
+  .tl b{color:var(--fg);font-size:1.05rem}
+  .tl span{color:var(--accent2);font:600 .85rem 'Inter',sans-serif;margin-left:8px}
+  /* 지도 슬라이드 */
+  .mapwrap{display:grid;grid-template-columns:minmax(300px,34%) 1fr;gap:14px;height:78vh}
+  .side{display:flex;flex-direction:column;min-height:0;background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .filters{display:flex;flex-wrap:wrap;gap:6px;padding:10px}
+  .filters button{font-size:.78rem;padding:5px 10px;border-radius:999px;border:1px solid var(--line);background:var(--bg2);color:var(--muted);cursor:pointer}
+  .filters button.on{border-color:var(--accent);color:var(--accent)}
+  .side input{margin:0 10px 8px;padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--fg);font-size:.9rem}
+  #plist{overflow:auto;flex:1;min-height:0}
+  #plist div{padding:9px 12px;border-top:1px solid var(--line);cursor:pointer;font-size:.86rem;line-height:1.45}
+  #plist div:hover{background:var(--bg2)}
+  #plist div.sel{background:#1d2b4a;border-left:3px solid var(--accent)}
+  #plist div.nogeo{opacity:.55;cursor:default}
+  #plist b{display:block;color:var(--fg);font-weight:500}
+  #plist small{color:var(--muted)}
+  #plist em{font-style:normal;color:var(--accent2);font-size:.75rem;margin-right:6px}
+  #map{border-radius:14px;border:1px solid var(--line);background:#0f172a;height:100%}
+  .leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#16213a;color:#e8edf7}
+  .leaflet-popup-content{font-size:.85rem;line-height:1.5;margin:10px 14px}
+  .leaflet-container{font-family:inherit}
+  .mnote{font-size:.75rem;color:var(--muted);margin-top:8px}
+  /* 갤러리 */
+  .gal{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .gal figure{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;cursor:zoom-in}
+  .gal img{width:100%;height:20vh;object-fit:cover;display:block;background:#fff}
+  .gal figcaption{padding:8px 12px;font-size:.85rem;color:var(--fg)}
+  .gal figcaption small{display:block;color:var(--muted)}
+  #lb{position:fixed;inset:0;background:rgba(5,8,16,.92);display:none;align-items:center;justify-content:center;z-index:50;cursor:zoom-out;flex-direction:column;gap:12px}
+  #lb img{max-width:92vw;max-height:84vh;border-radius:10px;background:#fff}
+  #lb p{color:var(--fg)}
+  /* 채팅 */
+  .chat{display:grid;grid-template-columns:1fr 320px;gap:16px;height:72vh}
+  #log{flex:1;min-height:0;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;overflow:auto;display:flex;flex-direction:column;gap:12px}
+  .msg{max-width:88%;padding:10px 14px;border-radius:12px;font-size:.95rem;line-height:1.65;white-space:pre-wrap}
+  .msg.u{align-self:flex-end;background:#1f3b5c;color:#fff}
+  .msg.m{align-self:flex-start;background:var(--bg2);border:1px solid var(--line);color:var(--fg)}
+  .msg.m b{color:var(--accent)}
+  .askbox{display:flex;gap:8px;margin-top:10px}
+  .askbox input{flex:1;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--fg);font-size:1rem}
+  .askbox button,.sugg button{padding:10px 14px;border-radius:10px;border:1px solid var(--accent);background:transparent;color:var(--accent);cursor:pointer;font-size:.9rem}
+  .sugg{display:flex;flex-direction:column;gap:8px}
+  .sugg button{text-align:left;border-color:var(--line);color:var(--fg);font-size:.85rem;line-height:1.4}
+  .sugg button:hover{border-color:var(--accent)}
+  @media (max-width:900px){
+    .slide{padding:4vh 5vw;overflow:auto;justify-content:flex-start}
+    .cover{grid-template-columns:1fr}
+    .mapwrap{grid-template-columns:1fr;grid-template-rows:38vh 1fr}
+    .gal{grid-template-columns:repeat(2,1fr)}
+    .chat{grid-template-columns:1fr;height:auto}
+    .sugg{flex-direction:row;flex-wrap:wrap}
+  }
+  @media print{
+    html,body{overflow:visible;background:#fff;color:#000}
+    #bar,#nav,#dots,#hint,#lb{display:none!important}
+    #deck{position:static}
+    .slide{position:static;opacity:1;transform:none;visibility:visible;page-break-after:always;min-height:100vh;color:#000}
+    p,li,.sub{color:#333}
+  }
+</style>
+</head>
+<body>
+<div id="bar"></div>
+<div id="deck">
+
+<!-- 1. 표지 -->
+<section class="slide">
+  <div class="cover">
+    <img src="img/photo.jpg" alt="박영시">
+    <div>
+      <div class="kicker">Environmental Impact Assessment · GIS</div>
+      <h1>박영시<br><span style="color:var(--accent)">환경영향평가 실무 4년</span></h1>
+      <p class="sub">수질 · 수리수문 · 지형지질 · 경관 시뮬레이션 — 현장부터 GIS·개발까지</p>
+      <div class="chips">
+        <span class="chip acc">전략환경영향평가 8건</span><span class="chip acc">소규모환경영향평가 37건</span>
+        <span class="chip">사후환경영향조사</span><span class="chip">QGIS · CAD · SketchUp</span><span class="chip">Web/App · API</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 2. 한눈에 -->
+<section class="slide">
+  <div class="kicker">At a glance</div>
+  <h2>한눈에 보기</h2>
+  <div class="grid" style="grid-template-columns:repeat(4,1fr)">
+    <div class="card"><div class="stat">4<span style="font-size:.5em">년+</span><small>환경영향평가 실무 (2022.02~)</small></div></div>
+    <div class="card"><div class="stat">62<small>참여 사업 (EIA 54 · 산림 8)</small></div></div>
+    <div class="card"><div class="stat">5<small>근무 조직 (동국기술단 → 이레이앤씨 → 유원이앤씨)</small></div></div>
+    <div class="card"><div class="stat">3<small>PM 수행 (도로 · 파크골프장 · 근생부지)</small></div></div>
+  </div>
+  <div class="grid" style="grid-template-columns:1fr 1fr;margin-top:18px">
+    <div class="card">
+      <h3>담당 파트</h3>
+      <div class="chips">
+        <span class="chip acc">수질 / 수리수문</span><span class="chip acc">지형지질</span><span class="chip acc">경관 (시뮬레이션 · 일조)</span>
+        <span class="chip">소음진동</span><span class="chip">대기</span><span class="chip">지역개황</span><span class="chip">폐기물</span><span class="chip">GIS 분석</span>
+      </div>
+      <h3 style="margin-top:16px">도구</h3>
+      <div class="chips">
+        <span class="chip">QGIS</span><span class="chip">ArcView</span><span class="chip">AutoCAD</span><span class="chip">SketchUp</span>
+        <span class="chip">Photoshop</span><span class="chip">PowerPoint</span><span class="chip">Mapbox / VWorld API</span><span class="chip">Python · JS</span>
+      </div>
+    </div>
+    <div class="card">
+      <h3>기본 정보</h3>
+      <ul style="list-style:none;margin-top:8px">
+        <li>· 1995년생 · 서울 강서구 마곡동 거주</li>
+        <li>· 한국교통대학교 환경공학과 (2019.02 졸업)</li>
+        <li>· 충주고등학교 이과 과학중점반 (2013.02)</li>
+        <li>· 수질환경기사 · 소음진동기사 — 필기 합격, 실기 준비 중</li>
+        <li>· 1종 운전면허 · 육군 병장 만기 전역</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 3. 경력 -->
+<section class="slide">
+  <div class="kicker">Career</div>
+  <h2>경력</h2>
+  <div class="tl">
+    <div><b>㈜유원이앤씨</b><span>2026.01 ~ 현재</span>
+      <p>소규모·전략환경영향평가 — 수질 · 소음진동 · 대기 파트 (횡성 태양광, 인제 군관리계획 등)</p></div>
+    <div><b>㈜이레이앤씨 환경사업부</b><span>2024.05 ~ 2025.08</span>
+      <p>전략환경영향평가 5건 수질/수리수문 담당 (철원군 농어촌도로, 2035 영월군관리계획, 강릉권역 하천기본계획 3건)<br>
+      소규모환경영향평가 PM 2건 (태안203호 도로 확포장, 안면고남 파크골프장) · 강릉 디오션 사후모니터링 · 환경성검토(광화문 대심도 빗물터널)</p></div>
+    <div><b>동국산림기술 · ㈜동국기술단 산림사업팀</b><span>2023.05 ~ 2023.11</span>
+      <p>숲가꾸기·풀베기 실시설계(표준지 조사·도면), 상수관로·도로 GIS DB구축 측량 지원, 재해위험성 검토의견서 작성</p></div>
+    <div><b>㈜동국기술단 환경사업부</b><span>2022.02 ~ 2023.05</span>
+      <p>소규모환경영향평가 약 30건 — 지형지질 · 경관(시뮬레이션·일조) · 수질 · 소음진동 파트<br>
+      충주댐 사후환경영향조사(분기), 괴산 태양광 사후환경영향조사, ㈜청오산업 토석채취 환경영향평가, 충주시 소규모수도시설 관리 용역</p></div>
+    <div><b>Utobit (개인 개발)</b><span>2024.08 ~</span>
+      <p>환경영향평가 자동화 시스템(모바일/웹) 개발 중 · 지도 API 웹앱 · AI 에이전트</p></div>
+  </div>
+</section>
+
+<!-- 4. 참여사업 지도 -->
+<section class="slide" id="s-map">
+  <div style="display:flex;align-items:baseline;gap:16px;margin-bottom:10px">
+    <h2 style="margin:0">참여 사업 지도</h2><span class="mnote" id="mcount"></span>
+    <span class="mnote" style="margin-left:auto">목록 클릭 → 해당 위치로 이동 · 위치는 읍·면·리 단위 근사</span>
+  </div>
+  <div class="mapwrap">
+    <div class="side">
+      <div class="filters" id="filters"></div>
+      <input id="psearch" placeholder="사업명 · 파트 검색">
+      <div id="plist"></div>
+    </div>
+    <div id="map"></div>
+  </div>
+</section>
+
+<!-- 5. 전략환경영향평가 -->
+<section class="slide">
+  <div class="kicker">Strategic EIA</div>
+  <h2>전략환경영향평가 — 계획 단계의 수질·수리수문</h2>
+  <div class="grid" style="grid-template-columns:repeat(3,1fr)">
+    <div class="card"><h3>강릉권역 하천기본계획 3건</h3><p>사천천 · 섬석천 · 어단천<br>수질/수리수문 파트 — 현황조사, 영향 예측, 저감방안<br><span class="chip" style="margin-top:8px;display:inline-block">이레이앤씨 · 환경부 협의</span></p></div>
+    <div class="card"><h3>2035 영월군관리계획(재정비)</h3><p>군관리계획 재정비 전략환경영향평가 — 수질 파트<br><span class="chip" style="margin-top:8px;display:inline-block">이레이앤씨 · 환경부 협의</span></p></div>
+    <div class="card"><h3>철원군 농어촌도로 기본 및 정비계획</h3><p>도로 계획 전략환경영향평가 — 수질/수리수문 파트<br><span class="chip" style="margin-top:8px;display:inline-block">이레이앤씨 · 환경부 협의</span></p></div>
+    <div class="card"><h3>인제 군관리계획 결정</h3><p>월학리 청년·은퇴자마을 지구단위계획 — 수질 · 소음 · 대기<br><span class="chip" style="margin-top:8px;display:inline-block">유원이앤씨 · 진행 중</span></p></div>
+    <div class="card"><h3>법화천 하천기본계획 · 천평지구</h3><p>경관 · 토양 파트 / 작업 중 인수인계<br><span class="chip" style="margin-top:8px;display:inline-block">동국기술단</span></p></div>
+    <div class="card"><h3>기타 검토</h3><p>서산2일반산업단지 환경보전방안 · 광화문 대심도 빗물배수터널 환경성검토(GIS·수질) · 입지검토 · 환경성검토서 다수</p></div>
+  </div>
+</section>
+
+<!-- 6. 소규모 EIA -->
+<section class="slide">
+  <div class="kicker">Small-scale EIA</div>
+  <h2>소규모환경영향평가 37건 — 파트별 수행</h2>
+  <div class="grid" style="grid-template-columns:1fr 1fr">
+    <div class="card">
+      <h3>파트별 건수</h3>
+      <div id="partstats" class="chips"></div>
+      <p style="margin-top:12px">공장·물류·창고 부지, 태양광, 도로 확포장, 체육시설, 동식물관련시설, 토석채취 등 사업유형 전반 경험</p>
+    </div>
+    <div class="card">
+      <h3>PM · 전체 작성</h3>
+      <ul style="list-style:none;margin-top:6px">
+        <li>· 태안203호(쇠평이) 도로 확포장공사 — PM/수질</li>
+        <li>· 남부권(안면고남) 파크골프장 조성사업 — PM/수질</li>
+        <li>· 제천시 양화리 근린생활시설부지 — PM/전체 작성</li>
+      </ul>
+      <h3 style="margin-top:14px">사후환경영향조사 · 모니터링</h3>
+      <ul style="list-style:none;margin-top:6px">
+        <li>· 충주댐 사후환경영향조사 (분기 1회 보고서)</li>
+        <li>· 괴산 소수면 수리 태양광 발전단지 사후환경영향조사</li>
+        <li>· 강릉 디오션 259 신축공사 사후모니터링 담당</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 7. 프로그램 활용 -->
+<section class="slide">
+  <div class="kicker">Tools</div>
+  <h2>프로그램 활용 — 실제 작업물</h2>
+  <div class="gal" id="gal"></div>
+</section>
+
+<!-- 8. 개발 -->
+<section class="slide">
+  <div class="kicker">Development</div>
+  <h2>GIS를 넘어 — 직접 만드는 도구</h2>
+  <div class="grid" style="grid-template-columns:repeat(3,1fr)">
+    <div class="card"><h3>환경영향평가 자동화 시스템</h3><p>모바일/웹 · 2026.01~ 개인 개발<br>현황 조사 → 도면 → 보고서 초안까지 이어지는 워크플로우 자동화를 목표로 구축 중</p></div>
+    <div class="card"><h3>지도 API 웹앱</h3><p>Mapbox · Google · VWorld 레이어 전환, 좌표 조회, 3D 건물 — 사업대상지 검토용 (2024.08~)</p></div>
+    <div class="card"><h3>AI 에이전트 · 이 페이지</h3><p>PC·모바일 연동 AI 비서(달래) 운영 중.<br>이 소개 페이지도 Leaflet 지도 + Gemini API 질의응답으로 직접 구성</p></div>
+  </div>
+  <p style="margin-top:18px">→ 실무에서 반복되는 GIS 가공·도면 편집·보고서 정리를 스크립트와 웹 도구로 줄이는 데 관심이 있습니다.</p>
+</section>
+
+<!-- 9. Q&A -->
+<section class="slide" id="s-chat">
+  <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:12px">
+    <h2 style="margin:0">환경영향평가 AI 질의응답</h2><span class="mnote">Gemini 2.5 · 직접 질문해 보세요</span>
+  </div>
+  <div class="chat">
+    <div style="display:flex;flex-direction:column;min-height:0">
+      <div id="log"><div class="msg m"><b>EIA 도우미</b>&nbsp; 환경영향평가 제도·절차·평가항목이나 지원자 경력에 대해 물어보세요.</div></div>
+      <form class="askbox" id="askform"><input id="q" placeholder="예) 하천기본계획 전략환경영향평가에서 수리수문 항목은 무엇을 검토하나요?" autocomplete="off"><button type="submit" id="askbtn">질문</button></form>
+    </div>
+    <div class="sugg" id="sugg"></div>
+  </div>
+</section>
+
+<!-- 10. 마무리 -->
+<section class="slide">
+  <div class="kicker">Thank you</div>
+  <h1>감사합니다.</h1>
+  <p class="sub" style="margin-top:20px">현장 조사부터 GIS 분석, 보고서, 그리고 도구 개발까지 —<br>한 사람이 끝까지 책임지는 실무자가 되겠습니다.</p>
+  <div class="chips" style="margin-top:28px">
+    <span class="chip">박영시</span><span class="chip">연락처 · 이메일 (추가 예정)</span><span class="chip">utobit.net/ys</span>
+  </div>
+</section>
+
+</div>
+
+<div id="dots"></div>
+<div id="hint">← → 이동 · F 전체화면 · 클릭으로 사업지 이동</div>
+<div id="nav"><span id="cnt"></span><button id="prev" title="이전">‹</button><button id="next" title="다음">›</button><button id="fs" title="전체화면">⛶</button></div>
+<div id="lb"><img alt=""><p></p></div>
+
+<script src="projects.js"></script>
+<script>
+/* ── 슬라이드 엔진 ─────────────────────────────── */
+const slides=[...document.querySelectorAll('.slide')];let cur=-1;
+const dots=document.getElementById('dots');
+slides.forEach((_,i)=>{const d=document.createElement('i');d.onclick=()=>go(i);dots.appendChild(d)});
+function go(n){
+  n=Math.max(0,Math.min(slides.length-1,n)); if(n===cur)return;
+  slides.forEach((s,i)=>{s.classList.toggle('active',i===n);s.classList.toggle('prev',i<n)});
+  [...dots.children].forEach((d,i)=>d.classList.toggle('on',i===n));
+  cur=n; location.hash='#'+(n+1);
+  document.getElementById('bar').style.width=((n+1)/slides.length*100)+'%';
+  document.getElementById('cnt').textContent=(n+1)+' / '+slides.length;
+  if(slides[n].id==='s-map') setTimeout(()=>map&&map.invalidateSize(),350);
+}
+document.getElementById('prev').onclick=()=>go(cur-1);
+document.getElementById('next').onclick=()=>go(cur+1);
+document.getElementById('fs').onclick=()=>document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen();
+addEventListener('keydown',e=>{
+  if(e.target.tagName==='INPUT')return;
+  if(['ArrowRight','ArrowDown','PageDown',' '].includes(e.key)){e.preventDefault();go(cur+1)}
+  else if(['ArrowLeft','ArrowUp','PageUp'].includes(e.key)){e.preventDefault();go(cur-1)}
+  else if(e.key==='Home')go(0); else if(e.key==='End')go(slides.length-1);
+  else if(e.key==='f'||e.key==='F')document.getElementById('fs').click();
+});
+let tx=null;addEventListener('touchstart',e=>{tx=e.touches[0].clientX},{passive:true});
+addEventListener('touchend',e=>{if(tx===null)return;const dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>60&&!e.target.closest('#map,#plist,#log'))go(cur+(dx<0?1:-1));tx=null});
+addEventListener('hashchange',()=>{const n=parseInt(location.hash.slice(1))-1;if(!isNaN(n))go(n)});
+
+/* ── 지도 + 사업 목록 ───────────────────────────── */
+const P=window.PROJECTS||[];
+const COMPANIES=[...new Set(P.map(p=>p.company))];
+const SHORT={'㈜유원이앤씨':'유원','㈜이레이앤씨':'이레','㈜동국기술단 환경사업부':'동국·환경','㈜동국기술단 산림사업팀':'동국·산림','동국산림기술':'동국산림기술'};
+const COLOR={'㈜유원이앤씨':'#ffcc66','㈜이레이앤씨':'#3ddc97','㈜동국기술단 환경사업부':'#5aa9ff','㈜동국기술단 산림사업팀':'#c084fc','동국산림기술':'#c084fc'};
+let filter='ALL',query='',map,markers={},sel=null;
+const fl=document.getElementById('filters');
+[['ALL','전체'],...COMPANIES.map(c=>[c,SHORT[c]||c])].forEach(([k,label])=>{
+  const b=document.createElement('button');b.textContent=label;b.dataset.k=k;if(k==='ALL')b.classList.add('on');
+  b.onclick=()=>{filter=k;[...fl.children].forEach(x=>x.classList.toggle('on',x===b));render()};fl.appendChild(b);
+});
+document.getElementById('psearch').oninput=e=>{query=e.target.value.trim();render()};
+function visible(){return P.filter(p=>(filter==='ALL'||p.company===filter)&&(!query||(p.name+p.part+p.kind).includes(query)))}
+function render(){
+  const list=document.getElementById('plist');list.innerHTML='';
+  const vis=visible();
+  vis.forEach(p=>{
+    const d=document.createElement('div');d.dataset.id=p.id;if(!p.lat)d.classList.add('nogeo');if(sel===p.id)d.classList.add('sel');
+    d.innerHTML=`<em style="color:${COLOR[p.company]}">${SHORT[p.company]}</em><small>${p.kind}</small><b>${p.name}</b><small>${p.part}${p.note?' · '+p.note:''}</small>`;
+    d.onclick=()=>focus(p);list.appendChild(d);
+  });
+  document.getElementById('mcount').textContent=vis.length+'건 / 지도 표시 '+vis.filter(p=>p.lat).length+'건';
+  Object.entries(markers).forEach(([id,m])=>{const on=vis.some(p=>p.id==id);on?m.addTo(map):m.remove()});
+}
+function focus(p){
+  if(!p.lat)return; sel=p.id;
+  [...document.querySelectorAll('#plist div')].forEach(d=>d.classList.toggle('sel',d.dataset.id==p.id));
+  map.flyTo([p.lat,p.lng],12,{duration:1.2}); setTimeout(()=>markers[p.id].openPopup(),1200);
+}
+function initMap(){
+  map=L.map('map',{zoomControl:true}).setView([36.9,127.6],8);
+  const osm=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'});
+  const sat=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,attribution:'© Esri'});
+  osm.addTo(map); L.control.layers({'일반':osm,'위성':sat},null,{position:'topright'}).addTo(map);
+  P.forEach(p=>{ if(!p.lat)return;
+    const m=L.circleMarker([p.lat,p.lng],{radius:7,color:'#0b1220',weight:1.5,fillColor:COLOR[p.company],fillOpacity:.9})
+      .bindPopup(`<b>${p.name}</b><br>${p.kind} · ${p.part}<br><span style="color:#94a3c0">${p.company} (${p.period})</span>`);
+    m.on('click',()=>{sel=p.id;[...document.querySelectorAll('#plist div')].forEach(d=>d.classList.toggle('sel',d.dataset.id==p.id));const el=document.querySelector(`#plist div[data-id="${p.id}"]`);el&&el.scrollIntoView({block:'center',behavior:'smooth'})});
+    markers[p.id]=m; m.addTo(map);
+  });
+  render();
+}
+/* 파트별 통계 (소규모 EIA) */
+(function(){
+  const cnt={};P.filter(p=>p.kind==='소규모환경영향평가').forEach(p=>p.part.split(/[,/·]/).map(s=>s.replace(/\(.*?\)/g,'').trim()).filter(s=>s&&s!=='-').forEach(s=>{cnt[s]=(cnt[s]||0)+1}));
+  const el=document.getElementById('partstats');
+  Object.entries(cnt).sort((a,b)=>b[1]-a[1]).forEach(([k,v])=>{const c=document.createElement('span');c.className='chip'+(v>=5?' acc':'');c.textContent=`${k} ${v}건`;el.appendChild(c)});
+})();
+
+/* ── 갤러리 ─────────────────────────────────────── */
+const GAL=[
+ ['image1.jpg','지역개황도 편집','Photoshop — 사업대상지 주변 현황 표기'],
+ ['image2.jpg','토지이용계획도','AutoCAD — 공장부지 조성 토지이용계획'],
+ ['image6.jpg','경관 시뮬레이션 · 일조분석','SketchUp — 물류센터 조성사업'],
+ ['image4.jpg','경사도 분석','ArcView — 사업대상지 경사 등급'],
+ ['image5.jpg','임상도','QGIS — 영급·경급·수종 표기'],
+ ['image3.jpg','현장조사','QGIS 모바일 — 현장 좌표·필지 확인'],
+ ['image7.jpg','풍력 입지조사 (편입용지)','PPT + QGIS — 전국 풍력발전시설 입지조사서'],
+ ['image8.jpg','풍력 입지조사 (풍속 분석)','PPT + QGIS — 래스터 분석 시각화'],
+ ['image9.jpg','지도 API 웹앱','HTML/JS — Mapbox · Google · VWorld 레이어 전환'],
+];
+const gal=document.getElementById('gal'),lb=document.getElementById('lb');
+GAL.forEach(([f,t,s])=>{const fg=document.createElement('figure');fg.innerHTML=`<img src="img/${f}" loading="lazy" alt="${t}"><figcaption>${t}<small>${s}</small></figcaption>`;
+  fg.onclick=()=>{lb.querySelector('img').src='img/'+f;lb.querySelector('p').textContent=t+' — '+s;lb.style.display='flex'};gal.appendChild(fg)});
+lb.onclick=()=>lb.style.display='none';
+
+/* ── Q&A ────────────────────────────────────────── */
+const API='https://43-200-128-54.sslip.io/eia/ask';
+const SUGG=['전략환경영향평가와 소규모환경영향평가의 차이는?','하천기본계획 전략환경영향평가에서 수리수문 항목은 무엇을 검토하나요?','소규모환경영향평가 협의 절차를 단계별로 설명해 주세요.','경관 시뮬레이션은 어떤 사업에서 필요하고 어떻게 작성하나요?','이 지원자의 강점을 세 가지로 요약해 주세요.'];
+const sg=document.getElementById('sugg');SUGG.forEach(s=>{const b=document.createElement('button');b.textContent=s;b.onclick=()=>ask(s);sg.appendChild(b)});
+const log=document.getElementById('log');let history=[],busy=false;
+function add(role,text){const d=document.createElement('div');d.className='msg '+(role==='user'?'u':'m');d.innerHTML=(role==='user'?'':'<b>EIA 도우미</b>&nbsp; ')+esc(text);log.appendChild(d);log.scrollTop=log.scrollHeight;return d}
+function esc(s){return s.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])).replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')}
+async function ask(q){
+  if(busy||!q)return;busy=true;document.getElementById('askbtn').disabled=true;
+  add('user',q);const w=add('model','생각 중…');
+  try{
+    const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:q,history})});
+    const j=await r.json(); if(!r.ok)throw new Error(j.detail||r.status);
+    w.innerHTML='<b>EIA 도우미</b>&nbsp; '+esc(j.answer);
+    history.push({role:'user',text:q},{role:'model',text:j.answer});history=history.slice(-6);
+  }catch(e){w.innerHTML='<b>EIA 도우미</b>&nbsp; 응답 실패: '+esc(String(e.message))}
+  busy=false;document.getElementById('askbtn').disabled=false;log.scrollTop=log.scrollHeight;
+}
+document.getElementById('askform').onsubmit=e=>{e.preventDefault();const i=document.getElementById('q');ask(i.value.trim());i.value=''};
+
+/* ── 시작 ───────────────────────────────────────── */
+initMap();
+go(Math.max(0,(parseInt(location.hash.slice(1))||1)-1));
+</script>
+</body>
+</html>
