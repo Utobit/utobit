@@ -21,14 +21,7 @@
   header{display:flex;align-items:center;gap:14px;padding:0 16px;background:#0f1b2d;color:#fff}
   header .ttl{font-weight:900;font-size:1.15rem;letter-spacing:-.01em}
   header .ttl small{font:700 .65rem 'Inter',sans-serif;background:var(--acc);padding:3px 7px;border-radius:5px;margin-left:8px;vertical-align:middle;letter-spacing:.08em}
-  header .sub{color:#9fb0c8;font-size:.8rem}
-  header .me{margin-left:auto;display:flex;align-items:center;gap:10px}
-  header .me img{width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid #2b3d58}
-  header .me b{display:block;font-size:.9rem}header .me span{font-size:.72rem;color:#9fb0c8}
-  header .btns{display:flex;gap:6px;margin-left:8px}
-  header .btns button{background:#1d2e48;border:1px solid #2f4466;color:#dce6f5;padding:6px 10px;border-radius:7px;font-size:.78rem}
-  header .btns button:hover{border-color:var(--acc)}
-  /* 본문 3열 */
+                /* 본문 3열 */
   main{display:grid;grid-template-columns:300px 1fr 400px;gap:10px;padding:10px;min-height:0}
   .panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;display:flex;flex-direction:column;min-height:0;overflow:hidden}
   .ph{padding:10px 12px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px;font-weight:700}
@@ -87,33 +80,12 @@
   /* 푸터 */
   footer{display:flex;align-items:center;gap:14px;padding:0 16px;font-size:.72rem;color:var(--muted);background:#fff;border-top:1px solid var(--line)}
   footer b{color:var(--acc)}
-  /* 모달 */
-  .modal{position:fixed;inset:0;background:rgba(10,16,28,.6);display:none;align-items:center;justify-content:center;z-index:100;padding:20px}
-  .modal.on{display:flex}
-  .mbox{background:#fff;border-radius:12px;max-width:1000px;width:100%;max-height:90vh;overflow:auto;padding:20px 24px}
-  .mbox h2{font-size:1.1rem;margin-bottom:12px}
-  .mbox .x{float:right;border:0;background:none;font-size:1.3rem;color:var(--muted)}
-  .gal{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-  .gal figure{border:1px solid var(--line);border-radius:8px;overflow:hidden;cursor:zoom-in}
-  .gal img{width:100%;height:150px;object-fit:cover;display:block}
-  .gal figcaption{padding:6px 9px;font-size:.78rem}.gal figcaption small{display:block;color:var(--muted)}
-  #lb{position:fixed;inset:0;background:rgba(5,8,16,.92);display:none;align-items:center;justify-content:center;z-index:200;cursor:zoom-out}
-  #lb img{max-width:94vw;max-height:92vh;border-radius:8px;background:#fff}
-  .tl{border-left:2px solid var(--line);padding-left:18px;display:grid;gap:12px;margin-top:8px}
-  .tl div{position:relative;font-size:.85rem;line-height:1.6;color:var(--muted)}
-  .tl div::before{content:"";position:absolute;left:-25px;top:8px;width:10px;height:10px;border-radius:50%;background:var(--acc);border:2px solid #fff}
-  .tl b{color:var(--fg)}.tl span{color:var(--acc2);font:700 .75rem 'Inter',sans-serif;margin-left:6px}
-  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:8px}
-  .steps div{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:.8rem;line-height:1.5;color:var(--muted)}
-  .steps b{display:block;color:var(--fg);margin-bottom:4px}
   @media (max-width:1100px){
     #app{height:auto;grid-template-rows:auto 1fr auto}
     main{grid-template-columns:1fr}
     .panel{max-height:none}
     #map{height:340px}
     #plist{max-height:320px}
-    header .sub,header .me span{display:none}
-    .steps{grid-template-columns:1fr 1fr}.gal{grid-template-columns:1fr 1fr}
   }
 </style>
 </head>
@@ -122,16 +94,6 @@
 <header>
   <div>
     <div class="ttl">환경영향평가 임시콘솔<small>PROTOTYPE</small></div>
-    <div class="sub">연계기관 · 지원자 참여사업 지도 · AI 평가대상 판단/질의응답 — 지원자가 AI와 함께 하루 안에 구성한 데모</div>
-  </div>
-  <div class="me">
-    <img src="img/photo.jpg" alt="">
-    <div><b>박영시</b><span>환경영향평가 실무 4년 · 수질/수리수문 · 지형지질 · 경관 · GIS</span></div>
-    <div class="btns">
-      <button onclick="openM('m-career')">경력 요약</button>
-      <button onclick="openM('m-gal')">작업물</button>
-      <button onclick="openM('m-build')">제작 과정</button>
-    </div>
   </div>
 </header>
 
@@ -194,30 +156,6 @@
 </footer>
 </div>
 
-<!-- 모달 -->
-<div class="modal" id="m-career"><div class="mbox"><button class="x" onclick="closeM()">×</button><h2>경력 요약</h2>
-  <div class="tl">
-    <div><b>㈜유원이앤씨</b><span>2026.01 ~ 현재</span><br>소규모·전략환경영향평가 — 수질 · 소음진동 · 대기 (횡성 태양광, 인제 군관리계획 등)</div>
-    <div><b>㈜이레이앤씨 환경사업부</b><span>2024.05 ~ 2025.08</span><br>전략환경영향평가 5건 수질/수리수문 (철원군 농어촌도로, 2035 영월군관리계획, 강릉권역 하천기본계획 3건) · 소규모 EIA PM 2건 · 사후모니터링 · 환경성검토</div>
-    <div><b>동국산림기술 · ㈜동국기술단 산림사업팀</b><span>2023.05 ~ 2023.11</span><br>숲가꾸기·풀베기 실시설계, GIS DB구축 측량 지원, 재해위험성 검토의견서</div>
-    <div><b>㈜동국기술단 환경사업부</b><span>2022.02 ~ 2023.05</span><br>소규모환경영향평가 약 30건 (지형지질 · 경관 시뮬레이션·일조 · 수질 · 소음진동), 충주댐 사후환경영향조사, 토석채취 환경영향평가</div>
-    <div><b>학력·자격</b><br>한국교통대학교 환경공학과 (2019.02) · 수질환경기사·소음진동기사 필기 합격 · 1종 운전면허 · 육군 병장 만기 전역</div>
-  </div>
-</div></div>
-
-<div class="modal" id="m-gal"><div class="mbox"><button class="x" onclick="closeM()">×</button><h2>작업물 — 프로그램 활용</h2><div class="gal" id="gal"></div></div></div>
-
-<div class="modal" id="m-build"><div class="mbox"><button class="x" onclick="closeM()">×</button><h2>제작 과정 — AI와 함께 하루 안에</h2>
-  <p style="font-size:.85rem;color:var(--muted);line-height:1.6">이 콘솔은 면접 전날 저녁, 지원자가 AI 코딩 에이전트(Claude Code)에 요구사항을 말로 전달하고 결과를 검토·수정하는 방식으로 만들었습니다. 코드 작성·서버 배포·지오코딩·사이트 캡처는 AI가 수행하고, 지원자는 방향 결정과 내용 검증을 맡았습니다.</p>
-  <div class="steps">
-    <div><b>1. 데이터 정리</b>엑셀 이력서·참여사업 62건을 구조화 → 읍·면·리 단위 지오코딩(OSM Nominatim) → 지도 데이터</div>
-    <div><b>2. 지도·목록</b>Leaflet + OpenStreetMap/위성 레이어, 회사별 필터·검색, 클릭 시 위치 이동</div>
-    <div><b>3. AI 백엔드</b>AWS Lightsail의 FastAPI 서버에 Claude Opus 5 연동(스트리밍, Gemini 폴백) — 환경영향평가 특화 시스템 프롬프트, 평가대상 판단 모드, 요청 한도</div>
-    <div><b>4. 배포</b>Netlify 정적 호스팅(utobit.net), 검색 비노출 설정, 연계기관 사이트 자동 캡처</div>
-  </div>
-  <p style="font-size:.8rem;color:var(--muted);margin-top:12px">같은 방식으로 실무에서는 현황조사표 자동 집계, 도면 일괄 편집, 보고서 초안 생성, 협의의견 DB 검색 같은 반복 작업을 도구화할 수 있습니다.</p>
-</div></div>
-<div id="lb"><img alt=""></div>
 
 <script src="projects.js"></script>
 <script>
@@ -294,18 +232,6 @@ function focus(p){if(!p.lat)return;sel=p.id;[...document.querySelectorAll('#plis
   render();
 })();
 
-/* ── 모달·갤러리 ────────────────────────────── */
-function openM(id){document.getElementById(id).classList.add('on')}
-function closeM(){document.querySelectorAll('.modal').forEach(m=>m.classList.remove('on'))}
-document.querySelectorAll('.modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)closeM()}));
-addEventListener('keydown',e=>{if(e.key==='Escape'){closeM();lb.style.display='none'}});
-const GAL=[['image1.jpg','지역개황도 편집','Photoshop'],['image2.jpg','토지이용계획도','AutoCAD'],['image6.jpg','경관 시뮬레이션 · 일조분석','SketchUp'],
- ['image4.jpg','경사도 분석','ArcView'],['image5.jpg','임상도','QGIS'],['image3.jpg','현장조사','QGIS 모바일'],
- ['image7.jpg','풍력 입지조사 (편입용지)','PPT + QGIS'],['image8.jpg','풍력 입지조사 (풍속 분석)','PPT + QGIS'],['image9.jpg','지도 API 웹앱','HTML/JS · Mapbox/Google/VWorld']];
-const gal=document.getElementById('gal'),lb=document.getElementById('lb');
-GAL.forEach(([f,t,s])=>{const fg=document.createElement('figure');fg.innerHTML=`<img src="img/${f}" loading="lazy" alt="${t}"><figcaption>${t}<small>${s}</small></figcaption>`;
-  fg.onclick=()=>{lb.querySelector('img').src='img/'+f;lb.style.display='flex'};gal.appendChild(fg)});
-lb.onclick=()=>lb.style.display='none';
 
 /* ── Q&A ────────────────────────────────────── */
 const API='https://43-200-128-54.sslip.io/eia/ask';
