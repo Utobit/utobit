@@ -152,7 +152,7 @@
 
   <!-- Q&A -->
   <section class="panel">
-    <div class="ph">AI Q&amp;A <small>Gemini 2.5 Flash · 환경영향평가 특화 프롬프트</small></div>
+    <div class="ph">AI Q&amp;A <small>Claude Opus 5 · 환경영향평가 특화 프롬프트 · 스트리밍</small></div>
     <div class="tabs"><button class="on" data-t="t-scr">평가대상여부</button><button data-t="t-qa">질의응답</button></div>
 
     <div class="tab on" id="t-scr">
@@ -189,7 +189,7 @@
 
 <footer>
   <span><b>Built in a day</b> — 요구 정리 → Claude Code 협업 → 배포</span>
-  <span>Netlify 정적 호스팅 · Leaflet + OpenStreetMap · FastAPI @ AWS Lightsail · Gemini 2.5 Flash</span>
+  <span>Netlify 정적 호스팅 · Leaflet + OpenStreetMap · FastAPI @ AWS Lightsail · Claude Opus 5 (Gemini 폴백)</span>
   <span style="margin-left:auto">utobit.net/ys · 비공개 URL</span>
 </footer>
 </div>
@@ -212,7 +212,7 @@
   <div class="steps">
     <div><b>1. 데이터 정리</b>엑셀 이력서·참여사업 62건을 구조화 → 읍·면·리 단위 지오코딩(OSM Nominatim) → 지도 데이터</div>
     <div><b>2. 지도·목록</b>Leaflet + OpenStreetMap/위성 레이어, 회사별 필터·검색, 클릭 시 위치 이동</div>
-    <div><b>3. AI 백엔드</b>AWS Lightsail의 FastAPI 서버에 Gemini 2.5 Flash 연동 — 환경영향평가 특화 시스템 프롬프트, 평가대상 판단 모드, 요청 한도</div>
+    <div><b>3. AI 백엔드</b>AWS Lightsail의 FastAPI 서버에 Claude Opus 5 연동(스트리밍, Gemini 폴백) — 환경영향평가 특화 시스템 프롬프트, 평가대상 판단 모드, 요청 한도</div>
     <div><b>4. 배포</b>Netlify 정적 호스팅(utobit.net), 검색 비노출 설정, 연계기관 사이트 자동 캡처</div>
   </div>
   <p style="font-size:.8rem;color:var(--muted);margin-top:12px">같은 방식으로 실무에서는 현황조사표 자동 집계, 도면 일괄 편집, 보고서 초안 생성, 협의의견 DB 검색 같은 반복 작업을 도구화할 수 있습니다.</p>
@@ -318,9 +318,13 @@ function md(s){ // 최소 마크다운: **굵게**, 글머리, 문단
     else{if(ul){out+='</ul>';ul=false}if(l.trim())out+='<p>'+l+'</p>'}}
   return out+(ul?'</ul>':'');
 }
-async function call(question,mode,history){
+/* 서버는 text/plain 스트림(Claude) 또는 한 번에(Gemini 폴백). onText(전체누적, 모델명)를 청크마다 호출 */
+async function call(question,mode,history,onText){
   const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question,mode,history})});
-  const j=await r.json();if(!r.ok)throw new Error(j.detail||r.status);return j;
+  if(!r.ok){let d='';try{d=(await r.json()).detail}catch(_){}throw new Error(d||r.status)}
+  const model=r.headers.get('X-Model')||'AI';const rd=r.body.getReader(),dec=new TextDecoder();let acc='';
+  for(;;){const {value,done}=await rd.read();if(done)break;acc+=dec.decode(value,{stream:true});onText(acc,model)}
+  acc+=dec.decode();onText(acc,model);return {answer:acc,model};
 }
 /* 평가대상여부 */
 const scr=document.getElementById('scr'),scrout=document.getElementById('scrout');
@@ -329,7 +333,7 @@ scr.onsubmit=async e=>{e.preventDefault();
   const q=`사업유형: ${scr.type.value} / 면적: ${scr.area.value?Number(scr.area.value).toLocaleString()+'㎡':'미입력'} / 용도지역: ${scr.zone.value} / 구분: ${scr.cls.value} / 비고: ${scr.etc.value.trim()||'없음'}`;
   scrout.innerHTML=`<div class="r u"><div class="tag">입력</div>${esc(q)}</div><div class="r"><div class="tag">판단</div>분석 중…</div>`;
   document.getElementById('scrbtn').disabled=true;
-  try{const j=await call(q,'screening',[]);scrout.lastElementChild.innerHTML='<div class="tag">판단 · '+j.model+'</div>'+md(j.answer)}
+  try{await call(q,'screening',[],(t,m)=>{scrout.lastElementChild.innerHTML='<div class="tag">판단 · '+m+'</div>'+md(t);scrout.scrollTop=scrout.scrollHeight})}
   catch(err){scrout.lastElementChild.innerHTML='<div class="tag">오류</div>'+esc(String(err.message))}
   document.getElementById('scrbtn').disabled=false;
 };
@@ -340,7 +344,7 @@ const log=document.getElementById('log');let history=[],busy=false;
 function add(cls,tag,html){const d=document.createElement('div');d.className='r'+(cls?' '+cls:'');d.innerHTML=`<div class="tag">${tag}</div>${html}`;log.appendChild(d);log.scrollTop=log.scrollHeight;return d}
 async function ask(q){if(busy||!q)return;busy=true;document.getElementById('askbtn').disabled=true;
   add('u','질문',esc(q));const w=add('','EIA 도우미','생각 중…');
-  try{const j=await call(q,'qa',history);w.innerHTML='<div class="tag">EIA 도우미</div>'+md(j.answer);history.push({role:'user',text:q},{role:'model',text:j.answer});history=history.slice(-6)}
+  try{const j=await call(q,'qa',history,(t,m)=>{w.innerHTML='<div class="tag">EIA 도우미 · '+m+'</div>'+md(t);log.scrollTop=log.scrollHeight});history.push({role:'user',text:q},{role:'model',text:j.answer});history=history.slice(-6)}
   catch(err){w.innerHTML='<div class="tag">오류</div>'+esc(String(err.message))}
   busy=false;document.getElementById('askbtn').disabled=false;log.scrollTop=log.scrollHeight}
 document.getElementById('askform').onsubmit=e=>{e.preventDefault();const i=document.getElementById('q');ask(i.value.trim());i.value=''};
