@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="theme-color" content="#0f1b2d">
+<title>소음진동기사 실기 노트</title>
+<link rel="icon" href="../../assets/dallae_icon.png">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#eef1f6;--panel:#fff;--line:#dbe1ea;--fg:#16202e;--muted:#5b6b82;--acc:#1f8f5f;--acc2:#2563eb;--soft:#f4f7fb;--calc:#2563eb;--desc:#b45309}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{background:var(--bg);color:var(--fg);font-family:'Noto Sans KR',system-ui,sans-serif;font-size:15px;line-height:1.55;padding-bottom:64px}
+  button{font-family:inherit;cursor:pointer}
+  header{position:sticky;top:0;z-index:5;background:#0f1b2d;color:#fff;padding:10px 14px;display:flex;align-items:center;gap:10px}
+  header .ttl{font-weight:900;font-size:1.05rem}
+  header .ttl small{font:700 .62rem sans-serif;background:var(--acc);padding:2px 6px;border-radius:5px;margin-left:6px;vertical-align:middle;letter-spacing:.06em}
+  header .prog{margin-left:auto;font-size:.72rem;color:#b8c4d6;text-align:right;line-height:1.3}
+  .wrap{max-width:820px;margin:0 auto;padding:10px}
+  .view{display:none}.view.on{display:block}
+  /* 하단 탭 */
+  nav{position:fixed;left:0;right:0;bottom:0;z-index:5;display:flex;background:#fff;border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+  nav button{flex:1;padding:11px 0 9px;border:0;background:none;color:var(--muted);font-weight:700;font-size:.82rem;border-top:2px solid transparent}
+  nav button.on{color:var(--acc);border-top-color:var(--acc)}
+  /* 이론 */
+  details.sec{background:var(--panel);border:1px solid var(--line);border-radius:10px;margin-bottom:8px;overflow:hidden}
+  details.sec>summary{list-style:none;padding:12px 14px;font-weight:700;display:flex;align-items:center;gap:8px;cursor:pointer}
+  details.sec>summary::-webkit-details-marker{display:none}
+  details.sec>summary::after{content:'▾';margin-left:auto;color:var(--muted);transition:.15s}
+  details.sec[open]>summary::after{transform:rotate(180deg)}
+  .body{padding:2px 14px 14px;border-top:1px solid var(--line)}
+  .body h4{margin:14px 0 6px;font-size:.92rem;color:var(--acc);border-left:3px solid var(--acc);padding-left:8px}
+  .body ul{padding-left:18px;margin:4px 0}
+  .body li{margin:3px 0;font-size:.9rem}
+  .body p{font-size:.9rem;margin:4px 0}
+  .body .note{font-size:.8rem;color:var(--muted);background:var(--soft);padding:8px 10px;border-radius:7px}
+  .f{background:#0f1b2d;color:#e6edf7;font-family:'Noto Sans KR',ui-monospace,monospace;font-size:.86rem;line-height:1.75;padding:9px 12px;border-radius:8px;margin:6px 0;overflow-x:auto;white-space:nowrap}
+  .f b{color:#8ee6b8}
+  table{border-collapse:collapse;font-size:.82rem;margin:6px 0;width:100%;display:block;overflow-x:auto;white-space:nowrap}
+  th,td{border:1px solid var(--line);padding:4px 7px;text-align:center}
+  th{background:var(--soft);font-weight:700}
+  td:first-child{text-align:left}
+  /* 문제 */
+  .filters{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+  .filters button{font-size:.76rem;padding:5px 10px;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--muted)}
+  .filters button.on{border-color:var(--acc);color:var(--acc);background:#ecf8f2}
+  .filters .sp{flex-basis:100%;height:0}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;margin-bottom:8px;padding:12px 14px}
+  .card.done{opacity:.55}
+  .card .meta{display:flex;gap:6px;align-items:center;font-size:.7rem;color:var(--muted);margin-bottom:6px}
+  .card .meta em{font-style:normal;font-weight:700;padding:1px 6px;border-radius:4px;color:#fff}
+  .card .meta em.calc{background:var(--calc)}.card .meta em.desc{background:var(--desc)}
+  .card .meta .chk{margin-left:auto;display:flex;align-items:center;gap:4px;cursor:pointer}
+  .card .q{font-size:.93rem;font-weight:500;white-space:pre-line}
+  .card .ans{display:none;margin-top:10px;padding:10px 12px;background:var(--soft);border-left:3px solid var(--acc);border-radius:6px;font-size:.88rem;line-height:1.7}
+  .card.open .ans{display:block}
+  .card .btn{margin-top:8px;font-size:.78rem;padding:5px 12px;border-radius:7px;border:1px solid var(--acc);background:#fff;color:var(--acc)}
+  .card.open .btn{background:var(--acc);color:#fff}
+  .empty{text-align:center;color:var(--muted);padding:30px 0;font-size:.9rem}
+  /* 랜덤 */
+  .rbar{display:flex;gap:8px;margin-bottom:10px}
+  .rbar button{flex:1;padding:10px;border-radius:9px;border:1px solid var(--line);background:#fff;font-weight:700;font-size:.85rem}
+  .rbar button.primary{background:var(--acc);color:#fff;border-color:var(--acc)}
+  .hint{font-size:.76rem;color:var(--muted);margin:10px 2px}
+</style>
+</head>
+<body>
+<header>
+  <div class="ttl">소음진동기사 실기<small>NOTE</small></div>
+  <div class="prog" id="prog"></div>
+</header>
+
+<div class="wrap">
+  <section class="view on" id="v-theory"></section>
+
+  <section class="view" id="v-prob">
+    <div class="filters" id="filters"></div>
+    <div id="plist"></div>
+  </section>
+
+  <section class="view" id="v-rand">
+    <div class="rbar">
+      <button class="primary" onclick="nextRandom()">다음 문제 →</button>
+      <button onclick="toggleRandType()" id="rtype">계산+서술</button>
+    </div>
+    <div id="rcard"></div>
+    <p class="hint">랜덤은 '외움' 체크 안 된 문제를 우선 출제. 답 보고 외웠으면 체크.</p>
+  </section>
+</div>
+
+<nav>
+  <button class="on" data-v="theory" onclick="go('theory')">이론</button>
+  <button data-v="prob" onclick="go('prob')">문제</button>
+  <button data-v="rand" onclick="go('rand')">랜덤</button>
+</nav>
+
+<script src="data.js"></script>
+<script>
+const CH = ['','음향기초','평가','측정','흡음','차음','소음기','진동','법규'];
+const LS = 'nv_done_v1';
+let done = new Set(); try{ done = new Set(JSON.parse(localStorage.getItem(LS)||'[]')); }catch(e){}
+function saveDone(){ try{ localStorage.setItem(LS, JSON.stringify([...done])); }catch(e){} }
+PROBLEMS.forEach((p,i)=>p.id=i);
+
+/* 뷰 전환 */
+function go(v){
+  document.querySelectorAll('.view').forEach(e=>e.classList.toggle('on', e.id==='v-'+v));
+  document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on', b.dataset.v===v));
+  try{ localStorage.setItem('nv_view', v); }catch(e){}
+  window.scrollTo(0,0);
+  if(v==='rand' && !document.getElementById('rcard').innerHTML) nextRandom();
+}
+
+/* 이론 */
+document.getElementById('v-theory').innerHTML = THEORY.map(t=>
+  `<details class="sec" id="${t.id}"><summary>${t.title}</summary><div class="body">${t.body}</div></details>`).join('');
+document.querySelectorAll('details.sec').forEach(d=>{
+  try{ if(localStorage.getItem('nv_open_'+d.id)==='1') d.open=true; }catch(e){}
+  d.addEventListener('toggle',()=>{ try{ localStorage.setItem('nv_open_'+d.id, d.open?'1':'0'); }catch(e){} });
+});
+
+/* 문제 카드 */
+function card(p){
+  return `<div class="card ${done.has(p.id)?'done':''}" id="c${p.id}">
+    <div class="meta"><span>#${p.id+1}</span><em class="${p.type}">${p.type==='calc'?'계산':'서술'}</em><span>${CH[p.ch]}</span>
+      <label class="chk"><input type="checkbox" ${done.has(p.id)?'checked':''} onchange="mark(${p.id},this.checked)"> 외움</label></div>
+    <div class="q">${p.q}</div>
+    <button class="btn" onclick="this.parentNode.classList.toggle('open')">정답·풀이</button>
+    <div class="ans">${p.a}</div>
+  </div>`;
+}
+function mark(id,on){
+  if(on) done.add(id); else done.delete(id);
+  saveDone(); renderProg();
+  document.querySelectorAll('#c'+id).forEach(c=>c.classList.toggle('done',on));
+}
+function renderProg(){
+  document.getElementById('prog').innerHTML = `외움 ${done.size} / ${PROBLEMS.length}<br>${Math.round(done.size/PROBLEMS.length*100)}%`;
+}
+
+/* 필터 */
+let fch=0, ftype='all', fhide=false;
+function renderFilters(){
+  const b=(on,lab,fn)=>`<button class="${on?'on':''}" onclick="${fn}">${lab}</button>`;
+  let h = b(fch===0,'전체','setCh(0)');
+  for(let i=1;i<=8;i++) h += b(fch===i, i+'. '+CH[i], `setCh(${i})`);
+  h += '<span class="sp"></span>';
+  h += b(ftype==='all','계산+서술',"setType('all')") + b(ftype==='calc','계산만',"setType('calc')") + b(ftype==='desc','서술만',"setType('desc')");
+  h += b(fhide,'외운 것 숨김','toggleHide()');
+  document.getElementById('filters').innerHTML = h;
+}
+function setCh(c){fch=c;renderFilters();renderList()}
+function setType(t){ftype=t;renderFilters();renderList()}
+function toggleHide(){fhide=!fhide;renderFilters();renderList()}
+function filtered(){
+  return PROBLEMS.filter(p=>(fch===0||p.ch===fch)&&(ftype==='all'||p.type===ftype)&&!(fhide&&done.has(p.id)));
+}
+function renderList(){
+  const l=filtered();
+  document.getElementById('plist').innerHTML = l.length? l.map(card).join('') : '<div class="empty">해당 문제 없음</div>';
+}
+
+/* 랜덤 */
+let rtype='all', rlast=-1;
+function toggleRandType(){
+  rtype = rtype==='all'?'calc':rtype==='calc'?'desc':'all';
+  document.getElementById('rtype').textContent = rtype==='all'?'계산+서술':rtype==='calc'?'계산만':'서술만';
+  nextRandom();
+}
+function nextRandom(){
+  let pool = PROBLEMS.filter(p=>(rtype==='all'||p.type===rtype));
+  const fresh = pool.filter(p=>!done.has(p.id));
+  if(fresh.length) pool = fresh;
+  if(pool.length>1) pool = pool.filter(p=>p.id!==rlast);
+  const p = pool[Math.floor(Math.random()*pool.length)];
+  rlast = p.id;
+  document.getElementById('rcard').innerHTML = card(p);
+}
+
+renderFilters(); renderList(); renderProg();
+try{ const v=localStorage.getItem('nv_view'); if(v&&v!=='theory') go(v); }catch(e){}
+</script>
+</body>
+</html>
