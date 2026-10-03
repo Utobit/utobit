@@ -432,7 +432,7 @@
           if (iconIds[it.id]) {
             var img = document.createElement('img');
             img.src = 'items/' + encodeURIComponent(it.id) + '.png';
-            img.alt = ''; img.loading = 'lazy'; img.width = 36; img.height = 36;
+            img.alt = ''; img.width = 36; img.height = 36;
             li.appendChild(img);
           } else {
             li.appendChild(el('i'));               // 아이콘이 없는 아이템 = 빈 칸(줄 맞춤)
