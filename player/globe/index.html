@@ -91,6 +91,10 @@
     .row button { background: transparent; border: 1px solid var(--line-strong); color: var(--cyan); cursor: pointer;
       font: inherit; font-size: 12px; font-weight: 600; padding: 5px 10px; border-radius: 8px; transition: background .15s; }
     .row button:hover { background: rgba(94, 230, 255, .12); }
+    .legend { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 10px; font-size: 11px; color: var(--muted); }
+    .legend i { display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+    .legend .w { background: var(--cyan); box-shadow: 0 0 8px var(--cyan); }
+    .legend .g { background: var(--gold); box-shadow: 0 0 8px var(--gold); }
     .note { margin-top: 12px; font-size: 11px; color: var(--dim); line-height: 1.5; }
 
     .hint { bottom: max(34px, env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%);
@@ -134,6 +138,7 @@
         <div class="stat"><b id="c-power"></b><span data-t="power"></span></div>
       </div>
       <div class="rows" id="c-rows"></div>
+      <div class="legend" id="c-legend" hidden><span><i class="w"></i><span data-t="walk"></span></span><span><i class="g"></i><span data-t="gate"></span></span></div>
       <p class="note" data-t="note"></p>
     </div>
   </div>
@@ -161,6 +166,7 @@
     many: function (n) { return n + '명이 검색되었습니다. 헌터를 선택하세요.'; },
     fail: '서버에 연결하지 못했습니다. 잠시 후 다시 시도해 주세요.',
     grade: '등급', country: '국가', guild: '길드', guildHq: '길드 본부', view: '위치 보기', noHq: '미설립',
+    trail: '자취가 닿은 지역', trailUnit: '곳', walk: '지나간 길', gate: '게이트 공략 지역', noTrail: '아직 기록이 없습니다',
     note: '상세 스탯은 공개되지 않습니다. 기록은 몇 분 간격으로 갱신됩니다.',
     noMap: '지도를 불러오지 못했습니다. 검색은 그대로 사용할 수 있습니다.'
   } : {
@@ -169,6 +175,7 @@
     many: function (n) { return n + ' hunters found. Select one.'; },
     fail: 'Could not reach the server. Please try again shortly.',
     grade: 'Grade', country: 'Country', guild: 'Guild', guildHq: 'Guild HQ', view: 'Show', noHq: 'Not built',
+    trail: 'Areas reached', trailUnit: '', walk: 'Path walked', gate: 'Gate cleared area', noTrail: 'No records yet',
     note: 'Detailed stats are private. Records refresh every few minutes.',
     noMap: 'The map could not be loaded. Search still works.'
   };
@@ -213,6 +220,23 @@
         filter: none, paint: { 'line-color': '#5ee6ff', 'line-width': 5, 'line-blur': 6, 'line-opacity': 0.7 } });
       map.addLayer({ id: 'country-line', type: 'line', source: 'countries', 'source-layer': 'country_boundaries',
         filter: none, paint: { 'line-color': '#c9f6ff', 'line-width': 1 } });
+      // 자취 — 멀리서는 빛점, 가까이서는 칸
+      var empty = { type: 'FeatureCollection', features: [] };
+      var tone = ['case', ['==', ['get', 'k'], 1], '#5ee6ff', '#ffd27a'];
+      map.addSource('trail-pt', { type: 'geojson', data: empty });
+      map.addSource('trail-cell', { type: 'geojson', data: empty });
+      map.addLayer({ id: 'trail-halo', type: 'circle', source: 'trail-pt', maxzoom: 8, paint: {
+        'circle-color': tone, 'circle-blur': 1,
+        'circle-radius': ['interpolate', ['linear'], ['zoom'], 0, 5, 4, 9, 8, 26],
+        'circle-opacity': ['interpolate', ['linear'], ['zoom'], 0, 0.55, 6, 0.4, 8, 0] } });
+      map.addLayer({ id: 'trail-dot', type: 'circle', source: 'trail-pt', maxzoom: 7, paint: {
+        'circle-color': '#ffffff',
+        'circle-radius': ['interpolate', ['linear'], ['zoom'], 0, 1, 4, 1.8, 7, 3],
+        'circle-opacity': ['interpolate', ['linear'], ['zoom'], 0, 0.9, 6, 0.6, 7, 0] } });
+      map.addLayer({ id: 'trail-fill', type: 'fill', source: 'trail-cell', minzoom: 4.5, paint: {
+        'fill-color': tone, 'fill-opacity': ['interpolate', ['linear'], ['zoom'], 4.5, 0, 6.5, 0.32] } });
+      map.addLayer({ id: 'trail-edge', type: 'line', source: 'trail-cell', minzoom: 6, paint: {
+        'line-color': tone, 'line-width': 1.2, 'line-blur': 1.5, 'line-opacity': 0.8 } });
       mapReady = true;
       if (pendingRow) { focusRow(pendingRow); pendingRow = null; }
     });
@@ -289,6 +313,37 @@
     if (!row.country && hasHq) flyHq(row.guild);
   }
 
+  // 자취 칸([위도칸, 경도칸, 종류]) → 지도. 종류 1=지나간 길, 2·3=게이트 공략 지역(금빛 우선)
+  function drawTrail(cells, deg) {
+    var pts = [], polys = [], w = 180, e = -180, s = 90, n = -90;
+    (cells || []).forEach(function (c) {
+      var la = c[0] * deg - 90, lo = c[1] * deg - 180, k = c[2] === 1 ? 1 : 2;
+      pts.push({ type: 'Feature', properties: { k: k }, geometry: { type: 'Point', coordinates: [lo + deg / 2, la + deg / 2] } });
+      polys.push({ type: 'Feature', properties: { k: k }, geometry: { type: 'Polygon',
+        coordinates: [[[lo, la], [lo + deg, la], [lo + deg, la + deg], [lo, la + deg], [lo, la]]] } });
+      w = Math.min(w, lo); e = Math.max(e, lo + deg); s = Math.min(s, la); n = Math.max(n, la + deg);
+    });
+    map.getSource('trail-pt').setData({ type: 'FeatureCollection', features: pts });
+    map.getSource('trail-cell').setData({ type: 'FeatureCollection', features: polys });
+    return pts.length ? [[w, s], [e, n]] : null;
+  }
+
+  function loadTrail(row, onCount) {
+    var mine = seq;
+    fetch(apiBase + '/globe?trail=' + encodeURIComponent(row.name))
+      .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function (j) {
+        if (mine !== seq) return;
+        var cells = (j && j.cells) || [];
+        onCount(cells.length);
+        if (!map || !mapReady) return;
+        var box = drawTrail(cells, j.deg || 0.05);
+        // 자취가 있으면 국가 대신 자취 전체가 보이게 — 한 지역뿐이면 너무 파고들지 않는다
+        if (box) map.fitBounds(box, { padding: 120, maxZoom: 7, duration: 2800, essential: true });
+      })
+      .catch(function () { if (mine === seq) onCount(-1); });
+  }
+
   function flyHq(g) { map.flyTo({ center: [g.hqLng, g.hqLat], zoom: 13.5, duration: 3200, essential: true }); }
 
   // ── 검색 ────────────────────────────────────────────────────────────
@@ -350,9 +405,11 @@
       wrap.appendChild(b);
       row.appendChild(wrap);
     } else {
-      row.appendChild(el('b', null, value));
+      var val = el('b', null, value);
+      row.appendChild(val);
     }
     $('c-rows').appendChild(row);
+    return val || null;
   }
 
   function render(r) {
@@ -372,8 +429,15 @@
       if (has && map) addRow(T.guildHq, '', T.view, function () { spinning = false; flyHq(r.guild); });
       else addRow(T.guildHq, has ? countryName(r.guild.hqCountry || '') || '-' : T.noHq);
     }
+    var trailRow = addRow(T.trail, '…');
+    $('c-legend').hidden = true;
     show('card');
     focusRow(r);
+    if (map && mapReady) drawTrail([], 0.05);
+    loadTrail(r, function (n) {
+      trailRow.textContent = n > 0 ? num(n) + (T.trailUnit ? ' ' + T.trailUnit : '') : n === 0 ? T.noTrail : '-';
+      $('c-legend').hidden = !(n > 0);
+    });
   }
 
   $('form').addEventListener('submit', function (e) { e.preventDefault(); search($('q').value, true); });
