@@ -91,6 +91,14 @@
     .row button { background: transparent; border: 1px solid var(--line-strong); color: var(--cyan); cursor: pointer;
       font: inherit; font-size: 12px; font-weight: 600; padding: 5px 10px; border-radius: 8px; transition: background .15s; }
     .row button:hover { background: rgba(94, 230, 255, .12); }
+    .equip { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); }
+    .equip h3 { font-size: 11px; font-weight: 700; letter-spacing: .08em; color: var(--muted); margin-bottom: 8px; }
+    .equip ul { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+    .equip li { display: flex; align-items: baseline; justify-content: space-between; gap: 6px; padding: 7px 9px; border-radius: 8px;
+      background: rgba(150, 130, 255, .07); border: 1px solid var(--line); font-size: 12px; min-width: 0; }
+    .equip li span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .equip li b { flex: none; font-weight: 700; color: var(--gold); font-variant-numeric: tabular-nums; }
+    .equip p { font-size: 12px; color: var(--dim); }
     .legend { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 10px; font-size: 11px; color: var(--muted); }
     .legend i { display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
     .legend .w { background: var(--cyan); box-shadow: 0 0 8px var(--cyan); }
@@ -168,6 +176,7 @@
         <div class="stat"><b id="c-power"></b><span data-t="power"></span></div>
       </div>
       <div class="rows" id="c-rows"></div>
+      <div class="equip" id="c-equip" hidden><h3 data-t="equip"></h3><ul id="c-equip-list"></ul><p id="c-equip-none" data-t="noEquip" hidden></p></div>
       <div class="legend" id="c-legend" hidden><span><i class="w"></i><span data-t="walk"></span></span><span><i class="g"></i><span data-t="gate"></span></span></div>
       <p class="note" data-t="note"></p>
     </div>
@@ -208,6 +217,7 @@
     many: function (n) { return n + '명이 검색되었습니다. 헌터를 선택하세요.'; },
     fail: '서버에 연결하지 못했습니다. 잠시 후 다시 시도해 주세요.',
     grade: '등급', country: '국가', guild: '길드', guildHq: '길드 본부', view: '위치 보기', noHq: '미설립',
+    equip: '착용 장비', noEquip: '착용 중인 장비가 없습니다.',
     rankTitle: '랭킹', rankPoints: '공략 포인트', rankOpen: '랭킹 열기', rankEmpty: '아직 랭킹이 없습니다.',
     trail: '자취가 닿은 지역', trailUnit: '곳', walk: '지나간 길', gate: '게이트 공략 지역', noTrail: '아직 기록이 없습니다',
     note: '상세 스탯은 공개되지 않습니다. 기록은 몇 분 간격으로 갱신됩니다.',
@@ -218,6 +228,7 @@
     many: function (n) { return n + ' hunters found. Select one.'; },
     fail: 'Could not reach the server. Please try again shortly.',
     grade: 'Grade', country: 'Country', guild: 'Guild', guildHq: 'Guild HQ', view: 'Show', noHq: 'Not built',
+    equip: 'EQUIPPED', noEquip: 'Nothing equipped.',
     rankTitle: 'RANKING', rankPoints: 'RAID POINTS', rankOpen: 'Open ranking', rankEmpty: 'No ranking yet.',
     trail: 'Areas reached', trailUnit: '', walk: 'Path walked', gate: 'Gate cleared area', noTrail: 'No records yet',
     note: 'Detailed stats are private. Records refresh every few minutes.',
@@ -373,11 +384,11 @@
   }
 
   function loadTrail(row, onCount) {
-    var mine = seq;
+    var mine = cardSeq;
     fetch(apiBase + '/globe?trail=' + encodeURIComponent(row.name))
       .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
       .then(function (j) {
-        if (mine !== seq) return;
+        if (mine !== cardSeq) return;
         var cells = (j && j.cells) || [];
         onCount(cells.length);
         if (!map || !mapReady) return;
@@ -387,7 +398,39 @@
         var pad = window.innerWidth > 720 ? { top: 90, bottom: 90, left: 420, right: 90 } : { top: 400, bottom: 50, left: 30, right: 30 };
         if (box) map.fitBounds(box, { padding: pad, maxZoom: 7, duration: still ? 0 : 2800, essential: true });
       })
-      .catch(function () { if (mine === seq) onCount(-1); });
+      .catch(function () { if (mine === cardSeq) onCount(-1); });
+  }
+
+  // 아이템 이름을 받을 언어 — 게임 언어팩 17종 중 브라우저 언어에 맞는 것
+  function packLang() {
+    var l = (navigator.language || 'en').toLowerCase();
+    if (l.indexOf('zh') === 0) return /tw|hk|mo|hant/.test(l) ? 'zh-Hant' : 'zh-Hans';
+    var two = l.slice(0, 2);
+    return ['ko', 'en', 'ja', 'de', 'fr', 'es', 'it', 'pt', 'pl', 'ru', 'tr', 'vi', 'id', 'th', 'ar'].indexOf(two) >= 0 ? two : 'en';
+  }
+
+  var cardSeq = 0;   // 카드가 바뀌면 이전 헌터의 늦은 응답은 버린다
+
+  function loadEquip(row) {
+    var mine = cardSeq;
+    $('c-equip').hidden = true;
+    fetch(apiBase + '/globe?equip=' + encodeURIComponent(row.name) + '&lang=' + packLang())
+      .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function (j) {
+        if (mine !== cardSeq) return;
+        var items = (j && j.items) || [], ul = $('c-equip-list');
+        ul.textContent = '';
+        items.forEach(function (it) {
+          var li = el('li');
+          li.appendChild(el('span', null, it.name));
+          if (it.enhance > 0) li.appendChild(el('b', null, '+' + it.enhance));
+          li.title = it.name;
+          ul.appendChild(li);
+        });
+        $('c-equip-none').hidden = items.length > 0;
+        $('c-equip').hidden = false;
+      })
+      .catch(function () {});
   }
 
   function flyHq(g) { map.flyTo({ center: [g.hqLng, g.hqLat], zoom: 13.5, duration: still ? 0 : 3200, essential: true }); }
@@ -475,6 +518,8 @@
       if (has && map) addRow(T.guildHq, '', T.view, function () { spinning = false; flyHq(r.guild); });
       else addRow(T.guildHq, has ? countryName(r.guild.hqCountry || '') || '-' : T.noHq);
     }
+    cardSeq++;
+    loadEquip(r);
     var trailRow = addRow(T.trail, '…');
     $('c-legend').hidden = true;
     show('card');
