@@ -135,6 +135,37 @@
       text-transform: uppercase;
     }
 
+    /* ── PLAYER 서비스 중 배너(최상단) ── */
+    .live-banner {
+      position: relative; overflow: hidden;
+      display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
+      margin-bottom: 36px; padding: 22px 24px;
+      border-radius: 18px; border: 1px solid rgba(76,141,255,.35);
+      background: linear-gradient(100deg, rgba(5,9,19,.94) 0%, rgba(5,9,19,.78) 55%, rgba(5,9,19,.45) 100%), url('player/assets/hero.jpg') center 38% / cover no-repeat;
+      color: #e8eefc;
+    }
+    .live-banner .lb-icon { width: 64px; height: 64px; border-radius: 22%; flex-shrink: 0; box-shadow: 0 8px 22px rgba(0,0,0,.45); }
+    .live-banner .lb-text { flex: 1; min-width: 220px; }
+    .lb-badge {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-size: .68rem; font-weight: 800; letter-spacing: .14em;
+      padding: 4px 10px; border-radius: 999px; margin-bottom: 8px;
+      background: rgba(76,141,255,.18); border: 1px solid rgba(76,141,255,.5); color: #cfe0ff;
+    }
+    .lb-badge i { width: 7px; height: 7px; border-radius: 50%; background: #5cf2a5; box-shadow: 0 0 10px #5cf2a5; }
+    .lb-title { font-size: 1.25rem; font-weight: 900; letter-spacing: -.02em; }
+    .lb-desc { font-size: .82rem; color: #a9bbdc; margin-top: 4px; }
+    .lb-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .lb-btn {
+      font-size: .82rem; font-weight: 700; text-decoration: none;
+      padding: 9px 16px; border-radius: 10px; color: #e8eefc;
+      border: 1px solid rgba(120,170,255,.35); background: rgba(11,20,38,.6);
+      transition: border-color .15s, background .15s;
+    }
+    .lb-btn:hover { border-color: #4c8dff; }
+    .lb-btn-main { background: #4c8dff; border-color: #4c8dff; color: #fff; }
+    .lb-btn-main:hover { background: #3b7cf0; }
+
     /* ── SEARCH ── */
     .search-wrap {
       width: 100%; max-width: 400px;
@@ -297,6 +328,7 @@
     <a href="/" class="nav-logo">UTOBIT</a>
     <div class="nav-right">
       <span class="nav-ustore">UStore</span>
+      <a href="player/" class="nav-link">Player</a>
       <a href="studio/" class="nav-link hide-mobile">Studio</a>
       <a href="agents/" class="nav-link hide-mobile">Agent</a>
       <a href="information/" class="nav-link">Information</a>
@@ -316,6 +348,21 @@
 </nav>
 
 <main>
+
+  <!-- PLAYER 서비스 중 -->
+  <div class="live-banner">
+    <img class="lb-icon" src="player/assets/icon.jpg" alt="Player : Final Raid">
+    <div class="lb-text">
+      <span class="lb-badge"><i></i>서비스 중 · EARLY ACCESS</span>
+      <p class="lb-title">Player : Final Raid</p>
+      <p class="lb-desc">실제 지도에서 펼쳐지는 RPG — 지금 Google Play에서 플레이할 수 있습니다.</p>
+    </div>
+    <div class="lb-actions">
+      <a class="lb-btn lb-btn-main" href="https://play.google.com/store/apps/details?id=com.utobit.playerfinalraid" target="_blank" rel="noopener" onclick="gtag('event','player_banner',{to:'play'})">Google Play</a>
+      <a class="lb-btn" href="player/globe/" onclick="gtag('event','player_banner',{to:'globe'})">플레이어 지구본</a>
+      <a class="lb-btn" href="player/" onclick="gtag('event','player_banner',{to:'intro'})">게임 소개</a>
+    </div>
+  </div>
 
   <!-- Search -->
   <div class="search-wrap">
