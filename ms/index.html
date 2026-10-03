@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Manamuhan Studio</title>
-  <meta name="description" content="마나무한 스튜디오 — Project Glyph 개발 중.">
+  <meta name="description" content="마나무한 스튜디오 — Player : Final Raid 얼리 액세스 오픈. Project Glyph 개발 중.">
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-F93QE1MMT8"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -20,20 +20,18 @@
     body {
       font-family: 'Inter', 'Noto Sans KR', system-ui, sans-serif;
       background: #fff;
-      overflow: hidden;
+      overflow-x: hidden;
     }
 
-    a.stage {
+    .stage {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      width: 100%; height: 100vh;
-      text-decoration: none;
+      width: 100%; min-height: 100vh; padding: 48px 0;
       color: #111827;
       position: relative;
       overflow: hidden;
-      cursor: pointer;
     }
 
     /* 배경 격자 애니메이션 */
@@ -82,7 +80,7 @@
     }
 
     .studio-name {
-      font-size: clamp(3.5rem, 10vw, 9rem);
+      font-size: clamp(2.4rem, 12vw, 9rem);
       font-weight: 900;
       letter-spacing: -.05em;
       line-height: .9;
@@ -114,17 +112,44 @@
       animation: slideUp 0.9s cubic-bezier(.22,1,.36,1) 0.6s forwards;
       transition: color .2s;
     }
-    a.stage:hover .enter-hint { color: #2563eb; }
+    a.enter-hint { display: inline-block; text-decoration: none; }
+    a.enter-hint:hover { color: #2563eb; }
 
-    /* hover 시 배경 틴트 */
-    a.stage::before {
-      content: '';
-      position: absolute; inset: 0;
-      background: rgba(37,99,235,.02);
+    /* PLAYER : Final Raid 오픈 소식 (2026-10-01 얼리 액세스) */
+    .news {
+      display: block;
+      margin: 44px auto 0;
+      width: min(460px, calc(100vw - 32px));
+      border-radius: 18px;
+      overflow: hidden;
+      text-align: left;
+      text-decoration: none;
+      color: #fff;
+      background: #050913;
+      box-shadow: 0 18px 50px rgba(15,23,42,.22);
+      font-family: 'Noto Sans KR', system-ui, sans-serif;
       opacity: 0;
-      transition: opacity .3s;
+      animation: slideUp 0.9s cubic-bezier(.22,1,.36,1) 0.5s forwards;
+      transition: box-shadow .25s;
     }
-    a.stage:hover::before { opacity: 1; }
+    .news:hover { box-shadow: 0 22px 60px rgba(37,99,235,.35); }
+    .news-art {
+      position: relative; aspect-ratio: 16 / 8;
+      background: url('/player/assets/hero.jpg') center 42% / cover no-repeat;
+    }
+    .news-art::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, #050913 2%, rgba(5,9,19,0) 60%); }
+    .news-tag {
+      position: absolute; top: 14px; left: 14px; z-index: 1;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.6875rem; font-weight: 900; letter-spacing: .14em;
+      color: #fff; background: #2563eb;
+      padding: 4px 10px; border-radius: 999px;
+    }
+    .news-main { display: flex; gap: 14px; align-items: center; padding: 0 20px 20px; margin-top: -28px; position: relative; z-index: 1; }
+    .news-icon { width: 64px; height: 64px; border-radius: 16px; flex: none; box-shadow: 0 6px 18px rgba(0,0,0,.5), 0 0 0 1px rgba(255,255,255,.12); }
+    .news-title { font-size: 1.05rem; font-weight: 900; letter-spacing: -.02em; margin-bottom: 4px; }
+    .news-body { font-size: 0.8125rem; font-weight: 400; line-height: 1.55; color: #a9b8d6; }
+    .news-cta { font-size: 0.75rem; font-weight: 700; color: #7fb0ff; margin-top: 6px; }
 
     @keyframes slideUp {
       from { opacity: 0; transform: translateY(20px); }
@@ -144,7 +169,7 @@
     .stage-out .studio-name {
       animation: slideDown 0.35s cubic-bezier(.55,0,.1,1) 0.05s forwards !important;
     }
-    .stage-out .enter-hint {
+    .stage-out .enter-hint, .stage-out .news {
       animation: slideDown 0.35s cubic-bezier(.55,0,.1,1) 0.1s forwards !important;
     }
     .stage-out .grid-bg {
@@ -158,20 +183,31 @@
   </style>
 </head>
 <body>
-  <a href="pg/" class="stage">
+  <div class="stage">
     <div class="grid-bg"></div>
     <div class="glow"></div>
     <div class="content">
       <p class="studio-sub">Game Studio</p>
       <h1 class="studio-name">MANAMUHAN<br>STUDIO</h1>
-      <p class="enter-hint">Project Glyph →</p>
+      <a class="news" href="/player/">
+        <div class="news-art"><span class="news-tag">NOW OPEN · 2026.10.01</span></div>
+        <div class="news-main">
+          <img class="news-icon" src="/player/assets/icon.jpg" alt="Player : Final Raid">
+          <div>
+            <p class="news-title">Player : Final Raid 얼리 액세스 오픈!</p>
+            <p class="news-body">실제 지도에서 펼쳐지는 RPG.<br>주변에 생겨난 게이트를 클리어하세요.</p>
+            <p class="news-cta">자세히 보기 →</p>
+          </div>
+        </div>
+      </a>
+      <a class="enter-hint" href="pg/">Project Glyph →</a>
     </div>
-  </a>
+  </div>
 <script>
-  document.querySelector('a.stage').addEventListener('click', function(e) {
+  document.querySelector('a.enter-hint').addEventListener('click', function(e) {
     e.preventDefault();
     var href = this.getAttribute('href');
-    this.classList.add('stage-out');
+    document.querySelector('.stage').classList.add('stage-out');
     setTimeout(function() { window.location.href = href; }, 400);
   });
 </script>

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Player : Final Raid — 얼리 액세스 오픈</title>
+  <meta name="description" content="Player : Final Raid 얼리 액세스 오픈! 실제 지도에서 펼쳐지는 RPG. 주변에 생겨난 게이트를 클리어하세요.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Player : Final Raid — 얼리 액세스 오픈">
+  <meta property="og:description" content="실제 지도에서 펼쳐지는 RPG. 주변에 생겨난 게이트를 클리어하세요.">
+  <meta property="og:image" content="https://utobit.net/player/assets/og.jpg">
+  <meta property="og:url" content="https://utobit.net/player/">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="assets/icon-180.png">
+  <link rel="apple-touch-icon" href="assets/icon-180.png">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-F93QE1MMT8"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-F93QE1MMT8');
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;800;900&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #050913;
+      --panel: #0b1426;
+      --line: rgba(120, 170, 255, .16);
+      --text: #e8eefc;
+      --sub: #8fa3c7;
+      --blue: #4c8dff;
+      --glow: rgba(76, 141, 255, .45);
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Noto Sans KR', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; }
+
+    /* 상단 바 */
+    .top {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 20;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px clamp(16px, 4vw, 40px);
+      background: linear-gradient(to bottom, rgba(5,9,19,.85), rgba(5,9,19,0));
+    }
+    .top a { text-decoration: none; }
+    .brand { font-family: 'Inter', sans-serif; font-weight: 900; font-size: .8rem; letter-spacing: .22em; color: var(--sub); }
+    .brand:hover { color: var(--text); }
+    .top-cta {
+      font-size: .8rem; font-weight: 700; color: var(--text);
+      padding: 8px 14px; border: 1px solid var(--line); border-radius: 999px;
+      background: rgba(11,20,38,.6); backdrop-filter: blur(6px);
+    }
+    .top-cta:hover { border-color: var(--blue); }
+
+    /* 히어로 */
+    .hero {
+      position: relative; min-height: 100svh;
+      display: flex; align-items: flex-end;
+      padding: 120px clamp(16px, 6vw, 80px) clamp(56px, 10vh, 110px);
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background: url('assets/hero.jpg') center 40% / cover no-repeat;
+      transform: scale(1.06);
+      animation: heroZoom 14s ease-out forwards;
+    }
+    @keyframes heroZoom { to { transform: scale(1); } }
+    .hero::after {
+      content: ''; position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse at 50% 38%, rgba(76,141,255,.10), transparent 60%),
+        linear-gradient(to top, var(--bg) 4%, rgba(5,9,19,.72) 38%, rgba(5,9,19,.15) 70%, rgba(5,9,19,.55));
+    }
+    .hero-inner { position: relative; z-index: 2; max-width: 720px; }
+    .badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: 'Inter', sans-serif; font-size: .72rem; font-weight: 800; letter-spacing: .16em;
+      padding: 6px 12px; border-radius: 999px;
+      background: rgba(76,141,255,.16); border: 1px solid rgba(76,141,255,.45); color: #cfe0ff;
+      margin-bottom: 22px;
+      opacity: 0; animation: up .9s cubic-bezier(.22,1,.36,1) .15s forwards;
+    }
+    .badge i { width: 7px; height: 7px; border-radius: 50%; background: #5cf2a5; box-shadow: 0 0 10px #5cf2a5; animation: blink 1.6s ease-in-out infinite; }
+    @keyframes blink { 50% { opacity: .35; } }
+    .title-row { display: flex; align-items: center; gap: clamp(14px, 2vw, 22px); margin-bottom: 18px; opacity: 0; animation: up .9s cubic-bezier(.22,1,.36,1) .3s forwards; }
+    .app-icon { width: clamp(64px, 9vw, 92px); aspect-ratio: 1; border-radius: 22%; box-shadow: 0 10px 30px rgba(0,0,0,.5), 0 0 0 1px var(--line); }
+    h1 {
+      font-family: 'Inter', 'Noto Sans KR', sans-serif;
+      font-size: clamp(2.2rem, 6.4vw, 4.6rem); font-weight: 900; letter-spacing: -.035em; line-height: 1;
+      text-shadow: 0 0 40px var(--glow);
+    }
+    h1 small { display: block; font-size: .42em; letter-spacing: .02em; color: #b9cdf3; margin-top: 10px; font-weight: 800; }
+    .lead { font-size: clamp(1.05rem, 2vw, 1.3rem); font-weight: 700; margin-bottom: 8px; opacity: 0; animation: up .9s cubic-bezier(.22,1,.36,1) .45s forwards; }
+    .copy { font-size: clamp(.95rem, 1.6vw, 1.08rem); color: var(--sub); line-height: 1.75; opacity: 0; animation: up .9s cubic-bezier(.22,1,.36,1) .55s forwards; }
+    .cta-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; opacity: 0; animation: up .9s cubic-bezier(.22,1,.36,1) .7s forwards; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 14px 22px; border-radius: 14px; text-decoration: none;
+      font-weight: 700; font-size: .95rem; transition: background .2s, border-color .2s, box-shadow .2s;
+    }
+    .btn-play { background: var(--blue); color: #fff; box-shadow: 0 8px 28px rgba(76,141,255,.35); }
+    .btn-play:hover { background: #3b7cf0; box-shadow: 0 8px 34px rgba(76,141,255,.55); }
+    .btn-play svg { width: 20px; height: 20px; }
+    .btn-ghost { border: 1px solid var(--line); color: var(--text); background: rgba(11,20,38,.55); }
+    .btn-ghost:hover { border-color: var(--blue); }
+    @keyframes up { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+
+    /* 스크린샷 */
+    section { padding: clamp(64px, 10vw, 120px) clamp(16px, 6vw, 80px); }
+    .sec-label { font-family: 'Inter', sans-serif; font-size: .72rem; font-weight: 800; letter-spacing: .22em; color: var(--blue); margin-bottom: 10px; }
+    .sec-title { font-size: clamp(1.5rem, 3.4vw, 2.3rem); font-weight: 900; letter-spacing: -.02em; margin-bottom: 36px; }
+    .shots {
+      display: grid; grid-template-columns: repeat(5, 1fr); gap: clamp(10px, 1.6vw, 20px);
+    }
+    .shots img {
+      width: 100%; aspect-ratio: 9 / 16; object-fit: cover; display: block;
+      border-radius: 16px; border: 1px solid var(--line);
+      box-shadow: 0 16px 40px rgba(0,0,0,.45);
+      transition: transform .3s, border-color .3s;
+    }
+    .shots img:hover { transform: translateY(-6px); border-color: rgba(76,141,255,.55); }
+    @media (max-width: 900px) {
+      .shots { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 62%; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 12px; margin: 0 calc(-1 * clamp(16px, 6vw, 80px)); padding-left: clamp(16px, 6vw, 80px); padding-right: clamp(16px, 6vw, 80px); }
+      .shots img { scroll-snap-align: center; }
+      .shots img:hover { transform: none; }
+    }
+
+    /* 마무리 */
+    .closing {
+      text-align: center;
+      background: radial-gradient(ellipse at 50% 0%, rgba(76,141,255,.14), transparent 65%);
+      border-top: 1px solid var(--line);
+    }
+    .closing .app-icon { width: 88px; margin-bottom: 20px; }
+    .closing h2 { font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 900; margin-bottom: 10px; }
+    .closing p { color: var(--sub); margin-bottom: 28px; }
+    .closing .cta-row { justify-content: center; opacity: 1; animation: none; margin-top: 0; }
+
+    footer {
+      padding: 36px clamp(16px, 6vw, 80px) 48px;
+      border-top: 1px solid var(--line);
+      font-size: .8rem; color: var(--sub);
+      display: flex; flex-wrap: wrap; gap: 14px 22px; justify-content: space-between; align-items: center;
+    }
+    footer nav { display: flex; flex-wrap: wrap; gap: 8px 18px; }
+    footer a { text-decoration: none; }
+    footer a:hover { color: var(--text); }
+  </style>
+</head>
+<body>
+  <header class="top">
+    <a class="brand" href="/ms/">MANAMUHAN STUDIO</a>
+    <a class="top-cta" href="https://play.google.com/store/apps/details?id=com.utobit.playerfinalraid" target="_blank" rel="noopener">Google Play</a>
+  </header>
+
+  <main>
+    <div class="hero">
+      <div class="hero-bg" role="img" aria-label="도시 위에 열린 게이트 앞에 선 헌터"></div>
+      <div class="hero-inner">
+        <span class="badge"><i></i>EARLY ACCESS · NOW OPEN</span>
+        <div class="title-row">
+          <img class="app-icon" src="assets/icon.jpg" alt="Player : Final Raid 앱 아이콘">
+          <h1>PLAYER<small>Final Raid</small></h1>
+        </div>
+        <p class="lead">Player : Final Raid 얼리 액세스 오픈!</p>
+        <p class="copy">실제 지도에서 펼쳐지는 RPG.<br>주변에 생겨난 게이트를 클리어하세요.</p>
+        <div class="cta-row">
+          <a class="btn btn-play" href="https://play.google.com/store/apps/details?id=com.utobit.playerfinalraid" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4 2.8v18.4c0 .5.5.8.9.6L20.6 13c.5-.3.5-.9 0-1.2L4.9 2.2C4.5 2 4 2.3 4 2.8z"/></svg>
+            Google Play에서 받기
+          </a>
+          <a class="btn btn-ghost" href="#screens">게임 화면 보기</a>
+        </div>
+      </div>
+    </div>
+
+    <section id="screens">
+      <p class="sec-label">SCREENSHOTS</p>
+      <h2 class="sec-title">게임 화면</h2>
+      <div class="shots">
+        <img src="assets/shot1.jpg" alt="세계 각지를 자유롭게 돌아다니자" loading="lazy">
+        <img src="assets/shot2.jpg" alt="데일리 임무를 수행하고 보상을 획득" loading="lazy">
+        <img src="assets/shot3.jpg" alt="헌터가 되어 게이트를 클리어하자" loading="lazy">
+        <img src="assets/shot4.jpg" alt="나만의 고유 스킬을 획득하자" loading="lazy">
+        <img src="assets/shot5.jpg" alt="세계 곳곳에서 발생하는 다양한 이벤트!" loading="lazy">
+      </div>
+    </section>
+
+    <section class="closing">
+      <img class="app-icon" src="assets/icon.jpg" alt="">
+      <h2>지금 게이트가 열렸습니다</h2>
+      <p>Android · Google Play</p>
+      <div class="cta-row">
+        <a class="btn btn-play" href="https://play.google.com/store/apps/details?id=com.utobit.playerfinalraid" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4 2.8v18.4c0 .5.5.8.9.6L20.6 13c.5-.3.5-.9 0-1.2L4.9 2.2C4.5 2 4 2.3 4 2.8z"/></svg>
+          Google Play에서 받기
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>© 2026 MANAMUHAN STUDIO · UTOBIT</span>
+    <nav>
+      <a href="/player/terms/">이용약관</a>
+      <a href="/player/privacy/">개인정보처리방침</a>
+      <a href="/player/location-terms/">위치기반서비스 이용약관</a>
+      <a href="/player/refund/">청약철회 및 환불정책</a>
+      <a href="/player/delete-account/">계정 삭제</a>
+    </nav>
+  </footer>
+</body>
+</html>
