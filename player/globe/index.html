@@ -97,6 +97,29 @@
     .legend .g { background: var(--gold); box-shadow: 0 0 8px var(--gold); }
     .note { margin-top: 12px; font-size: 11px; color: var(--dim); line-height: 1.5; }
 
+    /* 랭킹 서랍 — 오른쪽 위 햄버거 */
+    .burger { top: max(16px, env(safe-area-inset-top)); right: 20px; width: 44px; height: 44px; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 5px; cursor: pointer; padding: 0; transition: border-color .15s; }
+    .burger:hover { border-color: var(--line-strong); }
+    .burger i { display: block; width: 18px; height: 2px; border-radius: 2px; background: var(--text); }
+    .drawer { top: max(70px, calc(env(safe-area-inset-top) + 58px)); right: 20px; bottom: 84px; width: 340px; max-width: calc(100vw - 32px);
+      display: flex; flex-direction: column; overflow: hidden; }
+    .drawer h2 { padding: 16px 18px 10px; font-size: 13px; font-weight: 800; letter-spacing: .22em; }
+    .tabs { display: flex; gap: 6px; padding: 0 14px 10px; }
+    .tabs button { flex: 1; height: 34px; border-radius: 9px; border: 1px solid var(--line); background: transparent; cursor: pointer;
+      color: var(--muted); font: inherit; font-size: 12px; font-weight: 700; transition: background .15s, color .15s; }
+    .tabs button.on { background: rgba(150, 130, 255, .2); border-color: var(--line-strong); color: var(--text); }
+    .ranks { flex: 1; overflow-y: auto; padding: 0 8px 10px; }
+    .ranks button { display: grid; grid-template-columns: 34px 1fr auto; align-items: center; gap: 8px; width: 100%; padding: 9px 10px;
+      background: transparent; border: 0; border-radius: 9px; cursor: pointer; color: var(--text); font: inherit; text-align: left; transition: background .15s; }
+    .ranks button:hover { background: rgba(150, 130, 255, .14); }
+    .ranks .no { font-size: 13px; font-weight: 800; color: var(--muted); font-variant-numeric: tabular-nums; text-align: center; }
+    .ranks .top .no { color: var(--gold); }
+    .ranks .who { min-width: 0; }
+    .ranks .who b { display: block; font-size: 14px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .ranks .who small { display: block; margin-top: 1px; font-size: 11px; color: var(--dim); }
+    .ranks .sc { font-size: 13px; font-weight: 700; color: var(--cyan); font-variant-numeric: tabular-nums; }
+
     .hint { bottom: max(34px, env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%);
       font-size: 11px; letter-spacing: .1em; color: var(--dim); pointer-events: none; white-space: nowrap; }
 
@@ -108,8 +131,15 @@
     @keyframes ping { from { transform: scale(.6); opacity: .9; } to { transform: scale(2.4); opacity: 0; } }
     @media (prefers-reduced-motion: reduce) { .hq::after { animation: none; } }
 
+    .ranks, .list { scrollbar-width: thin; scrollbar-color: rgba(150, 130, 255, .45) transparent; }
+    .ranks::-webkit-scrollbar, .list::-webkit-scrollbar { width: 6px; }
+    .ranks::-webkit-scrollbar-thumb, .list::-webkit-scrollbar-thumb { background: rgba(150, 130, 255, .45); border-radius: 3px; }
+    .ranks::-webkit-scrollbar-track, .list::-webkit-scrollbar-track { background: transparent; }
+
     [hidden] { display: none !important; }
     @media (max-width: 560px) {
+      .burger { right: 16px; }
+      .drawer { left: 16px; right: 16px; width: auto; bottom: 16px; z-index: 6; }
       .brand { left: 16px; }
       .panel { left: 16px; right: 16px; width: auto; }
       .hint { display: none; }
@@ -143,6 +173,17 @@
     </div>
   </div>
 
+  <button class="hud glass burger" id="burger" type="button" aria-expanded="false"><i></i><i></i><i></i></button>
+  <div class="hud glass drawer" id="drawer" hidden>
+    <h2 data-t="rankTitle"></h2>
+    <div class="tabs" id="tabs">
+      <button type="button" data-board="points" data-t="rankPoints"></button>
+      <button type="button" data-board="level" data-t="level"></button>
+      <button type="button" data-board="power" data-t="power"></button>
+    </div>
+    <div class="ranks" id="ranks"></div>
+  </div>
+
   <div class="hud hint" data-t="hint"></div>
 
 <script>
@@ -167,6 +208,7 @@
     many: function (n) { return n + '명이 검색되었습니다. 헌터를 선택하세요.'; },
     fail: '서버에 연결하지 못했습니다. 잠시 후 다시 시도해 주세요.',
     grade: '등급', country: '국가', guild: '길드', guildHq: '길드 본부', view: '위치 보기', noHq: '미설립',
+    rankTitle: '랭킹', rankPoints: '공략 포인트', rankOpen: '랭킹 열기', rankEmpty: '아직 랭킹이 없습니다.',
     trail: '자취가 닿은 지역', trailUnit: '곳', walk: '지나간 길', gate: '게이트 공략 지역', noTrail: '아직 기록이 없습니다',
     note: '상세 스탯은 공개되지 않습니다. 기록은 몇 분 간격으로 갱신됩니다.',
     noMap: '지도를 불러오지 못했습니다. 검색은 그대로 사용할 수 있습니다.'
@@ -176,6 +218,7 @@
     many: function (n) { return n + ' hunters found. Select one.'; },
     fail: 'Could not reach the server. Please try again shortly.',
     grade: 'Grade', country: 'Country', guild: 'Guild', guildHq: 'Guild HQ', view: 'Show', noHq: 'Not built',
+    rankTitle: 'RANKING', rankPoints: 'RAID POINTS', rankOpen: 'Open ranking', rankEmpty: 'No ranking yet.',
     trail: 'Areas reached', trailUnit: '', walk: 'Path walked', gate: 'Gate cleared area', noTrail: 'No records yet',
     note: 'Detailed stats are private. Records refresh every few minutes.',
     noMap: 'The map could not be loaded. Search still works.'
@@ -443,9 +486,73 @@
     });
   }
 
+  // ── 랭킹 서랍 ───────────────────────────────────────────────────────
+  var rankCache = {}, rankBoard = 'points', rankSeq = 0;
+
+  function rankNote(text) {
+    var box = $('ranks');
+    box.textContent = '';
+    box.appendChild(el('div', 'msg', text));
+  }
+
+  function drawRanks(rows) {
+    var box = $('ranks');
+    box.textContent = '';
+    if (!rows.length) return rankNote(T.rankEmpty);
+    rows.forEach(function (r) {
+      var b = el('button', r.rank <= 3 ? 'top' : null);
+      b.type = 'button';
+      b.appendChild(el('span', 'no', r.rank));
+      var who = el('span', 'who');
+      who.appendChild(el('b', null, r.name));
+      who.appendChild(el('small', null, 'Lv.' + r.level + (r.country ? ' · ' + countryName(r.country) : '')));
+      b.appendChild(who);
+      b.appendChild(el('span', 'sc', num(r.score)));
+      b.addEventListener('click', function () {
+        seq++;                                   // 진행 중이던 검색 응답은 버린다
+        $('go').disabled = false;
+        $('q').value = r.name;
+        history.replaceState(null, '', location.pathname + '?' + withQuery(r.name));
+        if (window.innerWidth <= 560) toggleDrawer(false);   // 좁은 화면은 서랍이 카드를 덮는다
+        render(r);
+      });
+      box.appendChild(b);
+    });
+  }
+
+  function loadRank(board) {
+    rankBoard = board;
+    document.querySelectorAll('#tabs button').forEach(function (b) { b.classList.toggle('on', b.getAttribute('data-board') === board); });
+    if (rankCache[board]) return drawRanks(rankCache[board]);
+    var mine = ++rankSeq;
+    rankNote(T.searching);
+    fetch(apiBase + '/globe?rank=' + board)
+      .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function (j) {
+        rankCache[board] = (j && j.rows) || [];
+        if (mine === rankSeq) drawRanks(rankCache[board]);
+      })
+      .catch(function () { if (mine === rankSeq) rankNote(T.fail); });
+  }
+
+  function toggleDrawer(open) {
+    var d = $('drawer');
+    if (open == null) open = d.hidden;
+    d.hidden = !open;
+    $('burger').setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (open) loadRank(rankBoard);
+  }
+
+  $('burger').setAttribute('aria-label', T.rankOpen);
+  $('burger').addEventListener('click', function () { toggleDrawer(); });
+  document.querySelectorAll('#tabs button').forEach(function (b) {
+    b.addEventListener('click', function () { loadRank(b.getAttribute('data-board')); });
+  });
+
   $('form').addEventListener('submit', function (e) { e.preventDefault(); search($('q').value, true); });
 
   if (!initMap()) { $('map').hidden = true; message(T.noMap); }
+  if (params.has('rank')) toggleDrawer(true);   // ?rank = 랭킹을 연 채로 시작
   var q0 = params.get('q');
   if (q0) { $('q').value = q0; search(q0, false); }
 })();
