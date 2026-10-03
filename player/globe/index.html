@@ -151,7 +151,7 @@
 
   // ── 설정 ────────────────────────────────────────────────────────────
   // Mapbox 공개 토큰(pk.…) — URL 제한(utobit.net)을 건 웹 전용 토큰을 넣는다. 게임 클라의 sk 토큰은 절대 넣지 않는다.
-  var MAPBOX_TOKEN = '';
+  var MAPBOX_TOKEN = 'pk.eyJ1Ijoic2Flcm9rIiwiYSI6ImNtdXJ3MmpycTAwM3cyeXM1cGNxZDZ2bWoifQ.vSHSOBC3wO8Kax7hjxEl3g';
   var API = {
     live: 'https://d1lt9hjs49q6xa.cloudfront.net',                              // 실서비스
     test: 'https://uwpaalwrka.execute-api.ap-northeast-2.amazonaws.com/prod'    // 테스트 서버(?s=test)
@@ -159,6 +159,7 @@
 
   var params = new URLSearchParams(location.search);
   var apiBase = params.get('s') === 'test' ? API.test : API.live;
+  var still = params.has('still');   // 시점 이동 연출 없이 바로(화면 점검용)
   var KO = (navigator.language || 'en').toLowerCase().indexOf('ko') === 0;
   var T = KO ? {
     ph: '닉네임 또는 #헌터 번호', go: '검색', level: '레벨', stat: '총 스탯', power: '전투력',
@@ -293,7 +294,7 @@
         var ft = j && j.features && j.features[0];
         if (!ft) return;
         var c = ft.geometry.coordinates;
-        map.flyTo({ center: c, zoom: 2.6, duration: 2600, essential: true });
+        map.flyTo({ center: c, zoom: 2.6, duration: still ? 0 : 2600, essential: true });
       }).catch(function () {});
   }
 
@@ -339,12 +340,14 @@
         if (!map || !mapReady) return;
         var box = drawTrail(cells, j.deg || 0.05);
         // 자취가 있으면 국가 대신 자취 전체가 보이게 — 한 지역뿐이면 너무 파고들지 않는다
-        if (box) map.fitBounds(box, { padding: 120, maxZoom: 7, duration: 2800, essential: true });
+        // 검색 패널에 가리지 않게 여백을 둔다(넓은 화면 = 왼쪽, 좁은 화면 = 위)
+        var pad = window.innerWidth > 720 ? { top: 90, bottom: 90, left: 420, right: 90 } : { top: 400, bottom: 50, left: 30, right: 30 };
+        if (box) map.fitBounds(box, { padding: pad, maxZoom: 7, duration: still ? 0 : 2800, essential: true });
       })
       .catch(function () { if (mine === seq) onCount(-1); });
   }
 
-  function flyHq(g) { map.flyTo({ center: [g.hqLng, g.hqLat], zoom: 13.5, duration: 3200, essential: true }); }
+  function flyHq(g) { map.flyTo({ center: [g.hqLng, g.hqLat], zoom: 13.5, duration: still ? 0 : 3200, essential: true }); }
 
   // ── 검색 ────────────────────────────────────────────────────────────
   var seq = 0;
