@@ -22,7 +22,7 @@ window.GLOBE_GUIDE = {
    [
     "협회가 포착한 범람 게이트",
     "범람 게이트는 헌터가 활동하는 세계 곳곳의 도시에서 예고 없이 열립니다. 협회는 포착한 게이트의 위치를 이 지구 위에 <b>붉은 빛기둥</b>으로 공개합니다.",
-    "게임 안에서 이 지구를 열고 게이트를 누르면, 그 게이트는 헌터의 <b>레이드 › 위험</b> 목록에 등록됩니다. 한 게이트에는 단 한 번만 들어갈 수 있습니다. 준비된 헌터만 문을 여십시오."
+    "게임 안에서 이 지구를 열고 게이트를 누르면, 그 게이트는 헌터의 <b>레이드 › 위험</b> 목록에 등록됩니다."
    ]
   ],
   "— 헌터 협회 기록 보관소"
@@ -48,7 +48,7 @@ window.GLOBE_GUIDE = {
    [
     "Flood gates tracked by the Association",
     "Flood gates open without warning in cities around the world where hunters are active. The Association marks every gate it detects on this globe with a <b>red pillar of light</b>.",
-    "Open this globe from inside the game and tap a gate to add it to your <b>Raid › Danger</b> list. Each gate can be entered only once. Open the door only when you are ready."
+    "Open this globe from inside the game and tap a gate to add it to your <b>Raid › Danger</b> list."
    ]
   ],
   "— Hunter Association Archive"
@@ -74,7 +74,7 @@ window.GLOBE_GUIDE = {
    [
     "協会が捕捉した氾濫ゲート",
     "氾濫ゲートは、ハンターが活動する世界各地の都市に前触れなく開きます。協会は捕捉したゲートの位置を、この地球上に<b>赤い光の柱</b>で公開しています。",
-    "ゲーム内からこの地球儀を開いてゲートをタップすると、そのゲートはハンターの<b>レイド › 危険</b>一覧に登録されます。一つのゲートに入れるのは一度きりです。準備のできたハンターだけが扉を開けてください。"
+    "ゲーム内からこの地球儀を開いてゲートをタップすると、そのゲートはハンターの<b>レイド › 危険</b>一覧に登録されます。"
    ]
   ],
   "— ハンター協会 記録保管所"
@@ -100,7 +100,7 @@ window.GLOBE_GUIDE = {
    [
     "协会侦测到的泛滥之门",
     "泛滥之门会毫无预兆地出现在世界各地有猎人活动的城市。协会将侦测到的门的位置以<b>红色光柱</b>公开在这颗地球上。",
-    "从游戏内打开此地球仪并点击门，该门便会登记到猎人的<b>突袭 › 危险</b>列表。每扇门只能进入一次。做好准备再开门。"
+    "从游戏内打开此地球仪并点击门，该门便会登记到猎人的<b>突袭 › 危险</b>列表。"
    ]
   ],
   "— 猎人协会档案库"
@@ -126,7 +126,7 @@ window.GLOBE_GUIDE = {
    [
     "協會偵測到的氾濫之門",
     "氾濫之門會毫無預兆地出現在世界各地有獵人活動的城市。協會將偵測到的門的位置以<b>紅色光柱</b>公開在這顆地球上。",
-    "從遊戲內開啟此地球儀並點擊門，該門便會登記到獵人的<b>突襲 › 危險</b>列表。每扇門只能進入一次。做好準備再開門。"
+    "從遊戲內開啟此地球儀並點擊門，該門便會登記到獵人的<b>突襲 › 危險</b>列表。"
    ]
   ],
   "— 獵人協會檔案庫"
@@ -152,7 +152,7 @@ window.GLOBE_GUIDE = {
    [
     "Von der Vereinigung erfasste Fluttore",
     "Fluttore öffnen sich ohne Vorwarnung in Städten auf der ganzen Welt, in denen Jäger aktiv sind. Die Vereinigung markiert jedes erfasste Tor auf diesem Globus mit einer <b>roten Lichtsäule</b>.",
-    "Öffne diesen Globus aus dem Spiel heraus und tippe ein Tor an, um es deiner Liste <b>Raid › Gefahr</b> hinzuzufügen. Jedes Tor kann nur einmal betreten werden. Öffne die Tür erst, wenn du bereit bist."
+    "Öffne diesen Globus aus dem Spiel heraus und tippe ein Tor an, um es deiner Liste <b>Raid › Gefahr</b> hinzuzufügen."
    ]
   ],
   "— Archiv der Jägervereinigung"
@@ -178,7 +178,7 @@ window.GLOBE_GUIDE = {
    [
     "Portails en crue repérés par l’Association",
     "Les portails en crue s’ouvrent sans prévenir dans les villes du monde où des chasseurs sont actifs. L’Association signale chaque portail repéré sur ce globe par une <b>colonne de lumière rouge</b>.",
-    "Ouvrez ce globe depuis le jeu et touchez un portail pour l’ajouter à votre liste <b>Raid › Danger</b>. On ne peut entrer dans chaque portail qu’une seule fois. N’ouvrez la porte que lorsque vous êtes prêt."
+    "Ouvrez ce globe depuis le jeu et touchez un portail pour l’ajouter à votre liste <b>Raid › Danger</b>."
    ]
   ],
   "— Archives de l’Association des chasseurs"
@@ -204,7 +204,7 @@ window.GLOBE_GUIDE = {
    [
     "Portales desbordados detectados por la Asociación",
     "Los portales desbordados se abren sin previo aviso en ciudades de todo el mundo donde hay cazadores activos. La Asociación señala en este globo cada portal que detecta con una <b>columna de luz roja</b>.",
-    "Abre este globo desde el juego y toca un portal para añadirlo a tu lista <b>Incursión › Peligro</b>. Solo se puede entrar una vez en cada portal. Abre la puerta solo cuando estés listo."
+    "Abre este globo desde el juego y toca un portal para añadirlo a tu lista <b>Incursión › Peligro</b>."
    ]
   ],
   "— Archivo de la Asociación de Cazadores"
@@ -230,7 +230,7 @@ window.GLOBE_GUIDE = {
    [
     "Portali straripati rilevati dall’Associazione",
     "I portali straripati si aprono senza preavviso nelle città del mondo in cui ci sono cacciatori attivi. L’Associazione segnala su questo globo ogni portale rilevato con una <b>colonna di luce rossa</b>.",
-    "Apri questo globo dal gioco e tocca un portale per aggiungerlo al tuo elenco <b>Raid › Pericolo</b>. In ogni portale si può entrare una sola volta. Apri la porta solo quando sei pronto."
+    "Apri questo globo dal gioco e tocca un portale per aggiungerlo al tuo elenco <b>Raid › Pericolo</b>."
    ]
   ],
   "— Archivio dell’Associazione dei Cacciatori"
@@ -256,7 +256,7 @@ window.GLOBE_GUIDE = {
    [
     "Portais transbordados detectados pela Associação",
     "Os portais transbordados se abrem sem aviso em cidades do mundo onde há caçadores ativos. A Associação marca neste globo cada portal detectado com um <b>pilar de luz vermelha</b>.",
-    "Abra este globo de dentro do jogo e toque em um portal para adicioná-lo à sua lista <b>Raid › Perigo</b>. Só é possível entrar uma vez em cada portal. Abra a porta apenas quando estiver pronto."
+    "Abra este globo de dentro do jogo e toque em um portal para adicioná-lo à sua lista <b>Raid › Perigo</b>."
    ]
   ],
   "— Arquivo da Associação de Caçadores"
@@ -282,7 +282,7 @@ window.GLOBE_GUIDE = {
    [
     "Bramy wylewu wykryte przez Stowarzyszenie",
     "Bramy wylewu otwierają się bez ostrzeżenia w miastach całego świata, w których działają łowcy. Stowarzyszenie oznacza na tym globusie każdą wykrytą bramę <b>czerwonym słupem światła</b>.",
-    "Otwórz ten globus z poziomu gry i dotknij bramy, aby dodać ją do listy <b>Rajd › Zagrożenie</b>. Do każdej bramy można wejść tylko raz. Otwieraj drzwi dopiero wtedy, gdy jesteś gotów."
+    "Otwórz ten globus z poziomu gry i dotknij bramy, aby dodać ją do listy <b>Rajd › Zagrożenie</b>."
    ]
   ],
   "— Archiwum Stowarzyszenia Łowców"
@@ -308,7 +308,7 @@ window.GLOBE_GUIDE = {
    [
     "Врата разлива, обнаруженные Ассоциацией",
     "Врата разлива открываются без предупреждения в городах по всему миру, где действуют охотники. Ассоциация отмечает на этом глобусе каждые обнаруженные врата <b>красным столпом света</b>.",
-    "Откройте этот глобус из игры и нажмите на врата, чтобы добавить их в список <b>Рейд › Опасность</b>. В каждые врата можно войти только один раз. Открывайте дверь, только когда будете готовы."
+    "Откройте этот глобус из игры и нажмите на врата, чтобы добавить их в список <b>Рейд › Опасность</b>."
    ]
   ],
   "— Архив Ассоциации охотников"
@@ -334,7 +334,7 @@ window.GLOBE_GUIDE = {
    [
     "Birliğin tespit ettiği taşkın kapıları",
     "Taşkın kapıları, avcıların etkin olduğu dünyanın dört bir yanındaki şehirlerde habersizce açılır. Birlik, tespit ettiği her kapıyı bu kürede <b>kırmızı bir ışık sütunuyla</b> gösterir.",
-    "Bu küreyi oyunun içinden açıp bir kapıya dokunarak onu <b>Baskın › Tehlike</b> listene ekle. Her kapıya yalnızca bir kez girilebilir. Kapıyı ancak hazır olduğunda aç."
+    "Bu küreyi oyunun içinden açıp bir kapıya dokunarak onu <b>Baskın › Tehlike</b> listene ekle."
    ]
   ],
   "— Avcılar Birliği Arşivi"
@@ -360,7 +360,7 @@ window.GLOBE_GUIDE = {
    [
     "Cổng tràn do Hiệp hội phát hiện",
     "Cổng tràn mở ra không báo trước tại các thành phố trên khắp thế giới nơi có thợ săn hoạt động. Hiệp hội đánh dấu mỗi cổng phát hiện được trên quả địa cầu này bằng một <b>cột sáng đỏ</b>.",
-    "Mở quả địa cầu này từ trong game và chạm vào cổng để thêm vào danh sách <b>Đột kích › Nguy hiểm</b>. Mỗi cổng chỉ được vào một lần. Chỉ mở cửa khi bạn đã sẵn sàng."
+    "Mở quả địa cầu này từ trong game và chạm vào cổng để thêm vào danh sách <b>Đột kích › Nguy hiểm</b>."
    ]
   ],
   "— Kho lưu trữ Hiệp hội Thợ săn"
@@ -386,7 +386,7 @@ window.GLOBE_GUIDE = {
    [
     "Gate luapan yang terdeteksi Asosiasi",
     "Gate luapan terbuka tanpa peringatan di kota-kota di seluruh dunia tempat hunter aktif. Asosiasi menandai setiap gate yang terdeteksi di globe ini dengan <b>pilar cahaya merah</b>.",
-    "Buka globe ini dari dalam game lalu ketuk gate untuk menambahkannya ke daftar <b>Raid › Bahaya</b>. Setiap gate hanya bisa dimasuki satu kali. Buka pintunya hanya saat kamu siap."
+    "Buka globe ini dari dalam game lalu ketuk gate untuk menambahkannya ke daftar <b>Raid › Bahaya</b>."
    ]
   ],
   "— Arsip Asosiasi Hunter"
@@ -412,7 +412,7 @@ window.GLOBE_GUIDE = {
    [
     "เกตเอ่อล้นที่สมาคมตรวจพบ",
     "เกตเอ่อล้นเปิดขึ้นโดยไม่มีสัญญาณเตือนในเมืองต่าง ๆ ทั่วโลกที่มีฮันเตอร์เคลื่อนไหวอยู่ สมาคมแสดงตำแหน่งของเกตที่ตรวจพบไว้บนลูกโลกนี้ด้วย<b>เสาแสงสีแดง</b>",
-    "เปิดลูกโลกนี้จากในเกมแล้วแตะเกต เกตนั้นจะถูกเพิ่มลงในรายการ <b>เรด › อันตราย</b> ของคุณ แต่ละเกตเข้าได้เพียงครั้งเดียว เปิดประตูเมื่อพร้อมแล้วเท่านั้น"
+    "เปิดลูกโลกนี้จากในเกมแล้วแตะเกต เกตนั้นจะถูกเพิ่มลงในรายการ <b>เรด › อันตราย</b> ของคุณ"
    ]
   ],
   "— คลังบันทึกสมาคมฮันเตอร์"
@@ -438,7 +438,7 @@ window.GLOBE_GUIDE = {
    [
     "بوابات الفيضان التي رصدتها الجمعية",
     "تُفتح بوابات الفيضان دون سابق إنذار في مدن حول العالم ينشط فيها صيادون. تحدد الجمعية موقع كل بوابة ترصدها على هذه الكرة الأرضية <b>بعمود ضوء أحمر</b>.",
-    "افتح هذه الكرة الأرضية من داخل اللعبة واضغط على بوابة لإضافتها إلى قائمة <b>الغارة › خطر</b>. لا يمكن دخول كل بوابة إلا مرة واحدة. لا تفتح الباب إلا وأنت مستعد."
+    "افتح هذه الكرة الأرضية من داخل اللعبة واضغط على بوابة لإضافتها إلى قائمة <b>الغارة › خطر</b>."
    ]
   ],
   "— أرشيف جمعية الصيادين"
