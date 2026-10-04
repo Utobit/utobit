@@ -72,6 +72,12 @@
 
     .card { padding: 18px 18px 16px; }
     .card .who { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+    .card .fold { margin-left: auto; align-self: center; flex: none; width: 32px; height: 32px; display: grid; place-items: center;
+      border: 1px solid var(--line); border-radius: 8px; background: transparent; color: inherit; cursor: pointer; }
+    .card .fold svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; transition: transform .15s; }
+    .card.folded .fold svg { transform: rotate(180deg); }
+    .card.folded { padding-bottom: 14px; }
+    .card.folded > :not(.who) { display: none !important; }
     .card .nick { font-size: 22px; font-weight: 800; word-break: break-all; }
     .card .no { font-size: 14px; font-weight: 600; color: var(--cyan); }
     .card .tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
@@ -232,7 +238,7 @@
     <div class="glass msg" id="msg" hidden></div>
     <div class="glass list" id="list" hidden></div>
     <div class="glass card" id="card" hidden>
-      <div class="who"><span class="nick" id="c-nick"></span><span class="no" id="c-no"></span></div>
+      <div class="who"><span class="nick" id="c-nick"></span><span class="no" id="c-no"></span><button class="fold" id="c-fold" type="button" aria-expanded="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg></button></div>
       <div class="tags" id="c-tags"></div>
       <div class="stats">
         <div class="stat"><b id="c-level"></b><span data-t="level"></span></div>
@@ -661,6 +667,7 @@
     var trailRow = addRow(T.trail, '…');
     $('c-legend').hidden = true;
     show('card');
+    setFold(window.matchMedia('(max-width: 560px)').matches);   // 좁은 화면(휴대폰) = 접힌 채 시작 — 카드가 지구본을 가리지 않게
     focusRow(r);
     if (map && mapReady) drawTrail([], 0.05);
     loadTrail(r, function (n) {
@@ -873,6 +880,9 @@
   $('burger').addEventListener('click', function () {
     if (!$('bmenu').hidden || !$('lmenu').hidden || !$('gdrawer').hidden || !$('guide').hidden) closeBurger(); else openBurgerPanel('bmenu');
   });
+  // 헌터 정보 접기·펴기(접으면 이름 줄만 남는다)
+  function setFold(on) { $('card').classList.toggle('folded', on); $('c-fold').setAttribute('aria-expanded', on ? 'false' : 'true'); }
+  $('c-fold').addEventListener('click', function () { setFold(!$('card').classList.contains('folded')); });
   $('m-gates').addEventListener('click', function () { openBurgerPanel('gdrawer'); });
   $('m-guide').addEventListener('click', function () { openBurgerPanel('guide'); });
   // 언어 설정: 메뉴의 '언어' → 게임 제공 언어 목록. 고르면 기기에 저장하고 다시 불러온다(문구가 처음 한 번에 채워지는 구조)
