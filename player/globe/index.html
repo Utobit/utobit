@@ -698,7 +698,7 @@
     params.delete('k');
     history.replaceState(null, '', location.pathname + (params.toString() ? '?' + params.toString() : ''));
   }
-  function cityName(c) { return KO ? c : (CITY_EN[c] || c); }
+  function cityName(g) { return KO ? g.city : (g.cityEn || CITY_EN[g.city] || g.city); }
 
   function claimGate(g, st) {
     if (!gateKey) return;
@@ -716,7 +716,7 @@
     userTouched = true;
     if (floodPopup) { floodPopup.remove(); floodPopup = null; }
     var box = el('div', 'gpop');
-    box.appendChild(el('b', null, cityName(g.city) + ' · ' + g.name));
+    box.appendChild(el('b', null, cityName(g) + ' · ' + g.name));
     box.appendChild(el('span', null, T.gLine(g) + ' · ' + T.gStage(g.flood || 1)));
     var st = el('em', null, gateKey ? T.gClaiming : T.gNoKey);
     box.appendChild(st);
@@ -739,7 +739,7 @@
       b.type = 'button';
       b.appendChild(el('span', 'gr', g.grade));
       var who = el('span', 'who');
-      who.appendChild(el('b', null, cityName(g.city) + ' · ' + g.name));
+      who.appendChild(el('b', null, cityName(g) + ' · ' + g.name));
       var sm = el('small', null, T.gLine(g) + ' · ');
       sm.appendChild(el('em', null, T.gStage(g.flood || 1)));
       who.appendChild(sm);
@@ -778,7 +778,7 @@
       var dot = el('div', 'fg');
       dot.innerHTML = gateSvg(g.flood);                  // 고정 문자열 조합(서버 값은 단계 숫자만 — 1~3 으로 자른다)
       dot.appendChild(el('i', 'fgb', g.grade));
-      dot.title = cityName(g.city) + ' · ' + g.name + ' · ' + T.gStage(g.flood || 1);
+      dot.title = cityName(g) + ' · ' + g.name + ' · ' + T.gStage(g.flood || 1);
       dot.addEventListener('click', function (e) { e.stopPropagation(); openGate(g); });
       return new mapboxgl.Marker({ element: dot, anchor: 'bottom', offset: [0, 11] }).setLngLat([g.lng, g.lat]).addTo(map);
     });
@@ -814,7 +814,7 @@
       ['단계는 실패를 먹고 자란다', ['범람은 <b>1단계</b>에서 시작해, 누군가 공략에 실패할 때마다 한 단계씩 깊어집니다. 한도는 <b>3단계</b>입니다.', '단계가 오른 게이트는 <b>10분</b> 동안 모습을 감췄다가 같은 자리에 다시 열립니다. 그 안의 것들은 상처 하나 없이 회복되어 있습니다.', '<b>3단계</b>는 더 깊어지지 않습니다. 대신 쓰러뜨리지 못한 보스의 남은 생명력이 그대로 남습니다. 뒤에 온 헌터가 그 상처를 이어받아 싸웁니다. 혼자 닫지 못하는 게이트는 여럿이 닫습니다.']],
       ['위험은 값을 치른다', ['단계가 깊을수록 보상도 커집니다. 드랍률·경험치·골드는 <b>단계마다 +20%</b>(3단계 +60%), 마석은 <b>(1 + 단계)배</b>(3단계 4배)입니다.', '범람 게이트를 닫은 헌터에게는 공략 포인트가 <b>1.5배</b>로 기록됩니다.']],
       ['규율', ['범람 게이트 입장은 <b>1시간에 10회</b>까지 허가됩니다.', '게이트의 레벨이 헌터의 레벨보다 <b>10 넘게</b> 높으면 입장이 거부됩니다. 살아 돌아올 수 없는 곳에 헌터를 들여보내지 않는 것이 협회의 원칙입니다.']],
-      ['협회 지정 범람 게이트', ['매일 <b>정오(한국 시각)</b>, 협회는 뉴욕·도쿄·파리·서울·두바이 다섯 도시 어딘가에 범람 게이트를 하나씩 엽니다. 이 게이트는 <b>3일</b> 동안 열려 있으며, 이 지구 위에 붉은 빛기둥으로 표시됩니다. 기둥의 수가 곧 범람 단계입니다.', '게임 안에서 이 지구를 열고 게이트를 누르면, 그 게이트는 헌터의 <b>레이드 › 위험</b> 목록에 등록됩니다. 등록 기록은 3일간 유지되며, 목록에서 누르면 그 자리로 즉시 이동합니다.']]
+      ['협회 지정 범람 게이트', ['매일 <b>정오(한국 시각)</b>, 협회는 뉴욕·도쿄·파리·서울·두바이·타이베이, 그리고 <b>헌터가 활동 중인 나라의 대표 도시</b> 어딘가에 범람 게이트를 하나씩 엽니다. 이 게이트는 <b>3일</b> 동안 열려 있으며, 이 지구 위에 붉은 빛기둥으로 표시됩니다. 기둥의 수가 곧 범람 단계입니다.', '게임 안에서 이 지구를 열고 게이트를 누르면, 그 게이트는 헌터의 <b>레이드 › 위험</b> 목록에 등록됩니다. 등록 기록은 3일간 유지되며, 목록에서 누르면 그 자리로 즉시 이동합니다.']]
     ],
     end: '— 헌터 협회 기록 보관소'
   } : {
@@ -825,7 +825,7 @@
       ['Stages feed on failure', ['A flood starts at <b>stage 1</b> and deepens by one stage each time someone fails to clear it. The limit is <b>stage 3</b>.', 'A gate that deepens vanishes for <b>10 minutes</b>, then reopens in the same place. Everything inside is fully healed.', '<b>Stage 3</b> does not deepen further. Instead, the remaining health of the undefeated boss is kept. The next hunter inherits the wound and keeps fighting. A gate one hunter cannot close is closed by many.']],
       ['Danger pays', ['The deeper the stage, the greater the reward. Drop rate, EXP and gold gain <b>+20% per stage</b> (+60% at stage 3); magic stones are multiplied by <b>(1 + stage)</b> (x4 at stage 3).', 'Hunters who close a flood gate have their raid points recorded at <b>1.5x</b>.']],
       ['Discipline', ['Entry into flood gates is permitted <b>10 times per hour</b>.', 'Entry is denied if the gate level is <b>more than 10 above</b> the hunter level. The Association does not send hunters where they cannot return from.']],
-      ['Association-designated flood gates', ['Every day at <b>noon (KST)</b>, the Association opens one flood gate somewhere in each of five cities: New York, Tokyo, Paris, Seoul and Dubai. Each stays open for <b>3 days</b> and is marked on this globe by red pillars of light. The number of pillars is the flood stage.', 'Open this globe from inside the game and tap a gate to add it to your <b>Raid › Danger</b> list. The entry is kept for 3 days; tap it there to travel to the gate at once.']]
+      ['Association-designated flood gates', ['Every day at <b>noon (KST)</b>, the Association opens one flood gate somewhere in New York, Tokyo, Paris, Seoul, Dubai and Taipei, and in <b>the major city of every country where hunters are active</b>. Each stays open for <b>3 days</b> and is marked on this globe by red pillars of light. The number of pillars is the flood stage.', 'Open this globe from inside the game and tap a gate to add it to your <b>Raid › Danger</b> list. The entry is kept for 3 days; tap it there to travel to the gate at once.']]
     ],
     end: '— Hunter Association Archive'
   };
