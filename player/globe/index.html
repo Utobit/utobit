@@ -175,19 +175,11 @@
        1005 마스터 "빛기둥은 없애고, 발판형 빨간점은 괜찮네" → "빛기둥 1자로 그리는건 괜찮을듯"(렌즈 모양 균열 폐기) */
     .fg { width: 44px; height: 64px; cursor: pointer; }
     body.hunter .fg, body.hunter .site { display: none; }
-    /* 스타디움(청록)·발견된 유적지(금빛) 표식 */
+    /* 발견된 유적지(금빛) 표식 */
     .site { width: 26px; height: 26px; border-radius: 9px; box-sizing: border-box; cursor: pointer; display: flex; align-items: center; justify-content: center;
       background: rgba(10, 6, 30, .82); border: 1px solid var(--cyan); box-shadow: 0 0 10px rgba(94, 230, 255, .55); }
     .site.hr svg { width: 16px; height: 16px; fill: none; stroke: var(--gold); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
     .site.hr { border-color: var(--gold); box-shadow: 0 0 10px rgba(255, 210, 122, .6); }
-    /* 스타디움 = 상자 없이 경기장 모양 그대로(관중석 그릇 + 잔디 + 조명탑 4기) */
-    .site.st { width: 46px; height: 40px; border: 0; border-radius: 0; background: none; box-shadow: none;
-      filter: drop-shadow(0 0 5px rgba(94, 230, 255, .75)); transition: transform .15s; }
-    .site.st svg { width: 100%; height: 100%; overflow: visible; }
-    .site.st .lamp { animation: lamp 2.4s ease-in-out infinite; }
-    .site.st .lamp.b { animation-delay: 1.2s; }
-    @keyframes lamp { 0%, 100% { opacity: 1; } 50% { opacity: .45; } }
-    @media (prefers-reduced-motion: reduce) { .site.st .lamp { animation: none; } }
     .ranks button.sel { background: rgba(94, 230, 255, .16); box-shadow: inset 0 0 0 1px var(--cyan); }
     .fg svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible;
       filter: drop-shadow(0 0 5px rgba(255, 60, 95, .95)) drop-shadow(0 0 14px rgba(255, 40, 80, .55)); }
@@ -866,26 +858,8 @@
       .catch(function () { floods = []; drawGates(); });
   }
 
-  // ── 스타디움 + 발견된 유적지(최초 발견자 닉네임) ──
+  // ── 발견된 유적지(최초 발견자 닉네임) — 스타디움 표식은 1005 마스터 지시로 뺐다(서버 응답 stadiums 는 쓰지 않음) ──
   var SITE_SVG = {
-    st: '<svg viewBox="0 0 46 40" aria-hidden="true">' +
-      '<defs>' +
-      '<linearGradient id="stWall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a6fd6"/><stop offset="1" stop-color="#120b3d"/></linearGradient>' +
-      '<linearGradient id="stSeat" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1b1454"/><stop offset="1" stop-color="#6f58e8"/></linearGradient>' +
-      '<radialGradient id="stPitch" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#b6ffe0"/><stop offset=".6" stop-color="#35e0a0"/><stop offset="1" stop-color="#128a6a"/></radialGradient>' +
-      '<radialGradient id="stGlow" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#5ee6ff" stop-opacity=".5"/><stop offset="1" stop-color="#5ee6ff" stop-opacity="0"/></radialGradient>' +
-      '</defs>' +
-      '<ellipse cx="23" cy="31" rx="22" ry="8" fill="url(#stGlow)"/>' +
-      '<path d="M4 20v7a19 8.5 0 0 0 38 0v-7z" fill="url(#stWall)" stroke="#5ee6ff" stroke-width=".8" stroke-linejoin="round"/>' +
-      '<path d="M9.5 26.2v6.4M16 28v6.6M23 28.6v6.8M30 28v6.6M36.5 26.2v6.4" stroke="#9fe9ff" stroke-width=".7" stroke-opacity=".55" fill="none"/>' +
-      '<ellipse cx="23" cy="20" rx="19" ry="8.5" fill="url(#stSeat)" stroke="#c9f6ff" stroke-width="1"/>' +
-      '<ellipse cx="23" cy="20.4" rx="14.6" ry="6.1" fill="none" stroke="#b9aef0" stroke-width=".6" stroke-opacity=".7"/>' +
-      '<ellipse cx="23" cy="21" rx="10.4" ry="4" fill="url(#stPitch)" stroke="#eafff6" stroke-width=".5"/>' +
-      '<path d="M23 17v8" stroke="#eafff6" stroke-width=".5" stroke-opacity=".8"/><ellipse cx="23" cy="21" rx="2.2" ry=".9" fill="none" stroke="#eafff6" stroke-width=".5" stroke-opacity=".8"/>' +
-      '<path d="M7 16.5V6M39 16.5V6M13.5 13.2V3.5M32.5 13.2V3.5" stroke="#9fe9ff" stroke-width="1" stroke-linecap="round"/>' +
-      '<g fill="#fff"><rect class="lamp" x="4.6" y="3.6" width="4.8" height="2.8" rx=".8"/><rect class="lamp b" x="36.6" y="3.6" width="4.8" height="2.8" rx=".8"/>' +
-      '<rect class="lamp b" x="11.1" y="1.2" width="4.8" height="2.8" rx=".8"/><rect class="lamp" x="30.1" y="1.2" width="4.8" height="2.8" rx=".8"/></g>' +
-      '</svg>',
     hr: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l9-5 9 5M5 9v9M10 9v9M14 9v9M19 9v9M3 20h18"/></svg>'
   };
   var siteMarkers = [];
@@ -897,7 +871,7 @@
     box.appendChild(el('span', null, kind === 'st' ? T.stadium + (x.city ? ' · ' + x.city : '') : T.heritage));
     if (kind === 'hr' && x.by) box.appendChild(el('em', 'ok', T.firstBy + ' · ' + x.by));
     map.flyTo({ center: [x.lng, x.lat], zoom: Math.max(map.getZoom(), 5), duration: still ? 0 : 2200, essential: true });
-    floodPopup = new mapboxgl.Popup({ offset: kind === 'st' ? 36 : 18, maxWidth: '270px' }).setLngLat([x.lng, x.lat]).setDOMContent(box).addTo(map);
+    floodPopup = new mapboxgl.Popup({ offset: 18, maxWidth: '270px' }).setLngLat([x.lng, x.lat]).setDOMContent(box).addTo(map);
   }
   function placeSites(kind, rows) {
     (rows || []).forEach(function (x) {
@@ -905,7 +879,7 @@
       dot.innerHTML = SITE_SVG[kind];                    // 고정 문자열(서버 값은 넣지 않는다)
       dot.title = x.name + (kind === 'hr' && x.by ? ' · ' + T.firstBy + ' ' + x.by : '');
       dot.addEventListener('click', function (e) { e.stopPropagation(); openSite(kind, x); });
-      siteMarkers.push(new mapboxgl.Marker(kind === 'st' ? { element: dot, anchor: 'bottom', offset: [0, 8] } : { element: dot }).setLngLat([x.lng, x.lat]).addTo(map));
+      siteMarkers.push(new mapboxgl.Marker({ element: dot }).setLngLat([x.lng, x.lat]).addTo(map));
     });
   }
   function loadSites() {
@@ -915,7 +889,6 @@
       .then(function (j) {
         siteMarkers.forEach(function (m) { m.remove(); });
         siteMarkers = [];
-        placeSites('st', j && j.stadiums);
         placeSites('hr', j && j.heritage);
       })
       .catch(function () {});
