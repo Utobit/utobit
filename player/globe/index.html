@@ -141,6 +141,12 @@
     .bmenu button:hover { background: rgba(150, 130, 255, .16); }
     .bmenu button i { flex: none; width: 8px; height: 8px; border-radius: 50%; background: #ff4664; box-shadow: 0 0 8px #ff4664; }
     .bmenu button i.sys { background: var(--cyan); box-shadow: 0 0 8px var(--cyan); }
+    /* 언어 설정(메뉴 맨 아래) */
+    .langrow { display: flex; align-items: center; gap: 6px; margin-top: 4px; padding: 10px 8px 6px 12px; border-top: 1px solid var(--line);
+      font-size: 11px; font-weight: 700; letter-spacing: .08em; color: var(--dim); }
+    .langrow span { flex: 1; }
+    .bmenu .langrow button { width: auto; padding: 6px 10px; font-size: 12px; border: 1px solid var(--line); color: var(--muted); }
+    .bmenu .langrow button.on { background: rgba(150, 130, 255, .2); border-color: var(--line-strong); color: var(--text); }
     /* 시스템 안내서 */
     .doc { flex: 1; overflow-y: auto; padding: 0 18px 18px; scrollbar-width: thin; scrollbar-color: rgba(150, 130, 255, .45) transparent; }
     .doc .sys { margin: 2px 0 14px; padding: 12px 14px; border: 1px solid rgba(120, 220, 255, .45); border-radius: 10px;
@@ -244,6 +250,8 @@
   <div class="hud glass bmenu" id="bmenu" hidden>
     <button type="button" id="m-gates"><i></i><span data-t="gTitle"></span></button>
     <button type="button" id="m-guide"><i class="sys"></i><span data-t="guideTitle"></span></button>
+    <div class="langrow"><span data-t="langTitle"></span>
+      <button type="button" id="lang-ko">한국어</button><button type="button" id="lang-en">English</button></div>
   </div>
   <div class="hud glass drawer" id="guide" hidden>
     <h2 data-t="guideTitle"></h2>
@@ -281,7 +289,9 @@
   var params = new URLSearchParams(location.search);
   var apiBase = params.get('s') === 'test' ? API.test : API.live;
   var still = params.has('still');   // 시점 이동 연출 없이 바로(화면 점검용)
-  var KO = (navigator.language || 'en').toLowerCase().indexOf('ko') === 0;
+  var savedLang = '';
+  try { savedLang = localStorage.getItem('globeLang') || ''; } catch (e) {}
+  var KO = savedLang ? savedLang === 'ko' : (navigator.language || 'en').toLowerCase().indexOf('ko') === 0;
   var T = KO ? {
     ph: '닉네임 또는 #헌터 번호', go: '검색', level: '레벨', stat: '총 스탯', power: '전투력',
     hint: '드래그 회전 · 휠 확대', searching: '찾는 중…', none: '해당 헌터를 찾지 못했습니다.',
@@ -300,7 +310,7 @@
     gClaimed: function (n) { return (n ? n + ' 님의 ' : '내 ') + '게이트 목록에 등록되었습니다. 게임의 레이드 › 위험 목록에서 이동할 수 있습니다.'; },
     gDone: '등록됨', gGone: '이미 닫힌 게이트입니다.', gBadKey: '계정을 확인하지 못했습니다. 게임에서 지구본을 다시 열어 주세요.',
     gLine: function (g) { return g.grade + '급 · Lv.' + g.level; }, gStage: function (n) { return '범람 ' + n + '단계'; },
-    menuOpen: '메뉴', guideTitle: '시스템 안내서'
+    menuOpen: '메뉴', guideTitle: '시스템 안내서', langTitle: '언어'
   } : {
     ph: 'Nickname or #hunter number', go: 'Search', level: 'LEVEL', stat: 'TOTAL STATS', power: 'COMBAT POWER',
     hint: 'DRAG TO ROTATE · SCROLL TO ZOOM', searching: 'Searching…', none: 'No hunter found.',
@@ -319,7 +329,7 @@
     gClaimed: function (n) { return 'Added to ' + (n ? n + "'s" : 'your') + ' gate list. Travel to it from Raid › Danger in the game.'; },
     gDone: 'Added', gGone: 'This gate has already closed.', gBadKey: 'Could not verify your account. Reopen the globe from the game.',
     gLine: function (g) { return 'Grade ' + g.grade + ' · Lv.' + g.level; }, gStage: function (n) { return 'Flood stage ' + n; },
-    menuOpen: 'Menu', guideTitle: 'SYSTEM GUIDE'
+    menuOpen: 'Menu', guideTitle: 'SYSTEM GUIDE', langTitle: 'LANGUAGE'
   };
 
   var $ = function (id) { return document.getElementById(id); };
@@ -860,6 +870,15 @@
   });
   $('m-gates').addEventListener('click', function () { openBurgerPanel('gdrawer'); });
   $('m-guide').addEventListener('click', function () { openBurgerPanel('guide'); });
+  // 언어 설정: 선택을 기기에 저장하고 다시 불러온다(문구가 처음 한 번에 채워지는 구조)
+  [['lang-ko', 'ko'], ['lang-en', 'en']].forEach(function (p) {
+    $(p[0]).classList.toggle('on', (p[1] === 'ko') === KO);
+    $(p[0]).addEventListener('click', function () {
+      if ((p[1] === 'ko') === KO) return;
+      try { localStorage.setItem('globeLang', p[1]); } catch (e) {}
+      location.reload();
+    });
+  });
   document.querySelectorAll('#tabs button').forEach(function (b) {
     b.addEventListener('click', function () { loadRank(b.getAttribute('data-board')); });
   });
@@ -870,6 +889,7 @@
   if (params.has('rank')) toggleDrawer(true);   // ?rank = 랭킹을 연 채로 시작
   loadFloods();
   if (params.has('gates')) toggleGates(true);   // ?gates = 범람 게이트 목록을 연 채로 시작
+  if (params.has('menu')) openBurgerPanel('bmenu');     // ?menu = 메뉴를 연 채로 시작(화면 점검용)
   if (params.has('guide')) openBurgerPanel('guide');   // ?guide = 시스템 안내서를 연 채로 시작
   var q0 = params.get('q');
   if (q0) { $('q').value = q0; search(q0, false); }
