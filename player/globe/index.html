@@ -174,7 +174,14 @@
     /* 범람 게이트 표식 = 발판형 붉은 점(바닥 원 + 퍼지는 파문) + 곧게 선 1자 빛기둥 + 등급 표 — 발판 중심이 좌표.
        1005 마스터 "빛기둥은 없애고, 발판형 빨간점은 괜찮네" → "빛기둥 1자로 그리는건 괜찮을듯"(렌즈 모양 균열 폐기) */
     .fg { width: 44px; height: 64px; cursor: pointer; }
-    body.hunter .fg { display: none; }
+    body.hunter .fg, body.hunter .site { display: none; }
+    /* 스타디움(청록)·발견된 유적지(금빛) 표식 */
+    .site { width: 26px; height: 26px; border-radius: 9px; box-sizing: border-box; cursor: pointer; display: flex; align-items: center; justify-content: center;
+      background: rgba(10, 6, 30, .82); border: 1px solid var(--cyan); box-shadow: 0 0 10px rgba(94, 230, 255, .55); }
+    .site svg { width: 16px; height: 16px; fill: none; stroke: var(--cyan); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+    .site.hr { border-color: var(--gold); box-shadow: 0 0 10px rgba(255, 210, 122, .6); }
+    .site.hr svg { stroke: var(--gold); }
+    .ranks button.sel { background: rgba(94, 230, 255, .16); box-shadow: inset 0 0 0 1px var(--cyan); }
     .fg svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible;
       filter: drop-shadow(0 0 5px rgba(255, 60, 95, .95)) drop-shadow(0 0 14px rgba(255, 40, 80, .55)); }
     .fg .beam { animation: beam 2.6s ease-in-out infinite; }
@@ -327,7 +334,8 @@
     gClaimed: function (n) { return (n ? n + ' 님의 ' : '내 ') + '게이트 목록에 등록되었습니다. 게임의 레이드 › 위험 목록에서 이동할 수 있습니다.'; },
     gDone: '등록됨', gGone: '이미 닫힌 게이트입니다.', gBadKey: '계정을 확인하지 못했습니다. 게임에서 지구본을 다시 열어 주세요.',
     gLine: function (g) { return g.grade + '급 · Lv.' + g.level; }, gStage: function (n) { return '범람 ' + n + '단계'; },
-    menuOpen: '메뉴', guideTitle: '시스템 안내서', langTitle: '언어'
+    menuOpen: '메뉴', guideTitle: '시스템 안내서', langTitle: '언어',
+    stadium: '스타디움', heritage: '유적지', firstBy: '최초 발견자'
   } : {
     ph: 'Nickname or #hunter number', go: 'Search', level: 'LEVEL', stat: 'TOTAL STATS', power: 'COMBAT POWER',
     hint: 'DRAG TO ROTATE · SCROLL TO ZOOM', searching: 'Searching…', none: 'No hunter found.',
@@ -346,7 +354,8 @@
     gClaimed: function (n) { return 'Added to ' + (n ? n + "'s" : 'your') + ' gate list. Travel to it from Raid › Danger in the game.'; },
     gDone: 'Added', gGone: 'This gate has already closed.', gBadKey: 'Could not verify your account. Reopen the globe from the game.',
     gLine: function (g) { return 'Grade ' + g.grade + ' · Lv.' + g.level; }, gStage: function (n) { return 'Flood stage ' + n; },
-    menuOpen: 'Menu', guideTitle: 'SYSTEM GUIDE', langTitle: 'LANGUAGE'
+    menuOpen: 'Menu', guideTitle: 'SYSTEM GUIDE', langTitle: 'LANGUAGE',
+    stadium: 'Stadium', heritage: 'Heritage site', firstBy: 'First discovered by'
   };
 
   var $ = function (id) { return document.getElementById(id); };
@@ -580,21 +589,36 @@
   // ── 검색 ────────────────────────────────────────────────────────────
   var seq = 0;
 
+  var selName = '';   // 지금 강조 중인 헌터(닉네임#순번) — 랭킹에서 같은 줄을 다시 누르면 강조를 끈다
+
   function show(which) {
     ['msg', 'list', 'card'].forEach(function (id) { $(id).hidden = id !== which; });
-    // 헌터 한 명을 보는 동안에는 범람 게이트 표식을 끈다 — 그 헌터의 자취만 보이게
+    // 헌터 한 명을 보는 동안에는 범람 게이트·스타디움·유적지 표식을 끈다 — 그 헌터의 자취만 보이게
     document.body.classList.toggle('hunter', which === 'card');
     if (which === 'card' && floodPopup) { floodPopup.remove(); floodPopup = null; }
+    if (which !== 'card') { selName = ''; markRanks(); }
+  }
+  function markRanks() {
+    document.querySelectorAll('#ranks button').forEach(function (b) { b.classList.toggle('sel', !!selName && b.getAttribute('data-name') === selName); });
+  }
+  // 헌터 강조 끄기 — 카드·자취·국가 윤곽·길드 본부 표식을 지우고 범람 게이트 등 표식을 다시 보인다
+  function clearHunter() {
+    seq++; cardSeq++;
+    $('go').disabled = false;
+    $('q').value = '';
+    show(null);
+    if (hqMarker) { hqMarker.remove(); hqMarker = null; }
+    pendingRow = null;
+    if (map && mapReady) { drawTrail([], 0.05); focusCountry(''); }
   }
   function message(text) { $('msg').textContent = text; show('msg'); }
 
   function search(q, push) {
     q = (q || '').trim();
-    if (!q) return;
+    if (!q) return clearHunter();                 // 빈 검색 = 강조 끄기
     var mine = ++seq;
     $('go').disabled = true;
     message(T.searching);
-    if (push) history.replaceState(null, '', location.pathname + '?' + withQuery(q));
     fetch(apiBase + '/globe?q=' + encodeURIComponent(q))
       .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
       .then(function (j) {
@@ -608,12 +632,6 @@
       .then(function () { if (mine === seq) $('go').disabled = false; });
   }
 
-  function withQuery(q) {
-    var p = new URLSearchParams(location.search);
-    p.set('q', q);
-    return p.toString();
-  }
-
   function listRows(rows, total) {
     var box = $('list');
     box.textContent = '';
@@ -623,7 +641,7 @@
       b.type = 'button';
       b.appendChild(el('span', null, r.name));
       b.appendChild(el('small', null, 'Lv.' + r.level + ' · ' + num(r.power)));
-      b.addEventListener('click', function () { $('q').value = r.name; history.replaceState(null, '', location.pathname + '?' + withQuery(r.name)); render(r); });
+      b.addEventListener('click', function () { $('q').value = r.name; render(r); });
       box.appendChild(b);
     });
     show('list');
@@ -670,6 +688,7 @@
     var trailRow = addRow(T.trail, '…');
     $('c-legend').hidden = true;
     show('card');
+    selName = r.name; markRanks();
     setFold(window.matchMedia('(max-width: 560px)').matches);   // 좁은 화면(휴대폰) = 접힌 채 시작 — 카드가 지구본을 가리지 않게
     focusRow(r);
     if (map && mapReady) drawTrail([], 0.05);
@@ -701,11 +720,13 @@
       who.appendChild(el('small', null, 'Lv.' + r.level + (r.country ? ' · ' + countryName(r.country) : '')));
       b.appendChild(who);
       b.appendChild(el('span', 'sc', num(r.score)));
+      b.setAttribute('data-name', r.name);
+      if (r.name === selName) b.classList.add('sel');
       b.addEventListener('click', function () {
+        if (selName === r.name) return clearHunter();   // 강조 중인 줄을 다시 누르면 강조를 끈다
         seq++;                                   // 진행 중이던 검색 응답은 버린다
         $('go').disabled = false;
         $('q').value = r.name;
-        history.replaceState(null, '', location.pathname + '?' + withQuery(r.name));
         if (window.innerWidth <= 560) toggleDrawer(false);   // 좁은 화면은 서랍이 카드를 덮는다
         render(r);
       });
@@ -838,6 +859,44 @@
       .catch(function () { floods = []; drawGates(); });
   }
 
+  // ── 스타디움 + 발견된 유적지(최초 발견자 닉네임) ──
+  var SITE_SVG = {
+    st: '<svg viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="12" rx="9" ry="5.5"/><ellipse cx="12" cy="12" rx="4" ry="2"/></svg>',
+    hr: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l9-5 9 5M5 9v9M10 9v9M14 9v9M19 9v9M3 20h18"/></svg>'
+  };
+  var siteMarkers = [];
+  function openSite(kind, x) {
+    userTouched = true;
+    if (floodPopup) { floodPopup.remove(); floodPopup = null; }
+    var box = el('div', 'gpop');
+    box.appendChild(el('b', null, x.name));
+    box.appendChild(el('span', null, kind === 'st' ? T.stadium + (x.city ? ' · ' + x.city : '') : T.heritage));
+    if (kind === 'hr' && x.by) box.appendChild(el('em', 'ok', T.firstBy + ' · ' + x.by));
+    map.flyTo({ center: [x.lng, x.lat], zoom: Math.max(map.getZoom(), 5), duration: still ? 0 : 2200, essential: true });
+    floodPopup = new mapboxgl.Popup({ offset: 18, maxWidth: '270px' }).setLngLat([x.lng, x.lat]).setDOMContent(box).addTo(map);
+  }
+  function placeSites(kind, rows) {
+    (rows || []).forEach(function (x) {
+      var dot = el('div', 'site ' + kind);
+      dot.innerHTML = SITE_SVG[kind];                    // 고정 문자열(서버 값은 넣지 않는다)
+      dot.title = x.name + (kind === 'hr' && x.by ? ' · ' + T.firstBy + ' ' + x.by : '');
+      dot.addEventListener('click', function (e) { e.stopPropagation(); openSite(kind, x); });
+      siteMarkers.push(new mapboxgl.Marker({ element: dot }).setLngLat([x.lng, x.lat]).addTo(map));
+    });
+  }
+  function loadSites() {
+    if (!map) return;
+    fetch(apiBase + '/globe?sites=1&lang=' + encodeURIComponent(LANG))
+      .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function (j) {
+        siteMarkers.forEach(function (m) { m.remove(); });
+        siteMarkers = [];
+        placeSites('st', j && j.stadiums);
+        placeSites('hr', j && j.heritage);
+      })
+      .catch(function () {});
+  }
+
   function closeBurger() {
     $('bmenu').hidden = true; $('lmenu').hidden = true; $('gdrawer').hidden = true; $('guide').hidden = true;
     $('burger').setAttribute('aria-expanded', 'false');
@@ -910,12 +969,17 @@
   if (!initMap()) { $('map').hidden = true; message(T.noMap); }
   if (params.has('rank')) toggleDrawer(true);   // ?rank = 랭킹을 연 채로 시작
   loadFloods();
+  loadSites();
   if (params.has('gates')) toggleGates(true);   // ?gates = 범람 게이트 목록을 연 채로 시작
   if (params.has('langs')) openBurgerPanel('lmenu');    // ?langs = 언어 목록을 연 채로 시작(화면 점검용)
   if (params.has('menu')) openBurgerPanel('bmenu');     // ?menu = 메뉴를 연 채로 시작(화면 점검용)
   if (params.has('guide')) openBurgerPanel('guide');   // ?guide = 시스템 안내서를 연 채로 시작
   var q0 = params.get('q');
-  if (q0) { $('q').value = q0; search(q0, false); }
+  if (q0) {                                       // ?q = 공유받은 주소로 한 번만 검색 — 주소에서는 지운다(새로고침하면 처음 화면)
+    $('q').value = q0; search(q0, false);
+    params.delete('q');
+    history.replaceState(null, '', location.pathname + (params.toString() ? '?' + params.toString() : ''));
+  }
 })();
 </script>
 </body>
