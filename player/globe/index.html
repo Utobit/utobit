@@ -140,22 +140,21 @@
     .ranks .st { font-size: 11px; font-weight: 700; color: var(--dim); }
     .ranks .st.ok { color: var(--gold); }
     /* 범람 게이트 표식 */
-    /* 범람 게이트 표식 = 붉은 균열(세로 틈) + 위로 솟는 빛기둥 + 바닥 파문 + 등급 표 — 발밑(아래 가운데)이 좌표 */
+    /* 범람 게이트 표식 = 발판형 붉은 점(바닥 원 + 퍼지는 파문) + 곧게 선 1자 빛기둥 + 등급 표 — 발판 중심이 좌표.
+       1005 마스터 "빛기둥은 없애고, 발판형 빨간점은 괜찮네" → "빛기둥 1자로 그리는건 괜찮을듯"(렌즈 모양 균열 폐기) */
     .fg { width: 44px; height: 64px; cursor: pointer; }
     .fg svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible;
-      filter: drop-shadow(0 0 6px rgba(255, 60, 95, .95)) drop-shadow(0 0 18px rgba(255, 40, 80, .55)); }
-    .fg .rift { transform-origin: 22px 34px; animation: rift 2.6s ease-in-out infinite; }
+      filter: drop-shadow(0 0 5px rgba(255, 60, 95, .95)) drop-shadow(0 0 14px rgba(255, 40, 80, .55)); }
     .fg .beam { animation: beam 2.6s ease-in-out infinite; }
-    .fg .wave { transform-origin: 22px 57px; animation: wave 2.2s ease-out infinite; }
+    .fg .wave { transform-origin: 22px 53px; animation: wave 2.2s ease-out infinite; }
     .fg .wave.b { animation-delay: 1.1s; }
-    .fg .fgb { position: absolute; left: 30px; top: 6px; min-width: 18px; height: 18px; padding: 0 4px; border-radius: 6px; box-sizing: border-box;
+    .fg .fgb { position: absolute; left: 29px; top: 12px; min-width: 18px; height: 18px; padding: 0 4px; border-radius: 6px; box-sizing: border-box;
       font: 800 11px/16px inherit; font-style: normal; text-align: center; color: #fff; background: rgba(120, 12, 40, .92);
       border: 1px solid rgba(255, 150, 170, .9); box-shadow: 0 0 10px rgba(255, 60, 95, .6); }
-    .fg:hover svg { filter: drop-shadow(0 0 8px rgba(255, 120, 150, 1)) drop-shadow(0 0 24px rgba(255, 60, 95, .8)); }
-    @keyframes rift { 0%, 100% { transform: scale(1, 1); } 50% { transform: scale(1.14, 1.04); } }
-    @keyframes beam { 0%, 100% { opacity: .55; } 50% { opacity: 1; } }
-    @keyframes wave { from { transform: scale(.35); opacity: .95; } to { transform: scale(1.9); opacity: 0; } }
-    @media (prefers-reduced-motion: reduce) { .fg .rift, .fg .beam, .fg .wave { animation: none; } }
+    .fg:hover svg { filter: drop-shadow(0 0 7px rgba(255, 120, 150, 1)) drop-shadow(0 0 20px rgba(255, 60, 95, .8)); }
+    @keyframes beam { 0%, 100% { opacity: .6; } 50% { opacity: 1; } }
+    @keyframes wave { from { transform: scale(.4); opacity: .95; } to { transform: scale(1.9); opacity: 0; } }
+    @media (prefers-reduced-motion: reduce) { .fg .beam, .fg .wave { animation: none; } }
     .mapboxgl-popup-content { background: rgba(18, 12, 42, .96); color: var(--text); border: 1px solid var(--line-strong); border-radius: 12px;
       padding: 12px 34px 12px 14px; box-shadow: 0 10px 34px rgba(0, 0, 0, .5); font: inherit; }
     .mapboxgl-popup-tip { border-top-color: rgba(18, 12, 42, .96) !important; border-bottom-color: rgba(18, 12, 42, .96) !important; }
@@ -721,18 +720,16 @@
 
   var GATE_SVG = '<svg viewBox="0 0 44 64" aria-hidden="true">' +
     '<defs>' +
-    '<linearGradient id="fgBeam" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff5a78" stop-opacity="0"/><stop offset="1" stop-color="#ffd3db" stop-opacity=".95"/></linearGradient>' +
-    '<radialGradient id="fgCore" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff"/><stop offset=".28" stop-color="#ffc2cc"/><stop offset=".62" stop-color="#ff2d55"/><stop offset="1" stop-color="#7a0a2a"/></radialGradient>' +
+    '<linearGradient id="fgBeam" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff5a78" stop-opacity="0"/><stop offset=".45" stop-color="#ff4d70" stop-opacity=".85"/><stop offset="1" stop-color="#ffe3e8"/></linearGradient>' +
+    '<radialGradient id="fgPad" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff"/><stop offset=".3" stop-color="#ffb3c0"/><stop offset=".7" stop-color="#ff2d55"/><stop offset="1" stop-color="#8a0c30"/></radialGradient>' +
     '</defs>' +
-    '<ellipse class="wave" cx="22" cy="57" rx="13" ry="4.2" fill="none" stroke="#ff7a93" stroke-width="1.2"/>' +
-    '<ellipse class="wave b" cx="22" cy="57" rx="13" ry="4.2" fill="none" stroke="#ff7a93" stroke-width="1.2"/>' +
-    '<ellipse cx="22" cy="57" rx="9" ry="3" fill="rgba(255,45,85,.35)" stroke="#ff9db0" stroke-width="1"/>' +
-    '<rect class="beam" x="20.6" y="0" width="2.8" height="26" rx="1.4" fill="url(#fgBeam)"/>' +
-    '<g class="rift">' +
-    '<path d="M22 12 C33 22 33 46 22 57 C11 46 11 22 22 12Z" fill="url(#fgCore)" stroke="#ffd9df" stroke-width="1.1"/>' +
-    '<path d="M22 19 C26.5 27 26.5 42 22 50 C17.5 42 17.5 27 22 19Z" fill="#1a0410" opacity=".88"/>' +
-    '<path d="M22 23 C23.6 30 23.6 39 22 46 C20.4 39 20.4 30 22 23Z" fill="#ff5a78" opacity=".9"/>' +
-    '</g></svg>';
+    '<ellipse class="wave" cx="22" cy="53" rx="13" ry="4.6" fill="none" stroke="#ff7a93" stroke-width="1.2"/>' +
+    '<ellipse class="wave b" cx="22" cy="53" rx="13" ry="4.6" fill="none" stroke="#ff7a93" stroke-width="1.2"/>' +
+    '<ellipse cx="22" cy="53" rx="12" ry="4.2" fill="rgba(255,45,85,.28)" stroke="#ff9db0" stroke-width="1"/>' +
+    '<ellipse cx="22" cy="53" rx="6.5" ry="2.6" fill="url(#fgPad)"/>' +
+    '<g class="beam"><rect x="19.5" y="4" width="5" height="49" rx="2.5" fill="url(#fgBeam)" opacity=".55"/>' +
+    '<rect x="21.1" y="10" width="1.8" height="43" rx=".9" fill="url(#fgBeam)"/></g>' +
+    '</svg>';
 
   function placeGateMarkers() {
     if (!map || !floods) return;
@@ -743,7 +740,7 @@
       dot.appendChild(el('i', 'fgb', g.grade));
       dot.title = cityName(g.city) + ' · ' + g.name;
       dot.addEventListener('click', function (e) { e.stopPropagation(); openGate(g); });
-      return new mapboxgl.Marker({ element: dot, anchor: 'bottom', offset: [0, 7] }).setLngLat([g.lng, g.lat]).addTo(map);
+      return new mapboxgl.Marker({ element: dot, anchor: 'bottom', offset: [0, 11] }).setLngLat([g.lng, g.lat]).addTo(map);
     });
   }
 
