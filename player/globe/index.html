@@ -130,6 +130,30 @@
     .ranks .who small { display: block; margin-top: 1px; font-size: 11px; color: var(--dim); }
     .ranks .sc { font-size: 13px; font-weight: 700; color: var(--cyan); font-variant-numeric: tabular-nums; }
 
+    /* 랭킹 막대(햄버거 왼쪽) — 누르면 랭킹 서랍. 햄버거 = 서버 범람 게이트 목록 */
+    .rankbar { top: max(16px, env(safe-area-inset-top)); right: 74px; height: 44px; padding: 0 18px; cursor: pointer; color: var(--text);
+      font: inherit; font-size: 12px; font-weight: 800; letter-spacing: .2em; transition: border-color .15s; }
+    .rankbar:hover, .rankbar[aria-expanded="true"], .burger[aria-expanded="true"] { border-color: var(--line-strong); }
+    .gnote { padding: 0 18px 10px; font-size: 11px; line-height: 1.5; color: var(--dim); }
+    .ranks .gr { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 8px;
+      font-size: 13px; font-weight: 800; color: #ffd9de; background: rgba(255, 70, 100, .22); border: 1px solid rgba(255, 90, 120, .55); }
+    .ranks .st { font-size: 11px; font-weight: 700; color: var(--dim); }
+    .ranks .st.ok { color: var(--gold); }
+    /* 범람 게이트 표식 */
+    .fg { width: 16px; height: 16px; border-radius: 50%; background: #ff4664; cursor: pointer;
+      box-shadow: 0 0 0 4px rgba(255, 70, 100, .25), 0 0 22px 6px rgba(255, 70, 100, .6); }
+    .fg::after { content: ""; position: absolute; inset: -10px; border-radius: 50%; border: 1px solid rgba(255, 110, 135, .8);
+      animation: ping 1.8s ease-out infinite; }
+    @media (prefers-reduced-motion: reduce) { .fg::after { animation: none; } }
+    .mapboxgl-popup-content { background: rgba(18, 12, 42, .96); color: var(--text); border: 1px solid var(--line-strong); border-radius: 12px;
+      padding: 12px 34px 12px 14px; box-shadow: 0 10px 34px rgba(0, 0, 0, .5); font: inherit; }
+    .mapboxgl-popup-tip { border-top-color: rgba(18, 12, 42, .96) !important; border-bottom-color: rgba(18, 12, 42, .96) !important; }
+    .mapboxgl-popup-close-button { color: var(--muted); font-size: 18px; padding: 4px 8px; }
+    .gpop b { display: block; font-size: 14px; font-weight: 800; }
+    .gpop span { display: block; margin-top: 3px; font-size: 12px; color: var(--muted); }
+    .gpop em { display: block; margin-top: 8px; font-size: 11px; font-style: normal; line-height: 1.45; color: var(--dim); }
+    .gpop em.ok { color: var(--gold); }
+
     .hint { bottom: max(34px, env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%);
       font-size: 11px; letter-spacing: .1em; color: var(--dim); pointer-events: none; white-space: nowrap; }
 
@@ -149,6 +173,7 @@
     [hidden] { display: none !important; }
     @media (max-width: 560px) {
       .burger { right: 16px; }
+      .rankbar { right: 68px; padding: 0 14px; }
       .drawer { left: 16px; right: 16px; width: auto; bottom: 16px; z-index: 6; }
       .brand { left: 16px; }
       .panel { left: 16px; right: 16px; width: auto; }
@@ -184,7 +209,13 @@
     </div>
   </div>
 
+  <button class="hud glass rankbar" id="rankbar" type="button" aria-expanded="false" data-t="rankTitle"></button>
   <button class="hud glass burger" id="burger" type="button" aria-expanded="false"><i></i><i></i><i></i></button>
+  <div class="hud glass drawer" id="gdrawer" hidden>
+    <h2 data-t="gTitle"></h2>
+    <p class="gnote" id="gnote"></p>
+    <div class="ranks" id="gates"></div>
+  </div>
   <div class="hud glass drawer" id="drawer" hidden>
     <h2 data-t="rankTitle"></h2>
     <div class="tabs" id="tabs">
@@ -223,7 +254,14 @@
     rankTitle: '랭킹', rankPoints: '공략 포인트', rankOpen: '랭킹 열기', rankEmpty: '아직 랭킹이 없습니다.',
     trail: '자취가 닿은 지역', trailUnit: '곳', walk: '지나간 길', gate: '게이트 공략 지역', noTrail: '아직 기록이 없습니다',
     note: '상세 스탯은 공개되지 않습니다. 기록은 몇 분 간격으로 갱신됩니다.',
-    noMap: '지도를 불러오지 못했습니다. 검색은 그대로 사용할 수 있습니다.'
+    noMap: '지도를 불러오지 못했습니다. 검색은 그대로 사용할 수 있습니다.',
+    gTitle: '범람 게이트', gOpen: '범람 게이트 목록', gEmpty: '지금 열려 있는 범람 게이트가 없습니다.',
+    gNoteKey: function (n) { return (n ? n + ' 님 — ' : '') + '게이트를 누르면 내 게이트 목록(레이드 › 위험)에 등록됩니다.'; },
+    gNoteNoKey: '게임 안에서 지구본을 열면, 누른 게이트가 내 게이트 목록에 등록됩니다.',
+    gClaiming: '내 게이트 목록에 등록하는 중…', gNoKey: '게임 안에서 지구본을 열면 내 게이트 목록에 등록됩니다.',
+    gClaimed: function (n) { return (n ? n + ' 님의 ' : '내 ') + '게이트 목록에 등록되었습니다. 게임의 레이드 › 위험 목록에서 이동할 수 있습니다.'; },
+    gDone: '등록됨', gGone: '이미 닫힌 게이트입니다.', gBadKey: '계정을 확인하지 못했습니다. 게임에서 지구본을 다시 열어 주세요.',
+    gLine: function (g) { return g.grade + '급 · Lv.' + g.level; }
   } : {
     ph: 'Nickname or #hunter number', go: 'Search', level: 'LEVEL', stat: 'TOTAL STATS', power: 'COMBAT POWER',
     hint: 'DRAG TO ROTATE · SCROLL TO ZOOM', searching: 'Searching…', none: 'No hunter found.',
@@ -234,7 +272,14 @@
     rankTitle: 'RANKING', rankPoints: 'RAID POINTS', rankOpen: 'Open ranking', rankEmpty: 'No ranking yet.',
     trail: 'Areas reached', trailUnit: '', walk: 'Path walked', gate: 'Gate cleared area', noTrail: 'No records yet',
     note: 'Detailed stats are private. Records refresh every few minutes.',
-    noMap: 'The map could not be loaded. Search still works.'
+    noMap: 'The map could not be loaded. Search still works.',
+    gTitle: 'FLOOD GATES', gOpen: 'Flood gate list', gEmpty: 'No flood gates are open right now.',
+    gNoteKey: function (n) { return (n ? n + ' — ' : '') + 'Tap a gate to add it to your gate list (Raid › Danger).'; },
+    gNoteNoKey: 'Open the globe from inside the game to add tapped gates to your gate list.',
+    gClaiming: 'Adding to your gate list…', gNoKey: 'Open the globe from inside the game to add this gate to your list.',
+    gClaimed: function (n) { return 'Added to ' + (n ? n + "'s" : 'your') + ' gate list. Travel to it from Raid › Danger in the game.'; },
+    gDone: 'Added', gGone: 'This gate has already closed.', gBadKey: 'Could not verify your account. Reopen the globe from the game.',
+    gLine: function (g) { return 'Grade ' + g.grade + ' · Lv.' + g.level; }
   };
 
   var $ = function (id) { return document.getElementById(id); };
@@ -599,13 +644,101 @@
   function toggleDrawer(open) {
     var d = $('drawer');
     if (open == null) open = d.hidden;
+    if (open) toggleGates(false);                 // 두 서랍은 같은 자리 — 하나만 연다
     d.hidden = !open;
-    $('burger').setAttribute('aria-expanded', open ? 'true' : 'false');
+    $('rankbar').setAttribute('aria-expanded', open ? 'true' : 'false');
     if (open) loadRank(rankBoard);
   }
 
-  $('burger').setAttribute('aria-label', T.rankOpen);
-  $('burger').addEventListener('click', function () { toggleDrawer(); });
+  // ── 서버 범람 게이트: 지구 위 표식 + 햄버거 목록. 누르면 그 자리로 날아가고, 게임에서 연 지구본(계정 키 보유)이면 내 게이트 목록에 등록한다 ──
+  var CITY_EN = { '뉴욕': 'New York', '도쿄': 'Tokyo', '파리': 'Paris', '서울': 'Seoul', '두바이': 'Dubai' };
+  var gateKey = params.get('k') || '', floods = null, floodMe = '', floodMarkers = [], floodPopup = null, claimed = {};
+  try { if (gateKey) localStorage.setItem('globeKey', gateKey); else gateKey = localStorage.getItem('globeKey') || ''; } catch (e) {}
+  if (params.has('k')) {                          // 키는 주소에 남기지 않는다(주소를 공유해도 계정이 따라가지 않게)
+    params.delete('k');
+    history.replaceState(null, '', location.pathname + (params.toString() ? '?' + params.toString() : ''));
+  }
+  function cityName(c) { return KO ? c : (CITY_EN[c] || c); }
+
+  function claimGate(g, st) {
+    if (!gateKey) return;
+    if (claimed[g.id] != null) { st.textContent = T.gClaimed(claimed[g.id]); st.className = 'ok'; return; }
+    fetch(apiBase + '/globe?claim=' + encodeURIComponent(g.id) + '&k=' + encodeURIComponent(gateKey))
+      .then(function (r) { return r.json(); })
+      .then(function (j) {
+        if (j && j.ok) { claimed[g.id] = j.nick || ''; st.textContent = T.gClaimed(j.nick || ''); st.className = 'ok'; drawGates(); }
+        else st.textContent = j && j.message === 'gone' ? T.gGone : T.gBadKey;
+      })
+      .catch(function () { st.textContent = T.fail; });
+  }
+
+  function openGate(g) {
+    userTouched = true;
+    if (floodPopup) { floodPopup.remove(); floodPopup = null; }
+    var box = el('div', 'gpop');
+    box.appendChild(el('b', null, cityName(g.city) + ' · ' + g.name));
+    box.appendChild(el('span', null, T.gLine(g)));
+    var st = el('em', null, gateKey ? T.gClaiming : T.gNoKey);
+    box.appendChild(st);
+    if (map) {
+      map.flyTo({ center: [g.lng, g.lat], zoom: 12.5, duration: still ? 0 : 3000, essential: true });
+      floodPopup = new mapboxgl.Popup({ offset: 18, maxWidth: '270px' }).setLngLat([g.lng, g.lat]).setDOMContent(box).addTo(map);
+    }
+    claimGate(g, st);
+    if (window.innerWidth <= 560) toggleGates(false);   // 좁은 화면은 서랍이 지도를 덮는다
+  }
+
+  function drawGates() {
+    var box = $('gates');
+    box.textContent = '';
+    $('gnote').textContent = gateKey ? T.gNoteKey(floodMe) : T.gNoteNoKey;
+    if (floods == null) { box.appendChild(el('div', 'msg', T.searching)); return; }
+    if (!floods.length) { box.appendChild(el('div', 'msg', T.gEmpty)); return; }
+    floods.forEach(function (g) {
+      var b = el('button');
+      b.type = 'button';
+      b.appendChild(el('span', 'gr', g.grade));
+      var who = el('span', 'who');
+      who.appendChild(el('b', null, cityName(g.city) + ' · ' + g.name));
+      who.appendChild(el('small', null, T.gLine(g)));
+      b.appendChild(who);
+      b.appendChild(el('span', claimed[g.id] != null ? 'st ok' : 'st', claimed[g.id] != null ? T.gDone : ''));
+      b.addEventListener('click', function () { openGate(g); });
+      box.appendChild(b);
+    });
+  }
+
+  function placeGateMarkers() {
+    if (!map || !floods) return;
+    floodMarkers.forEach(function (m) { m.remove(); });
+    floodMarkers = floods.map(function (g) {
+      var dot = el('div', 'fg');
+      dot.title = cityName(g.city) + ' · ' + g.name;
+      dot.addEventListener('click', function (e) { e.stopPropagation(); openGate(g); });
+      return new mapboxgl.Marker({ element: dot }).setLngLat([g.lng, g.lat]).addTo(map);
+    });
+  }
+
+  function loadFloods() {
+    fetch(apiBase + '/globe?floods=1' + (gateKey ? '&k=' + encodeURIComponent(gateKey) : ''))
+      .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function (j) { floods = (j && j.rows) || []; floodMe = (j && j.me) || ''; drawGates(); placeGateMarkers(); })
+      .catch(function () { floods = []; drawGates(); });
+  }
+
+  function toggleGates(open) {
+    var d = $('gdrawer');
+    if (open == null) open = d.hidden;
+    if (open) toggleDrawer(false);
+    d.hidden = !open;
+    $('burger').setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (open) drawGates();
+  }
+
+  $('rankbar').setAttribute('aria-label', T.rankOpen);
+  $('rankbar').addEventListener('click', function () { toggleDrawer(); });
+  $('burger').setAttribute('aria-label', T.gOpen);
+  $('burger').addEventListener('click', function () { toggleGates(); });
   document.querySelectorAll('#tabs button').forEach(function (b) {
     b.addEventListener('click', function () { loadRank(b.getAttribute('data-board')); });
   });
@@ -614,6 +747,8 @@
 
   if (!initMap()) { $('map').hidden = true; message(T.noMap); }
   if (params.has('rank')) toggleDrawer(true);   // ?rank = 랭킹을 연 채로 시작
+  loadFloods();
+  if (params.has('gates')) toggleGates(true);   // ?gates = 범람 게이트 목록을 연 채로 시작
   var q0 = params.get('q');
   if (q0) { $('q').value = q0; search(q0, false); }
 })();
