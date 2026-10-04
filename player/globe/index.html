@@ -791,9 +791,9 @@
     '<ellipse cx="22" cy="53" rx="12" ry="4.2" fill="rgba(255,45,85,.28)" stroke="#ff9db0" stroke-width="1"/>' +
     '<ellipse cx="22" cy="53" rx="6.5" ry="2.6" fill="url(#fgPad)"/>' +
     '<g class="beam">BEAMS</g></svg>';
-  // 범람 단계만큼 빛기둥을 세운다(1단계 1줄 · 2단계 2줄 · 3단계 3줄) — 지구 위에서 한눈에 단계가 보이게
+  // 빛기둥은 모든 게이트가 같은 1줄(범람 단계는 목록·팝업에 글자로 표시)
   function gateSvg(stage) {
-    var n = Math.max(1, Math.min(3, parseInt(stage, 10) || 1)), xs = n === 1 ? [22] : n === 2 ? [18.5, 25.5] : [15.5, 22, 28.5], s = '';
+    var n = 1, xs = [22], s = '';   // 1005 마스터("빛기둥은 다 똑같이 한단계면 되잖아"): 단계와 무관하게 기둥 1줄 — 단계는 목록·팝업 글자로만
     xs.forEach(function (x, i) {
       var top = n === 3 && i !== 1 ? 14 : 4;       // 3단계는 가운데 기둥이 가장 높다
       s += '<rect x="' + (x - 2.5) + '" y="' + top + '" width="5" height="' + (53 - top) + '" rx="2.5" fill="url(#fgBeam)" opacity=".55"/>' +
