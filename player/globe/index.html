@@ -131,8 +131,27 @@
     .ranks .sc { font-size: 13px; font-weight: 700; color: var(--cyan); font-variant-numeric: tabular-nums; }
 
     /* 랭킹 막대(햄버거 왼쪽) — 누르면 랭킹 서랍. 햄버거 = 서버 범람 게이트 목록 */
-    .rankbar { top: max(16px, env(safe-area-inset-top)); right: 74px; height: 44px; padding: 0 18px; cursor: pointer; color: var(--text);
-      font: inherit; font-size: 12px; font-weight: 800; letter-spacing: .2em; transition: border-color .15s; }
+    .rankbar { top: max(16px, env(safe-area-inset-top)); right: 72px; width: 44px; height: 44px; padding: 0; cursor: pointer; color: var(--text);
+      display: flex; align-items: center; justify-content: center; transition: border-color .15s; }
+    .rankbar svg { width: 20px; height: 20px; fill: currentColor; }
+    /* 햄버거 메뉴(범람 게이트 · 시스템 안내서) */
+    .bmenu { top: max(70px, calc(env(safe-area-inset-top) + 58px)); right: 20px; width: 220px; padding: 6px; display: flex; flex-direction: column; gap: 2px; }
+    .bmenu button { display: flex; align-items: center; gap: 10px; width: 100%; padding: 11px 12px; border: 0; border-radius: 9px; background: transparent;
+      cursor: pointer; color: var(--text); font: inherit; font-size: 13px; font-weight: 700; text-align: left; transition: background .15s; }
+    .bmenu button:hover { background: rgba(150, 130, 255, .16); }
+    .bmenu button i { flex: none; width: 8px; height: 8px; border-radius: 50%; background: #ff4664; box-shadow: 0 0 8px #ff4664; }
+    .bmenu button i.sys { background: var(--cyan); box-shadow: 0 0 8px var(--cyan); }
+    /* 시스템 안내서 */
+    .doc { flex: 1; overflow-y: auto; padding: 0 18px 18px; scrollbar-width: thin; scrollbar-color: rgba(150, 130, 255, .45) transparent; }
+    .doc .sys { margin: 2px 0 14px; padding: 12px 14px; border: 1px solid rgba(120, 220, 255, .45); border-radius: 10px;
+      background: rgba(60, 170, 220, .08); font-size: 12px; line-height: 1.65; color: #cfefff; }
+    .doc .sys b { display: block; margin-bottom: 4px; font-size: 11px; letter-spacing: .2em; color: var(--cyan); }
+    .doc h3 { margin: 18px 0 6px; font-size: 12px; font-weight: 800; letter-spacing: .06em; color: var(--gold); }
+    .doc h3 span { margin-right: 8px; color: var(--dim); font-variant-numeric: tabular-nums; }
+    .doc p { margin: 0 0 7px; font-size: 12.5px; line-height: 1.7; color: var(--muted); }
+    .doc p b { color: var(--text); font-weight: 700; }
+    .doc .end { margin-top: 18px; font-size: 11px; color: var(--dim); text-align: right; }
+    .ranks .who small em { font-style: normal; color: #ff8fa3; font-weight: 700; }
     .rankbar:hover, .rankbar[aria-expanded="true"], .burger[aria-expanded="true"] { border-color: var(--line-strong); }
     .gnote { padding: 0 18px 10px; font-size: 11px; line-height: 1.5; color: var(--dim); }
     .ranks .gr { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 8px;
@@ -183,7 +202,8 @@
     [hidden] { display: none !important; }
     @media (max-width: 560px) {
       .burger { right: 16px; }
-      .rankbar { right: 68px; padding: 0 14px; }
+      .rankbar { right: 68px; }
+      .bmenu { right: 16px; }
       .drawer { left: 16px; right: 16px; width: auto; bottom: 16px; z-index: 6; }
       .brand { left: 16px; }
       .panel { left: 16px; right: 16px; width: auto; }
@@ -219,8 +239,16 @@
     </div>
   </div>
 
-  <button class="hud glass rankbar" id="rankbar" type="button" aria-expanded="false" data-t="rankTitle"></button>
+  <button class="hud glass rankbar" id="rankbar" type="button" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="12" width="5.4" height="9.5" rx="1.2"/><rect x="9.3" y="4" width="5.4" height="17.5" rx="1.2"/><rect x="16.1" y="8.5" width="5.4" height="13" rx="1.2"/></svg></button>
   <button class="hud glass burger" id="burger" type="button" aria-expanded="false"><i></i><i></i><i></i></button>
+  <div class="hud glass bmenu" id="bmenu" hidden>
+    <button type="button" id="m-gates"><i></i><span data-t="gTitle"></span></button>
+    <button type="button" id="m-guide"><i class="sys"></i><span data-t="guideTitle"></span></button>
+  </div>
+  <div class="hud glass drawer" id="guide" hidden>
+    <h2 data-t="guideTitle"></h2>
+    <div class="doc" id="doc"></div>
+  </div>
   <div class="hud glass drawer" id="gdrawer" hidden>
     <h2 data-t="gTitle"></h2>
     <p class="gnote" id="gnote"></p>
@@ -271,7 +299,8 @@
     gClaiming: '내 게이트 목록에 등록하는 중…', gNoKey: '게임 안에서 지구본을 열면 내 게이트 목록에 등록됩니다.',
     gClaimed: function (n) { return (n ? n + ' 님의 ' : '내 ') + '게이트 목록에 등록되었습니다. 게임의 레이드 › 위험 목록에서 이동할 수 있습니다.'; },
     gDone: '등록됨', gGone: '이미 닫힌 게이트입니다.', gBadKey: '계정을 확인하지 못했습니다. 게임에서 지구본을 다시 열어 주세요.',
-    gLine: function (g) { return g.grade + '급 · Lv.' + g.level; }
+    gLine: function (g) { return g.grade + '급 · Lv.' + g.level; }, gStage: function (n) { return '범람 ' + n + '단계'; },
+    menuOpen: '메뉴', guideTitle: '시스템 안내서'
   } : {
     ph: 'Nickname or #hunter number', go: 'Search', level: 'LEVEL', stat: 'TOTAL STATS', power: 'COMBAT POWER',
     hint: 'DRAG TO ROTATE · SCROLL TO ZOOM', searching: 'Searching…', none: 'No hunter found.',
@@ -289,7 +318,8 @@
     gClaiming: 'Adding to your gate list…', gNoKey: 'Open the globe from inside the game to add this gate to your list.',
     gClaimed: function (n) { return 'Added to ' + (n ? n + "'s" : 'your') + ' gate list. Travel to it from Raid › Danger in the game.'; },
     gDone: 'Added', gGone: 'This gate has already closed.', gBadKey: 'Could not verify your account. Reopen the globe from the game.',
-    gLine: function (g) { return 'Grade ' + g.grade + ' · Lv.' + g.level; }
+    gLine: function (g) { return 'Grade ' + g.grade + ' · Lv.' + g.level; }, gStage: function (n) { return 'Flood stage ' + n; },
+    menuOpen: 'Menu', guideTitle: 'SYSTEM GUIDE'
   };
 
   var $ = function (id) { return document.getElementById(id); };
@@ -654,7 +684,7 @@
   function toggleDrawer(open) {
     var d = $('drawer');
     if (open == null) open = d.hidden;
-    if (open) toggleGates(false);                 // 두 서랍은 같은 자리 — 하나만 연다
+    if (open) closeBurger();                      // 서랍은 같은 자리 — 하나만 연다
     d.hidden = !open;
     $('rankbar').setAttribute('aria-expanded', open ? 'true' : 'false');
     if (open) loadRank(rankBoard);
@@ -687,7 +717,7 @@
     if (floodPopup) { floodPopup.remove(); floodPopup = null; }
     var box = el('div', 'gpop');
     box.appendChild(el('b', null, cityName(g.city) + ' · ' + g.name));
-    box.appendChild(el('span', null, T.gLine(g)));
+    box.appendChild(el('span', null, T.gLine(g) + ' · ' + T.gStage(g.flood || 1)));
     var st = el('em', null, gateKey ? T.gClaiming : T.gNoKey);
     box.appendChild(st);
     if (map) {
@@ -710,7 +740,9 @@
       b.appendChild(el('span', 'gr', g.grade));
       var who = el('span', 'who');
       who.appendChild(el('b', null, cityName(g.city) + ' · ' + g.name));
-      who.appendChild(el('small', null, T.gLine(g)));
+      var sm = el('small', null, T.gLine(g) + ' · ');
+      sm.appendChild(el('em', null, T.gStage(g.flood || 1)));
+      who.appendChild(sm);
       b.appendChild(who);
       b.appendChild(el('span', claimed[g.id] != null ? 'st ok' : 'st', claimed[g.id] != null ? T.gDone : ''));
       b.addEventListener('click', function () { openGate(g); });
@@ -727,18 +759,26 @@
     '<ellipse class="wave b" cx="22" cy="53" rx="13" ry="4.6" fill="none" stroke="#ff7a93" stroke-width="1.2"/>' +
     '<ellipse cx="22" cy="53" rx="12" ry="4.2" fill="rgba(255,45,85,.28)" stroke="#ff9db0" stroke-width="1"/>' +
     '<ellipse cx="22" cy="53" rx="6.5" ry="2.6" fill="url(#fgPad)"/>' +
-    '<g class="beam"><rect x="19.5" y="4" width="5" height="49" rx="2.5" fill="url(#fgBeam)" opacity=".55"/>' +
-    '<rect x="21.1" y="10" width="1.8" height="43" rx=".9" fill="url(#fgBeam)"/></g>' +
-    '</svg>';
+    '<g class="beam">BEAMS</g></svg>';
+  // 범람 단계만큼 빛기둥을 세운다(1단계 1줄 · 2단계 2줄 · 3단계 3줄) — 지구 위에서 한눈에 단계가 보이게
+  function gateSvg(stage) {
+    var n = Math.max(1, Math.min(3, parseInt(stage, 10) || 1)), xs = n === 1 ? [22] : n === 2 ? [18.5, 25.5] : [15.5, 22, 28.5], s = '';
+    xs.forEach(function (x, i) {
+      var top = n === 3 && i !== 1 ? 14 : 4;       // 3단계는 가운데 기둥이 가장 높다
+      s += '<rect x="' + (x - 2.5) + '" y="' + top + '" width="5" height="' + (53 - top) + '" rx="2.5" fill="url(#fgBeam)" opacity=".55"/>' +
+           '<rect x="' + (x - 0.9) + '" y="' + (top + 6) + '" width="1.8" height="' + (47 - top) + '" rx=".9" fill="url(#fgBeam)"/>';
+    });
+    return GATE_SVG.replace('BEAMS', s);
+  }
 
   function placeGateMarkers() {
     if (!map || !floods) return;
     floodMarkers.forEach(function (m) { m.remove(); });
     floodMarkers = floods.map(function (g) {
       var dot = el('div', 'fg');
-      dot.innerHTML = GATE_SVG;                          // 고정 문자열(서버 값 없음)
+      dot.innerHTML = gateSvg(g.flood);                  // 고정 문자열 조합(서버 값은 단계 숫자만 — 1~3 으로 자른다)
       dot.appendChild(el('i', 'fgb', g.grade));
-      dot.title = cityName(g.city) + ' · ' + g.name;
+      dot.title = cityName(g.city) + ' · ' + g.name + ' · ' + T.gStage(g.flood || 1);
       dot.addEventListener('click', function (e) { e.stopPropagation(); openGate(g); });
       return new mapboxgl.Marker({ element: dot, anchor: 'bottom', offset: [0, 11] }).setLngLat([g.lng, g.lat]).addTo(map);
     });
@@ -751,19 +791,75 @@
       .catch(function () { floods = []; drawGates(); });
   }
 
-  function toggleGates(open) {
-    var d = $('gdrawer');
-    if (open == null) open = d.hidden;
-    if (open) toggleDrawer(false);
-    d.hidden = !open;
-    $('burger').setAttribute('aria-expanded', open ? 'true' : 'false');
-    if (open) drawGates();
+  function closeBurger() {
+    $('bmenu').hidden = true; $('gdrawer').hidden = true; $('guide').hidden = true;
+    $('burger').setAttribute('aria-expanded', 'false');
+  }
+  function openBurgerPanel(id) {                  // id = 'bmenu'(메뉴) | 'gdrawer'(범람 게이트) | 'guide'(시스템 안내서)
+    toggleDrawer(false);
+    closeBurger();
+    $(id).hidden = false;
+    $('burger').setAttribute('aria-expanded', 'true');
+    if (id === 'gdrawer') drawGates();
+    if (id === 'guide') drawGuide();
+  }
+  function toggleGates(open) { if (open === false) closeBurger(); else openBurgerPanel('gdrawer'); }
+
+  // ── 시스템 안내서: 이 세계의 규칙 문서. 지금은 범람 게이트 편(수치 = 서버 정산 규칙 그대로) ──
+  var GUIDE = KO ? {
+    sys: ['SYSTEM', '헌터 인증이 확인되었습니다. 협회 기록 보관소의 열람 권한이 부여됩니다. 이 문서는 게이트가 범람하는 규칙을 다룹니다. 끝까지 읽은 헌터가 더 오래 살아남습니다.'],
+    secs: [
+      ['게이트는 발견한 헌터의 것이다', ['게이트는 처음 발견한 헌터 한 사람에게만 보입니다. 다른 헌터는 그 존재조차 알지 못합니다.', '단, 게이트에는 시한이 있습니다. 열린 지 <b>72시간</b> 안에 닫지 못하면 게이트는 스스로 넘쳐흐릅니다.']],
+      ['범람', ['공략에 <b>실패</b>하거나 72시간이 지나면 게이트는 <b>범람</b>합니다.', '범람한 게이트는 더 이상 한 사람의 것이 아닙니다. 소유가 풀려 <b>반경 10km 안의 모든 헌터</b>에게 드러납니다. 누가 닫아도 좋습니다. 닫는 자가 보상을 가져갑니다.']],
+      ['단계는 실패를 먹고 자란다', ['범람은 <b>1단계</b>에서 시작해, 누군가 공략에 실패할 때마다 한 단계씩 깊어집니다. 한도는 <b>3단계</b>입니다.', '단계가 오른 게이트는 <b>10분</b> 동안 모습을 감췄다가 같은 자리에 다시 열립니다. 그 안의 것들은 상처 하나 없이 회복되어 있습니다.', '<b>3단계</b>는 더 깊어지지 않습니다. 대신 쓰러뜨리지 못한 보스의 남은 생명력이 그대로 남습니다. 뒤에 온 헌터가 그 상처를 이어받아 싸웁니다. 혼자 닫지 못하는 게이트는 여럿이 닫습니다.']],
+      ['위험은 값을 치른다', ['단계가 깊을수록 보상도 커집니다. 드랍률·경험치·골드는 <b>단계마다 +20%</b>(3단계 +60%), 마석은 <b>(1 + 단계)배</b>(3단계 4배)입니다.', '범람 게이트를 닫은 헌터에게는 공략 포인트가 <b>1.5배</b>로 기록됩니다.']],
+      ['규율', ['범람 게이트 입장은 <b>1시간에 10회</b>까지 허가됩니다.', '게이트의 레벨이 헌터의 레벨보다 <b>10 넘게</b> 높으면 입장이 거부됩니다. 살아 돌아올 수 없는 곳에 헌터를 들여보내지 않는 것이 협회의 원칙입니다.']],
+      ['협회 지정 범람 게이트', ['매일 <b>정오(한국 시각)</b>, 협회는 뉴욕·도쿄·파리·서울·두바이 다섯 도시 어딘가에 범람 게이트를 하나씩 엽니다. 이 게이트는 <b>3일</b> 동안 열려 있으며, 이 지구 위에 붉은 빛기둥으로 표시됩니다. 기둥의 수가 곧 범람 단계입니다.', '게임 안에서 이 지구를 열고 게이트를 누르면, 그 게이트는 헌터의 <b>레이드 › 위험</b> 목록에 등록됩니다. 등록 기록은 3일간 유지되며, 목록에서 누르면 그 자리로 즉시 이동합니다.']]
+    ],
+    end: '— 헌터 협회 기록 보관소'
+  } : {
+    sys: ['SYSTEM', 'Hunter authentication confirmed. Access to the Association archive is granted. This document covers how gates flood. Hunters who read to the end tend to live longer.'],
+    secs: [
+      ['A gate belongs to the hunter who found it', ['A gate is visible only to the one hunter who discovered it. No one else knows it exists.', 'But every gate has a time limit. If it is not closed within <b>72 hours</b> of opening, it overflows on its own.']],
+      ['Flood', ['A gate <b>floods</b> when a raid on it fails, or when 72 hours pass.', 'A flooded gate no longer belongs to one person. Its ownership dissolves and it is revealed to <b>every hunter within 10 km</b>. Anyone may close it. Whoever closes it takes the reward.']],
+      ['Stages feed on failure', ['A flood starts at <b>stage 1</b> and deepens by one stage each time someone fails to clear it. The limit is <b>stage 3</b>.', 'A gate that deepens vanishes for <b>10 minutes</b>, then reopens in the same place. Everything inside is fully healed.', '<b>Stage 3</b> does not deepen further. Instead, the remaining health of the undefeated boss is kept. The next hunter inherits the wound and keeps fighting. A gate one hunter cannot close is closed by many.']],
+      ['Danger pays', ['The deeper the stage, the greater the reward. Drop rate, EXP and gold gain <b>+20% per stage</b> (+60% at stage 3); magic stones are multiplied by <b>(1 + stage)</b> (x4 at stage 3).', 'Hunters who close a flood gate have their raid points recorded at <b>1.5x</b>.']],
+      ['Discipline', ['Entry into flood gates is permitted <b>10 times per hour</b>.', 'Entry is denied if the gate level is <b>more than 10 above</b> the hunter level. The Association does not send hunters where they cannot return from.']],
+      ['Association-designated flood gates', ['Every day at <b>noon (KST)</b>, the Association opens one flood gate somewhere in each of five cities: New York, Tokyo, Paris, Seoul and Dubai. Each stays open for <b>3 days</b> and is marked on this globe by red pillars of light. The number of pillars is the flood stage.', 'Open this globe from inside the game and tap a gate to add it to your <b>Raid › Danger</b> list. The entry is kept for 3 days; tap it there to travel to the gate at once.']]
+    ],
+    end: '— Hunter Association Archive'
+  };
+  var guideDrawn = false;
+  function richP(text) {                          // 고정 문구 안의 <b>…</b> 만 굵게 — 문자열을 HTML 로 넣지 않는다
+    var p = el('p');
+    text.split(/<b>|<\/b>/).forEach(function (part, i) { if (part) p.appendChild(i % 2 ? el('b', null, part) : document.createTextNode(part)); });
+    return p;
+  }
+  function drawGuide() {
+    if (guideDrawn) return;
+    guideDrawn = true;
+    var doc = $('doc'), sys = el('div', 'sys');
+    sys.appendChild(el('b', null, '[ ' + GUIDE.sys[0] + ' ]'));
+    sys.appendChild(document.createTextNode(GUIDE.sys[1]));
+    doc.appendChild(sys);
+    GUIDE.secs.forEach(function (s, i) {
+      var h = el('h3');
+      h.appendChild(el('span', null, (i < 9 ? '0' : '') + (i + 1)));
+      h.appendChild(document.createTextNode(s[0]));
+      doc.appendChild(h);
+      s[1].forEach(function (line) { doc.appendChild(richP(line)); });
+    });
+    doc.appendChild(el('div', 'end', GUIDE.end));
   }
 
   $('rankbar').setAttribute('aria-label', T.rankOpen);
   $('rankbar').addEventListener('click', function () { toggleDrawer(); });
-  $('burger').setAttribute('aria-label', T.gOpen);
-  $('burger').addEventListener('click', function () { toggleGates(); });
+  $('burger').setAttribute('aria-label', T.menuOpen);
+  $('burger').addEventListener('click', function () {
+    if (!$('bmenu').hidden || !$('gdrawer').hidden || !$('guide').hidden) closeBurger(); else openBurgerPanel('bmenu');
+  });
+  $('m-gates').addEventListener('click', function () { openBurgerPanel('gdrawer'); });
+  $('m-guide').addEventListener('click', function () { openBurgerPanel('guide'); });
   document.querySelectorAll('#tabs button').forEach(function (b) {
     b.addEventListener('click', function () { loadRank(b.getAttribute('data-board')); });
   });
@@ -774,6 +870,7 @@
   if (params.has('rank')) toggleDrawer(true);   // ?rank = 랭킹을 연 채로 시작
   loadFloods();
   if (params.has('gates')) toggleGates(true);   // ?gates = 범람 게이트 목록을 연 채로 시작
+  if (params.has('guide')) openBurgerPanel('guide');   // ?guide = 시스템 안내서를 연 채로 시작
   var q0 = params.get('q');
   if (q0) { $('q').value = q0; search(q0, false); }
 })();
