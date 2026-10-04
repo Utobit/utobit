@@ -168,6 +168,7 @@
     /* 범람 게이트 표식 = 발판형 붉은 점(바닥 원 + 퍼지는 파문) + 곧게 선 1자 빛기둥 + 등급 표 — 발판 중심이 좌표.
        1005 마스터 "빛기둥은 없애고, 발판형 빨간점은 괜찮네" → "빛기둥 1자로 그리는건 괜찮을듯"(렌즈 모양 균열 폐기) */
     .fg { width: 44px; height: 64px; cursor: pointer; }
+    body.hunter .fg { display: none; }
     .fg svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible;
       filter: drop-shadow(0 0 5px rgba(255, 60, 95, .95)) drop-shadow(0 0 14px rgba(255, 40, 80, .55)); }
     .fg .beam { animation: beam 2.6s ease-in-out infinite; }
@@ -570,7 +571,12 @@
   // ── 검색 ────────────────────────────────────────────────────────────
   var seq = 0;
 
-  function show(which) { ['msg', 'list', 'card'].forEach(function (id) { $(id).hidden = id !== which; }); }
+  function show(which) {
+    ['msg', 'list', 'card'].forEach(function (id) { $(id).hidden = id !== which; });
+    // 헌터 한 명을 보는 동안에는 범람 게이트 표식을 끈다 — 그 헌터의 자취만 보이게
+    document.body.classList.toggle('hunter', which === 'card');
+    if (which === 'card' && floodPopup) { floodPopup.remove(); floodPopup = null; }
+  }
   function message(text) { $('msg').textContent = text; show('msg'); }
 
   function search(q, push) {
