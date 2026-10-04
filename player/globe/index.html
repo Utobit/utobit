@@ -141,12 +141,12 @@
     .bmenu button:hover { background: rgba(150, 130, 255, .16); }
     .bmenu button i { flex: none; width: 8px; height: 8px; border-radius: 50%; background: #ff4664; box-shadow: 0 0 8px #ff4664; }
     .bmenu button i.sys { background: var(--cyan); box-shadow: 0 0 8px var(--cyan); }
-    /* 언어 설정(메뉴 맨 아래) */
-    .langrow { display: flex; align-items: center; gap: 6px; margin-top: 4px; padding: 10px 8px 6px 12px; border-top: 1px solid var(--line);
-      font-size: 11px; font-weight: 700; letter-spacing: .08em; color: var(--dim); }
-    .langrow span { flex: 1; }
-    .bmenu .langrow button { width: auto; padding: 6px 10px; font-size: 12px; border: 1px solid var(--line); color: var(--muted); }
-    .bmenu .langrow button.on { background: rgba(150, 130, 255, .2); border-color: var(--line-strong); color: var(--text); }
+    /* 언어: 메뉴의 한 줄(현재 언어 표시) → 누르면 게임 제공 언어 목록 */
+    .bmenu button i.lang { background: var(--gold); box-shadow: 0 0 8px var(--gold); }
+    .bmenu button em { margin-left: auto; font-style: normal; font-size: 12px; font-weight: 600; color: var(--dim); white-space: nowrap; }
+    .lmenu { max-height: calc(100vh - 160px); overflow-y: auto; scrollbar-width: thin; scrollbar-color: rgba(150, 130, 255, .45) transparent; }
+    .lmenu button { white-space: nowrap; }
+    .lmenu button.on { background: rgba(150, 130, 255, .2); }
     /* 시스템 안내서 */
     .doc { flex: 1; overflow-y: auto; padding: 0 18px 18px; scrollbar-width: thin; scrollbar-color: rgba(150, 130, 255, .45) transparent; }
     .doc .sys { margin: 2px 0 14px; padding: 12px 14px; border: 1px solid rgba(120, 220, 255, .45); border-radius: 10px;
@@ -250,9 +250,9 @@
   <div class="hud glass bmenu" id="bmenu" hidden>
     <button type="button" id="m-gates"><i></i><span data-t="gTitle"></span></button>
     <button type="button" id="m-guide"><i class="sys"></i><span data-t="guideTitle"></span></button>
-    <div class="langrow"><span data-t="langTitle"></span>
-      <button type="button" id="lang-ko">한국어</button><button type="button" id="lang-en">English</button></div>
+    <button type="button" id="m-lang"><i class="lang"></i><span data-t="langTitle"></span><em id="m-lang-cur"></em></button>
   </div>
+  <div class="hud glass bmenu lmenu" id="lmenu" hidden></div>
   <div class="hud glass drawer" id="guide" hidden>
     <h2 data-t="guideTitle"></h2>
     <div class="doc" id="doc"></div>
@@ -274,6 +274,8 @@
 
   <div class="hud hint" data-t="hint"></div>
 
+<script src="i18n.js"></script>
+<script src="guide.js"></script>
 <script>
 (function () {
   'use strict';
@@ -289,9 +291,17 @@
   var params = new URLSearchParams(location.search);
   var apiBase = params.get('s') === 'test' ? API.test : API.live;
   var still = params.has('still');   // 시점 이동 연출 없이 바로(화면 점검용)
-  var savedLang = '';
-  try { savedLang = localStorage.getItem('globeLang') || ''; } catch (e) {}
-  var KO = savedLang ? savedLang === 'ko' : (navigator.language || 'en').toLowerCase().indexOf('ko') === 0;
+  var I18N = window.GLOBE_I18N || { K: [], NAMES: [['ko', '한국어'], ['en', 'English']], L: {} };
+  var LANG = (function () {
+    var codes = I18N.NAMES.map(function (p) { return p[0]; }), saved = '';
+    try { saved = params.get('hl') || localStorage.getItem('globeLang') || ''; } catch (e) {}   // ?hl=ja = 주소로 언어 지정(점검·공유용)
+    if (codes.indexOf(saved) >= 0) return saved;
+    var nav = (navigator.language || 'en').toLowerCase();
+    if (nav.indexOf('zh') === 0) return /tw|hk|mo|hant/.test(nav) ? 'zh-Hant' : 'zh-Hans';
+    var two = nav.slice(0, 2);
+    return codes.indexOf(two) >= 0 ? two : 'en';
+  })();
+  var KO = LANG === 'ko';
   var T = KO ? {
     ph: '닉네임 또는 #헌터 번호', go: '검색', level: '레벨', stat: '총 스탯', power: '전투력',
     hint: '드래그 회전 · 휠 확대', searching: '찾는 중…', none: '해당 헌터를 찾지 못했습니다.',
@@ -341,7 +351,23 @@
   };
   var num = function (n) { return Number(n || 0).toLocaleString(); };
 
-  document.documentElement.lang = KO ? 'ko' : 'en';
+  // 한국어·영어 밖의 언어 = i18n.js 문구로 덮는다(빠진 값은 영어). {n}·{g}·{l} 자리가 있는 문구는 함수로 바꾼다.
+  (function () {
+    var pack = I18N.L[LANG];
+    if (!pack) return;
+    var fill = function (s, o) { return s.replace(/\{(\w)\}/g, function (_, k) { return o[k] != null ? o[k] : ''; }); };
+    I18N.K.forEach(function (k, i) {
+      var v = pack.T[i];
+      if (v == null) return;
+      if (k === 'many') T.many = function (n) { return fill(v, { n: n }); };
+      else if (k === 'gNote') T.gNoteKey = function (n) { return (n ? n + ' — ' : '') + v; };
+      else if (k === 'gClaimed') T.gClaimed = function (n) { return (n ? n + ' — ' : '') + v; };
+      else if (k === 'gLine') T.gLine = function (g) { return fill(v, { g: g.grade, l: g.level }); };
+      else if (k === 'gStage') T.gStage = function (n) { return fill(v, { n: n }); };
+      else T[k] = v;
+    });
+  })();
+  document.documentElement.lang = LANG;
   document.querySelectorAll('[data-t]').forEach(function (e) { e.textContent = T[e.getAttribute('data-t')]; });
   $('q').placeholder = T.ph;
   $('go').textContent = T.go;
@@ -427,7 +453,7 @@
   }
 
   function countryName(code) {
-    try { return new Intl.DisplayNames([KO ? 'ko' : 'en'], { type: 'region' }).of(code) || code; }
+    try { return new Intl.DisplayNames([LANG], { type: 'region' }).of(code) || code; }
     catch (e) { return code; }
   }
 
@@ -499,12 +525,7 @@
   }
 
   // 아이템 이름을 받을 언어 — 게임 언어팩 17종 중 브라우저 언어에 맞는 것
-  function packLang() {
-    var l = (navigator.language || 'en').toLowerCase();
-    if (l.indexOf('zh') === 0) return /tw|hk|mo|hant/.test(l) ? 'zh-Hant' : 'zh-Hans';
-    var two = l.slice(0, 2);
-    return ['ko', 'en', 'ja', 'de', 'fr', 'es', 'it', 'pt', 'pl', 'ru', 'tr', 'vi', 'id', 'th', 'ar'].indexOf(two) >= 0 ? two : 'en';
-  }
+  function packLang() { return LANG; }   // 장비·게이트 이름 = 화면 언어와 같은 언어팩
 
   var cardSeq = 0;   // 카드가 바뀌면 이전 헌터의 늦은 응답은 버린다
 
@@ -795,14 +816,14 @@
   }
 
   function loadFloods() {
-    fetch(apiBase + '/globe?floods=1' + (gateKey ? '&k=' + encodeURIComponent(gateKey) : ''))
+    fetch(apiBase + '/globe?floods=1&lang=' + encodeURIComponent(LANG) + (gateKey ? '&k=' + encodeURIComponent(gateKey) : ''))
       .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
       .then(function (j) { floods = (j && j.rows) || []; floodMe = (j && j.me) || ''; drawGates(); placeGateMarkers(); })
       .catch(function () { floods = []; drawGates(); });
   }
 
   function closeBurger() {
-    $('bmenu').hidden = true; $('gdrawer').hidden = true; $('guide').hidden = true;
+    $('bmenu').hidden = true; $('lmenu').hidden = true; $('gdrawer').hidden = true; $('guide').hidden = true;
     $('burger').setAttribute('aria-expanded', 'false');
   }
   function openBurgerPanel(id) {                  // id = 'bmenu'(메뉴) | 'gdrawer'(범람 게이트) | 'guide'(시스템 안내서)
@@ -816,29 +837,7 @@
   function toggleGates(open) { if (open === false) closeBurger(); else openBurgerPanel('gdrawer'); }
 
   // ── 시스템 안내서: 이 세계의 규칙 문서. 지금은 범람 게이트 편(수치 = 서버 정산 규칙 그대로) ──
-  var GUIDE = KO ? {
-    sys: ['SYSTEM', '헌터 인증이 확인되었습니다. 협회 기록 보관소의 열람 권한이 부여됩니다. 이 문서는 게이트가 범람하는 규칙을 다룹니다. 끝까지 읽은 헌터가 더 오래 살아남습니다.'],
-    secs: [
-      ['게이트는 발견한 헌터의 것이다', ['게이트는 처음 발견한 헌터 한 사람에게만 보입니다. 다른 헌터는 그 존재조차 알지 못합니다.', '단, 게이트에는 시한이 있습니다. 열린 지 <b>72시간</b> 안에 닫지 못하면 게이트는 스스로 넘쳐흐릅니다.']],
-      ['범람', ['공략에 <b>실패</b>하거나 72시간이 지나면 게이트는 <b>범람</b>합니다.', '범람한 게이트는 더 이상 한 사람의 것이 아닙니다. 소유가 풀려 <b>반경 10km 안의 모든 헌터</b>에게 드러납니다. 누가 닫아도 좋습니다. 닫는 자가 보상을 가져갑니다.']],
-      ['단계는 실패를 먹고 자란다', ['범람은 <b>1단계</b>에서 시작해, 누군가 공략에 실패할 때마다 한 단계씩 깊어집니다. 한도는 <b>3단계</b>입니다.', '단계가 오른 게이트는 <b>10분</b> 동안 모습을 감췄다가 같은 자리에 다시 열립니다. 그 안의 것들은 상처 하나 없이 회복되어 있습니다.', '<b>3단계</b>는 더 깊어지지 않습니다. 대신 쓰러뜨리지 못한 보스의 남은 생명력이 그대로 남습니다. 뒤에 온 헌터가 그 상처를 이어받아 싸웁니다. 혼자 닫지 못하는 게이트는 여럿이 닫습니다.']],
-      ['위험은 값을 치른다', ['단계가 깊을수록 보상도 커집니다. 드랍률·경험치·골드는 <b>단계마다 +20%</b>(3단계 +60%), 마석은 <b>(1 + 단계)배</b>(3단계 4배)입니다.', '범람 게이트를 닫은 헌터에게는 공략 포인트가 <b>1.5배</b>로 기록됩니다.']],
-      ['규율', ['범람 게이트 입장은 <b>1시간에 10회</b>까지 허가됩니다.', '게이트의 레벨이 헌터의 레벨보다 <b>10 넘게</b> 높으면 입장이 거부됩니다. 살아 돌아올 수 없는 곳에 헌터를 들여보내지 않는 것이 협회의 원칙입니다.']],
-      ['협회 지정 범람 게이트', ['매일 <b>정오(한국 시각)</b>, 협회는 뉴욕·도쿄·파리·서울·두바이·타이베이, 그리고 <b>헌터가 활동 중인 나라의 대표 도시</b> 어딘가에 범람 게이트를 하나씩 엽니다. 이 게이트는 <b>3일</b> 동안 열려 있으며, 이 지구 위에 붉은 빛기둥으로 표시됩니다. 기둥의 수가 곧 범람 단계입니다.', '게임 안에서 이 지구를 열고 게이트를 누르면, 그 게이트는 헌터의 <b>레이드 › 위험</b> 목록에 등록됩니다. 등록 기록은 3일간 유지되며, 목록에서 누르면 그 자리로 즉시 이동합니다.']]
-    ],
-    end: '— 헌터 협회 기록 보관소'
-  } : {
-    sys: ['SYSTEM', 'Hunter authentication confirmed. Access to the Association archive is granted. This document covers how gates flood. Hunters who read to the end tend to live longer.'],
-    secs: [
-      ['A gate belongs to the hunter who found it', ['A gate is visible only to the one hunter who discovered it. No one else knows it exists.', 'But every gate has a time limit. If it is not closed within <b>72 hours</b> of opening, it overflows on its own.']],
-      ['Flood', ['A gate <b>floods</b> when a raid on it fails, or when 72 hours pass.', 'A flooded gate no longer belongs to one person. Its ownership dissolves and it is revealed to <b>every hunter within 10 km</b>. Anyone may close it. Whoever closes it takes the reward.']],
-      ['Stages feed on failure', ['A flood starts at <b>stage 1</b> and deepens by one stage each time someone fails to clear it. The limit is <b>stage 3</b>.', 'A gate that deepens vanishes for <b>10 minutes</b>, then reopens in the same place. Everything inside is fully healed.', '<b>Stage 3</b> does not deepen further. Instead, the remaining health of the undefeated boss is kept. The next hunter inherits the wound and keeps fighting. A gate one hunter cannot close is closed by many.']],
-      ['Danger pays', ['The deeper the stage, the greater the reward. Drop rate, EXP and gold gain <b>+20% per stage</b> (+60% at stage 3); magic stones are multiplied by <b>(1 + stage)</b> (x4 at stage 3).', 'Hunters who close a flood gate have their raid points recorded at <b>1.5x</b>.']],
-      ['Discipline', ['Entry into flood gates is permitted <b>10 times per hour</b>.', 'Entry is denied if the gate level is <b>more than 10 above</b> the hunter level. The Association does not send hunters where they cannot return from.']],
-      ['Association-designated flood gates', ['Every day at <b>noon (KST)</b>, the Association opens one flood gate somewhere in New York, Tokyo, Paris, Seoul, Dubai and Taipei, and in <b>the major city of every country where hunters are active</b>. Each stays open for <b>3 days</b> and is marked on this globe by red pillars of light. The number of pillars is the flood stage.', 'Open this globe from inside the game and tap a gate to add it to your <b>Raid › Danger</b> list. The entry is kept for 3 days; tap it there to travel to the gate at once.']]
-    ],
-    end: '— Hunter Association Archive'
-  };
+  var GUIDE = (window.GLOBE_GUIDE || {})[LANG] || (window.GLOBE_GUIDE || {}).en || ['', [], ''];   // [머리말, [[제목, 문단…]…], 맺음말]
   var guideDrawn = false;
   function richP(text) {                          // 고정 문구 안의 <b>…</b> 만 굵게 — 문자열을 HTML 로 넣지 않는다
     var p = el('p');
@@ -849,36 +848,40 @@
     if (guideDrawn) return;
     guideDrawn = true;
     var doc = $('doc'), sys = el('div', 'sys');
-    sys.appendChild(el('b', null, '[ ' + GUIDE.sys[0] + ' ]'));
-    sys.appendChild(document.createTextNode(GUIDE.sys[1]));
+    sys.appendChild(el('b', null, '[ SYSTEM ]'));
+    sys.appendChild(document.createTextNode(GUIDE[0]));
     doc.appendChild(sys);
-    GUIDE.secs.forEach(function (s, i) {
+    GUIDE[1].forEach(function (s, i) {
       var h = el('h3');
       h.appendChild(el('span', null, (i < 9 ? '0' : '') + (i + 1)));
       h.appendChild(document.createTextNode(s[0]));
       doc.appendChild(h);
-      s[1].forEach(function (line) { doc.appendChild(richP(line)); });
+      s.slice(1).forEach(function (line) { doc.appendChild(richP(line)); });
     });
-    doc.appendChild(el('div', 'end', GUIDE.end));
+    doc.appendChild(el('div', 'end', GUIDE[2]));
   }
 
   $('rankbar').setAttribute('aria-label', T.rankOpen);
   $('rankbar').addEventListener('click', function () { toggleDrawer(); });
   $('burger').setAttribute('aria-label', T.menuOpen);
   $('burger').addEventListener('click', function () {
-    if (!$('bmenu').hidden || !$('gdrawer').hidden || !$('guide').hidden) closeBurger(); else openBurgerPanel('bmenu');
+    if (!$('bmenu').hidden || !$('lmenu').hidden || !$('gdrawer').hidden || !$('guide').hidden) closeBurger(); else openBurgerPanel('bmenu');
   });
   $('m-gates').addEventListener('click', function () { openBurgerPanel('gdrawer'); });
   $('m-guide').addEventListener('click', function () { openBurgerPanel('guide'); });
-  // 언어 설정: 선택을 기기에 저장하고 다시 불러온다(문구가 처음 한 번에 채워지는 구조)
-  [['lang-ko', 'ko'], ['lang-en', 'en']].forEach(function (p) {
-    $(p[0]).classList.toggle('on', (p[1] === 'ko') === KO);
-    $(p[0]).addEventListener('click', function () {
-      if ((p[1] === 'ko') === KO) return;
-      try { localStorage.setItem('globeLang', p[1]); } catch (e) {}
+  // 언어 설정: 메뉴의 '언어' → 게임 제공 언어 목록. 고르면 기기에 저장하고 다시 불러온다(문구가 처음 한 번에 채워지는 구조)
+  I18N.NAMES.forEach(function (p) {
+    if (p[0] === LANG) $('m-lang-cur').textContent = p[1];
+    var b = el('button', p[0] === LANG ? 'on' : null, p[1]);
+    b.type = 'button';
+    b.addEventListener('click', function () {
+      if (p[0] === LANG) { openBurgerPanel('bmenu'); return; }
+      try { localStorage.setItem('globeLang', p[0]); } catch (e) {}
       location.reload();
     });
+    $('lmenu').appendChild(b);
   });
+  $('m-lang').addEventListener('click', function () { openBurgerPanel('lmenu'); });
   document.querySelectorAll('#tabs button').forEach(function (b) {
     b.addEventListener('click', function () { loadRank(b.getAttribute('data-board')); });
   });
@@ -889,6 +892,7 @@
   if (params.has('rank')) toggleDrawer(true);   // ?rank = 랭킹을 연 채로 시작
   loadFloods();
   if (params.has('gates')) toggleGates(true);   // ?gates = 범람 게이트 목록을 연 채로 시작
+  if (params.has('langs')) openBurgerPanel('lmenu');    // ?langs = 언어 목록을 연 채로 시작(화면 점검용)
   if (params.has('menu')) openBurgerPanel('bmenu');     // ?menu = 메뉴를 연 채로 시작(화면 점검용)
   if (params.has('guide')) openBurgerPanel('guide');   // ?guide = 시스템 안내서를 연 채로 시작
   var q0 = params.get('q');
