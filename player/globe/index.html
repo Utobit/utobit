@@ -499,15 +499,18 @@
   }
 
   // 자취 칸([위도칸, 경도칸, 종류]) → 지도. 종류 1=지나간 길, 2·3=게이트 공략 지역(금빛 우선)
-  function drawTrail(cells, deg) {
+  // 게이트 공략 지역(gcells)은 서버가 큰 칸(gdeg)으로 뭉쳐서 준다 — 잘게 그리면 생활권이 특정된다
+  function drawTrail(cells, deg, gcells, gdeg) {
     var pts = [], polys = [], w = 180, e = -180, s = 90, n = -90;
-    (cells || []).forEach(function (c) {
-      var la = c[0] * deg - 90, lo = c[1] * deg - 180, k = c[2] === 1 ? 1 : 2;
-      pts.push({ type: 'Feature', properties: { k: k }, geometry: { type: 'Point', coordinates: [lo + deg / 2, la + deg / 2] } });
+    var put = function (iy, ix, d, k) {
+      var la = iy * d - 90, lo = ix * d - 180;
+      pts.push({ type: 'Feature', properties: { k: k }, geometry: { type: 'Point', coordinates: [lo + d / 2, la + d / 2] } });
       polys.push({ type: 'Feature', properties: { k: k }, geometry: { type: 'Polygon',
-        coordinates: [[[lo, la], [lo + deg, la], [lo + deg, la + deg], [lo, la + deg], [lo, la]]] } });
-      w = Math.min(w, lo); e = Math.max(e, lo + deg); s = Math.min(s, la); n = Math.max(n, la + deg);
-    });
+        coordinates: [[[lo, la], [lo + d, la], [lo + d, la + d], [lo, la + d], [lo, la]]] } });
+      w = Math.min(w, lo); e = Math.max(e, lo + d); s = Math.min(s, la); n = Math.max(n, la + d);
+    };
+    (gcells || []).forEach(function (c) { put(c[0], c[1], gdeg, 2); });
+    (cells || []).forEach(function (c) { if (c[2] === 1) put(c[0], c[1], deg, 1); });
     map.getSource('trail-pt').setData({ type: 'FeatureCollection', features: pts });
     map.getSource('trail-cell').setData({ type: 'FeatureCollection', features: polys });
     return pts.length ? [[w, s], [e, n]] : null;
@@ -519,10 +522,10 @@
       .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
       .then(function (j) {
         if (mine !== cardSeq) return;
-        var cells = (j && j.cells) || [];
-        onCount(cells.length);
+        var cells = (j && j.cells) || [], gcells = (j && j.gcells) || [];
+        onCount(cells.length + gcells.length);
         if (!map || !mapReady) return;
-        var box = drawTrail(cells, j.deg || 0.05);
+        var box = drawTrail(cells, j.deg || 0.05, gcells, j.gdeg || 0.25);
         // 자취가 있으면 국가 대신 자취 전체가 보이게 — 한 지역뿐이면 너무 파고들지 않는다
         // 검색 패널에 가리지 않게 여백을 둔다(넓은 화면 = 왼쪽, 좁은 화면 = 위)
         var pad = window.innerWidth > 720 ? { top: 90, bottom: 90, left: 420, right: 90 } : { top: 400, bottom: 50, left: 30, right: 30 };
