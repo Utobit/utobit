@@ -202,6 +202,12 @@
     .gpop em { display: block; margin-top: 8px; font-size: 11px; font-style: normal; line-height: 1.45; color: var(--dim); }
     .gpop em.ok { color: var(--gold); }
 
+    /* 다음 범람 게이트 등장까지 남은 시간 */
+    .gnext { bottom: max(58px, calc(env(safe-area-inset-bottom) + 24px)); left: 50%; transform: translateX(-50%); padding: 7px 14px; border-radius: 999px;
+      font-size: 12px; font-weight: 600; color: var(--muted); white-space: nowrap; pointer-events: none;
+      background: rgba(10, 6, 30, .72); border: 1px solid rgba(255, 90, 120, .45); }
+    .gnext b { margin-left: 8px; font-weight: 800; color: #ff9db0; font-variant-numeric: tabular-nums; }
+    body.hunter .gnext { display: none; }
     .hint { bottom: max(34px, env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%);
       font-size: 11px; letter-spacing: .1em; color: var(--dim); pointer-events: none; white-space: nowrap; }
 
@@ -227,6 +233,7 @@
       .brand { left: 16px; }
       .panel { left: 16px; right: 16px; width: auto; }
       .hint { display: none; }
+      .gnext { bottom: max(16px, env(safe-area-inset-bottom)); }
     }
   </style>
 </head>
@@ -285,6 +292,7 @@
     <div class="ranks" id="ranks"></div>
   </div>
 
+  <div class="hud gnext" id="gnext" hidden><span data-t="gNext"></span><b id="gnext-t"></b></div>
   <div class="hud hint" data-t="hint"></div>
 
 <script src="i18n.js"></script>
@@ -334,7 +342,7 @@
     gDone: '등록됨', gGone: '이미 닫힌 게이트입니다.', gBadKey: '계정을 확인하지 못했습니다. 게임에서 지구본을 다시 열어 주세요.',
     gLine: function (g) { return g.grade + '급 · Lv.' + g.level; }, gStage: function (n) { return '범람 ' + n + '단계'; },
     menuOpen: '메뉴', guideTitle: '시스템 안내서', langTitle: '언어',
-    stadium: '스타디움', heritage: '유적지', firstBy: '최초 발견자'
+    stadium: '스타디움', heritage: '유적지', firstBy: '최초 발견자', gNext: '다음 게이트 등장까지'
   } : {
     ph: 'Nickname or #hunter number', go: 'Search', level: 'LEVEL', stat: 'TOTAL STATS', power: 'COMBAT POWER',
     hint: 'DRAG TO ROTATE · SCROLL TO ZOOM', searching: 'Searching…', none: 'No hunter found.',
@@ -354,7 +362,7 @@
     gDone: 'Added', gGone: 'This gate has already closed.', gBadKey: 'Could not verify your account. Reopen the globe from the game.',
     gLine: function (g) { return 'Grade ' + g.grade + ' · Lv.' + g.level; }, gStage: function (n) { return 'Flood stage ' + n; },
     menuOpen: 'Menu', guideTitle: 'SYSTEM GUIDE', langTitle: 'LANGUAGE',
-    stadium: 'Stadium', heritage: 'Heritage site', firstBy: 'First discovered by'
+    stadium: 'Stadium', heritage: 'Heritage site', firstBy: 'First discovered by', gNext: 'Next gate in'
   };
 
   var $ = function (id) { return document.getElementById(id); };
@@ -854,8 +862,24 @@
   function loadFloods() {
     fetch(apiBase + '/globe?floods=1&lang=' + encodeURIComponent(LANG) + (gateKey ? '&k=' + encodeURIComponent(gateKey) : ''))
       .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
-      .then(function (j) { floods = (j && j.rows) || []; floodMe = (j && j.me) || ''; drawGates(); placeGateMarkers(); })
+      .then(function (j) { floods = (j && j.rows) || []; floodMe = (j && j.me) || ''; nextAt = (j && j.nextAt) || 0; drawGates(); placeGateMarkers(); })
       .catch(function () { floods = []; drawGates(); });
+  }
+
+  // 다음 게이트 등장까지 남은 시간 — 서버가 준 다음 일정 시각(매시 정각)까지 센다. 시각이 지나면 목록을 다시 받는다(스폰이 끝날 여유 20초).
+  var nextAt = 0, nextReload = 0;
+  function tickNext() {
+    var now = Date.now() / 1000;
+    if (!nextAt) nextAt = (Math.floor(now / 3600) + 1) * 3600;
+    var left = Math.ceil(nextAt - now);
+    if (left <= 0) {
+      if (!nextReload) nextReload = now + 20;
+      if (now >= nextReload) { nextReload = 0; nextAt = 0; loadFloods(); }
+      left = 0;
+    }
+    var m = Math.floor(left / 60), sec = left % 60;
+    $('gnext-t').textContent = (m < 10 ? '0' : '') + m + ':' + (sec < 10 ? '0' : '') + sec;
+    $('gnext').hidden = !map;
   }
 
   // ── 발견된 유적지(최초 발견자 닉네임) — 스타디움 표식은 1005 마스터 지시로 뺐다(서버 응답 stadiums 는 쓰지 않음) ──
@@ -966,6 +990,7 @@
   if (!initMap()) { $('map').hidden = true; message(T.noMap); }
   if (params.has('rank')) toggleDrawer(true);   // ?rank = 랭킹을 연 채로 시작
   loadFloods();
+  tickNext(); setInterval(tickNext, 1000);
   loadSites();
   if (params.has('gates')) toggleGates(true);   // ?gates = 범람 게이트 목록을 연 채로 시작
   if (params.has('langs')) openBurgerPanel('lmenu');    // ?langs = 언어 목록을 연 채로 시작(화면 점검용)
