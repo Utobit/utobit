@@ -31,6 +31,24 @@
     html, body { height: 100%; background: var(--space); color: var(--text); overflow: hidden;
       font-family: 'Inter', 'Noto Sans KR', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
     #map { position: fixed; inset: 0; }
+    /* 우주 연출(지도 뒤 층 — 지구본이 가리는 곳은 안 보이고 둘레의 우주에만 보인다). 움직임은 전부 CSS(스크립트 없음) */
+    #sky { position: fixed; inset: 0; pointer-events: none; overflow: hidden; }
+    #sky i { position: absolute; display: block; will-change: transform, opacity; }
+    #sky .meteor { width: 130px; height: 1.5px; border-radius: 2px; opacity: 0;
+      background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(190, 205, 255, .55) 60%, #fff);
+      animation: meteor var(--t, 13s) linear var(--d, 0s) infinite; }
+    @keyframes meteor {
+      0% { transform: translate3d(0, 0, 0) rotate(30deg); opacity: 0; }
+      1% { opacity: 1; }
+      6% { transform: translate3d(520px, 300px, 0) rotate(30deg); opacity: 0; }
+      100% { transform: translate3d(520px, 300px, 0) rotate(30deg); opacity: 0; }
+    }
+    #sky .sat { width: 3px; height: 3px; border-radius: 50%; background: #dfe6ff; left: 0; top: 0;
+      box-shadow: 0 0 6px rgba(170, 190, 255, .9);
+      animation: sat var(--t, 90s) linear var(--d, 0s) infinite, satblink 2.4s ease-in-out infinite; }
+    @keyframes sat { from { transform: translate3d(-6vw, var(--y0), 0); } to { transform: translate3d(106vw, var(--y1), 0); } }
+    @keyframes satblink { 0%, 100% { opacity: .35; } 50% { opacity: 1; } }
+    @media (prefers-reduced-motion: reduce) { #sky { display: none; } }
     /* 지구 뒤 성운 — 지도가 뜨기 전·토큰이 없을 때도 화면이 비지 않는다 */
     #nebula { position: fixed; inset: 0; pointer-events: none;
       background:
@@ -239,6 +257,15 @@
 </head>
 <body>
   <div id="nebula"></div>
+  <div id="sky" aria-hidden="true">
+    <i class="meteor" style="left:6%;top:8%;--t:13s;--d:2s"></i>
+    <i class="meteor" style="left:58%;top:4%;--t:19s;--d:7s"></i>
+    <i class="meteor" style="left:72%;top:52%;--t:23s;--d:12s"></i>
+    <i class="meteor" style="left:14%;top:62%;--t:29s;--d:17s"></i>
+    <i class="sat" style="--y0:14vh;--y1:30vh;--t:95s;--d:-20s"></i>
+    <i class="sat" style="--y0:86vh;--y1:66vh;--t:120s;--d:-70s"></i>
+    <i class="sat" style="--y0:44vh;--y1:6vh;--t:150s;--d:-110s"></i>
+  </div>
   <div id="map"></div>
 
   <div class="hud brand"><b>PLAYER GLOBE</b><span>MANAMUHAN STUDIO</span></div>
