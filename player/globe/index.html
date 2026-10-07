@@ -507,26 +507,24 @@
     catch (e) { return code; }
   }
 
-  var countryBox = null;   // 지금 고른 헌터의 나라 영역(약속) — focusCountry 가 채운다
+  // 1007 마스터("너무 대한민국만 보임. 지구크기로 보이는게 맞음"): 헌터를 골라도 나라로 다가가지 않는다 —
+  //  지구 전체가 보이는 첫 화면 크기 그대로, 그 나라가 가운데 오게 돌리기만 한다.
+  var GLOBE_ZOOM = 1.6;
   function focusCountry(code) {
     var f = ['all', ['==', ['get', 'iso_3166_1'], code], ['==', ['get', 'disputed'], 'false'],
              ['any', ['==', 'all', ['get', 'worldview']], ['in', 'US', ['get', 'worldview']]]];
     ['country-fill', 'country-glow', 'country-line'].forEach(function (id) { map.setFilter(id, code ? f : ['==', ['get', 'iso_3166_1'], '']); });
-    countryBox = null;
     if (!code) return;
     var en = code;
     try { en = new Intl.DisplayNames(['en'], { type: 'region' }).of(code) || code; } catch (e) {}
-    countryBox = fetch('https://api.mapbox.com/search/geocode/v6/forward?types=country&limit=1&country=' + encodeURIComponent(code) +
+    fetch('https://api.mapbox.com/search/geocode/v6/forward?types=country&limit=1&country=' + encodeURIComponent(code) +
           '&q=' + encodeURIComponent(en) + '&access_token=' + MAPBOX_TOKEN)
       .then(function (r) { return r.json(); })
       .then(function (j) {
         var ft = j && j.features && j.features[0];
-        if (!ft) return null;
-        var c = ft.geometry.coordinates;
-        map.flyTo({ center: c, zoom: 2.6, duration: still ? 0 : 2600, essential: true });
-        var bb = ft.properties && ft.properties.bbox;   // [서, 남, 동, 북] — 자취가 있는 헌터는 이 나라 전체가 화면에 차게 다가간다(loadTrail)
-        return bb && bb.length === 4 ? [[bb[0], bb[1]], [bb[2], bb[3]]] : null;
-      }).catch(function () { return null; });
+        if (!ft) return;
+        map.flyTo({ center: ft.geometry.coordinates, zoom: GLOBE_ZOOM, duration: still ? 0 : 2600, essential: true });
+      }).catch(function () {});
   }
 
   function focusHq(g) {
@@ -573,14 +571,9 @@
         onCount(cells.length + gcells.length);
         if (!map || !mapReady) return;
         var box = drawTrail(cells, j.deg || 0.05, gcells, j.gdeg || 0.25);
-        // 1007 마스터("누르면 지구본으로 확대되는데, 그래도 시점을 대한민국으로 잡으셈" / "자취지역으로 스케일은 확대되는데, 대한민국시점으로 해달라는거"):
-        //  자취가 있으면 다가가되, 자취 지역이 아니라 그 헌터의 나라 전체가 화면에 차는 시점으로. 나라를 모르는 헌터만 자취 전체를 대륙 수준까지.
-        // 검색 패널에 가리지 않게 여백을 둔다(넓은 화면 = 왼쪽, 좁은 화면 = 위)
-        var pad = window.innerWidth > 720 ? { top: 90, bottom: 90, left: 420, right: 90 } : { top: 400, bottom: 50, left: 30, right: 30 };
-        if (box && !row.country) map.fitBounds(box, { padding: pad, maxZoom: 3, duration: still ? 0 : 2800, essential: true });
-        else if (box && countryBox) countryBox.then(function (cb) {
-          if (cb && mine === cardSeq) map.fitBounds(cb, { padding: pad, maxZoom: 6.5, duration: still ? 0 : 2800, essential: true });
-        });
+        // 1007 마스터("너무 대한민국만 보임. 지구크기로 보이는게 맞음"): 자취가 있어도 다가가지 않는다 — 나라 시점은 focusCountry 가 지구 크기로 잡는다.
+        //  나라를 모르는 헌터만 자취 한가운데가 보이게 지구를 돌린다(크기는 같다).
+        if (box && !row.country) map.flyTo({ center: [(box[0][0] + box[1][0]) / 2, (box[0][1] + box[1][1]) / 2], zoom: GLOBE_ZOOM, duration: still ? 0 : 2800, essential: true });
       })
       .catch(function () { if (mine === cardSeq) onCount(-1); });
   }
