@@ -569,10 +569,11 @@
         onCount(cells.length + gcells.length);
         if (!map || !mapReady) return;
         var box = drawTrail(cells, j.deg || 0.05, gcells, j.gdeg || 0.25);
-        // 자취가 있으면 국가 대신 자취 전체가 보이게 — 한 지역뿐이면 너무 파고들지 않는다
+        // 1007 마스터("누르면 지구본으로 확대되는데, 그래도 시점을 대한민국으로 잡으셈"): 자취 지역으로 파고들지 않는다 —
+        //  시점은 그 헌터의 나라(focusCountry 가 잡은 화면) 그대로 둔다. 나라를 모르는 헌터만 자취 전체가 보이게 하되 대륙 수준까지만 다가간다.
         // 검색 패널에 가리지 않게 여백을 둔다(넓은 화면 = 왼쪽, 좁은 화면 = 위)
         var pad = window.innerWidth > 720 ? { top: 90, bottom: 90, left: 420, right: 90 } : { top: 400, bottom: 50, left: 30, right: 30 };
-        if (box) map.fitBounds(box, { padding: pad, maxZoom: 7, duration: still ? 0 : 2800, essential: true });
+        if (box && !row.country) map.fitBounds(box, { padding: pad, maxZoom: 3, duration: still ? 0 : 2800, essential: true });
       })
       .catch(function () { if (mine === cardSeq) onCount(-1); });
   }
