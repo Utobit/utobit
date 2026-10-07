@@ -323,7 +323,7 @@
   <div class="hud hint" data-t="hint"></div>
 
 <script src="i18n.js"></script>
-<script src="guide.js"></script>
+<script src="guide.js?v=1008"></script>
 <script>
 (function () {
   'use strict';
@@ -973,10 +973,12 @@
   function drawGuide() {
     if (guideDrawn) return;
     guideDrawn = true;
-    var doc = $('doc'), sys = el('div', 'sys');
-    sys.appendChild(el('b', null, '[ SYSTEM ]'));
-    sys.appendChild(document.createTextNode(GUIDE[0]));
-    doc.appendChild(sys);
+    var doc = $('doc');
+    if (GUIDE[0]) {                               // 머리말이 있을 때만 머리말 칸을 그린다(1008: 규칙만 짧게 — 지금은 비어 있다)
+      var sys = el('div', 'sys');
+      sys.appendChild(document.createTextNode(GUIDE[0]));
+      doc.appendChild(sys);
+    }
     GUIDE[1].forEach(function (s, i) {
       var h = el('h3');
       h.appendChild(el('span', null, (i < 9 ? '0' : '') + (i + 1)));
@@ -984,7 +986,7 @@
       doc.appendChild(h);
       s.slice(1).forEach(function (line) { doc.appendChild(richP(line)); });
     });
-    doc.appendChild(el('div', 'end', GUIDE[2]));
+    if (GUIDE[2]) doc.appendChild(el('div', 'end', GUIDE[2]));
   }
 
   $('rankbar').setAttribute('aria-label', T.rankOpen);
