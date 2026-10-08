@@ -117,6 +117,8 @@
     .row button:hover { background: rgba(94, 230, 255, .12); }
     .equip { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); }
     .equip h3 { font-size: 11px; font-weight: 700; letter-spacing: .08em; color: var(--muted); margin-bottom: 8px; }
+    .equip.latent li { padding: 7px 10px; }
+    .equip.latent li b { flex: none; min-width: 22px; color: #9ee37d; font-size: 12px; }
     .equip ul { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
     .equip li { display: flex; align-items: center; gap: 8px; padding: 6px 9px 6px 6px; border-radius: 8px;
       background: rgba(150, 130, 255, .07); border: 1px solid var(--line); font-size: 12px; min-width: 0; }
@@ -291,6 +293,7 @@
       </div>
       <div class="rows" id="c-rows"></div>
       <div class="equip" id="c-equip" hidden><h3 data-t="equip"></h3><ul id="c-equip-list"></ul><p id="c-equip-none" data-t="noEquip" hidden></p></div>
+      <div class="equip latent" id="c-latent" hidden><h3 data-t="latent"></h3><ul id="c-latent-list"></ul></div>
       <div class="legend" id="c-legend" hidden><span><i class="w"></i><span data-t="walk"></span></span><span><i class="g"></i><span data-t="gate"></span></span></div>
       <p class="note" data-t="note"></p>
     </div>
@@ -326,7 +329,7 @@
   <div class="hud gnext" id="gnext" hidden><span data-t="gNext"></span><b id="gnext-t"></b></div>
   <div class="hud hint" data-t="hint"></div>
 
-<script src="i18n.js?v=1008b"></script>
+<script src="i18n.js?v=1009"></script>
 <script src="guide.js?v=1008"></script>
 <script>
 (function () {
@@ -374,7 +377,7 @@
     gLine: function (g) { return g.grade + '급 · Lv.' + g.level; }, gStage: function (n) { return '범람 ' + n + '단계'; },
     menuOpen: '메뉴', guideTitle: '시스템 안내서', langTitle: '언어',
     stadium: '스타디움', heritage: '유적지', firstBy: '최초 발견자', gNext: '다음 게이트 등장까지',
-    threat: '위협지', nullIsland: '널 아일랜드'
+    threat: '위협지', nullIsland: '널 아일랜드', latent: '개방한 잠재능력'
   } : {
     ph: 'Nickname or #hunter number', go: 'Search', level: 'LEVEL', stat: 'TOTAL STATS', power: 'COMBAT POWER',
     hint: 'DRAG TO ROTATE · SCROLL TO ZOOM', searching: 'Searching…', none: 'No hunter found.',
@@ -395,7 +398,7 @@
     gLine: function (g) { return 'Grade ' + g.grade + ' · Lv.' + g.level; }, gStage: function (n) { return 'Flood stage ' + n; },
     menuOpen: 'Menu', guideTitle: 'SYSTEM GUIDE', langTitle: 'LANGUAGE',
     stadium: 'Stadium', heritage: 'Heritage site', firstBy: 'First discovered by', gNext: 'Next gate in',
-    threat: 'Threat site', nullIsland: 'Null Island'
+    threat: 'Threat site', nullIsland: 'Null Island', latent: 'LATENT ABILITIES UNLOCKED'
   };
 
   var $ = function (id) { return document.getElementById(id); };
@@ -598,6 +601,7 @@
   function loadEquip(row) {
     var mine = cardSeq;
     $('c-equip').hidden = true;
+    $('c-latent').hidden = true;
     iconsReady.then(function () { return fetch(apiBase + '/globe?equip=' + encodeURIComponent(row.name) + '&lang=' + packLang()); })
       .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
       .then(function (j) {
@@ -623,6 +627,17 @@
         });
         $('c-equip-none').hidden = items.length > 0;
         $('c-equip').hidden = false;
+        // GM 계정만: 서버가 latent 칸을 실어 준다(일반 헌터는 칸 자체가 없다)
+        var lat = j && j.latent, lu = $('c-latent-list');
+        lu.textContent = '';
+        (lat || []).forEach(function (sk) {
+          var li = el('li');
+          li.appendChild(el('b', null, sk.grade || ''));
+          li.appendChild(el('span', null, sk.name));
+          li.title = sk.name;
+          lu.appendChild(li);
+        });
+        $('c-latent').hidden = !(lat && lat.length);
       })
       .catch(function () {});
   }
