@@ -192,12 +192,16 @@
     /* 범람 게이트 표식 = 발판형 붉은 점(바닥 원 + 퍼지는 파문) + 곧게 선 1자 빛기둥 + 등급 표 — 발판 중심이 좌표.
        1005 마스터 "빛기둥은 없애고, 발판형 빨간점은 괜찮네" → "빛기둥 1자로 그리는건 괜찮을듯"(렌즈 모양 균열 폐기) */
     .fg { width: 44px; height: 64px; cursor: pointer; }
-    body.hunter .fg, body.hunter .site { display: none; }
+    body.hunter .fg, body.hunter .site, body.hunter .nidot { display: none; }
     /* 발견된 유적지(금빛) 표식 */
     .site { width: 26px; height: 26px; border-radius: 9px; box-sizing: border-box; cursor: pointer; display: flex; align-items: center; justify-content: center;
       background: rgba(10, 6, 30, .82); border: 1px solid var(--cyan); box-shadow: 0 0 10px rgba(94, 230, 255, .55); }
     .site.hr svg { width: 16px; height: 16px; fill: none; stroke: var(--gold); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
     .site.hr { border-color: var(--gold); box-shadow: 0 0 10px rgba(255, 210, 122, .6); }
+    /* 위협지(붉은빛) 표식 + 발견 전 (0, 0) 의 아주 작은 점(누를 수 없다) */
+    .site.th svg { width: 16px; height: 16px; fill: none; stroke: #ff5a78; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+    .site.th { border-color: #ff5a78; box-shadow: 0 0 10px rgba(255, 60, 95, .65); }
+    .nidot { width: 4px; height: 4px; border-radius: 50%; background: #fff; opacity: .85; box-shadow: 0 0 5px rgba(255, 255, 255, .9); pointer-events: none; }
     .ranks button.sel { background: rgba(94, 230, 255, .16); box-shadow: inset 0 0 0 1px var(--cyan); }
     .fg svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible;
       filter: drop-shadow(0 0 5px rgba(255, 60, 95, .95)) drop-shadow(0 0 14px rgba(255, 40, 80, .55)); }
@@ -322,7 +326,7 @@
   <div class="hud gnext" id="gnext" hidden><span data-t="gNext"></span><b id="gnext-t"></b></div>
   <div class="hud hint" data-t="hint"></div>
 
-<script src="i18n.js"></script>
+<script src="i18n.js?v=1008b"></script>
 <script src="guide.js?v=1008"></script>
 <script>
 (function () {
@@ -369,7 +373,8 @@
     gDone: '등록됨', gGone: '이미 닫힌 게이트입니다.', gBadKey: '계정을 확인하지 못했습니다. 게임에서 지구본을 다시 열어 주세요.',
     gLine: function (g) { return g.grade + '급 · Lv.' + g.level; }, gStage: function (n) { return '범람 ' + n + '단계'; },
     menuOpen: '메뉴', guideTitle: '시스템 안내서', langTitle: '언어',
-    stadium: '스타디움', heritage: '유적지', firstBy: '최초 발견자', gNext: '다음 게이트 등장까지'
+    stadium: '스타디움', heritage: '유적지', firstBy: '최초 발견자', gNext: '다음 게이트 등장까지',
+    threat: '위협지', nullIsland: '널 아일랜드'
   } : {
     ph: 'Nickname or #hunter number', go: 'Search', level: 'LEVEL', stat: 'TOTAL STATS', power: 'COMBAT POWER',
     hint: 'DRAG TO ROTATE · SCROLL TO ZOOM', searching: 'Searching…', none: 'No hunter found.',
@@ -389,7 +394,8 @@
     gDone: 'Added', gGone: 'This gate has already closed.', gBadKey: 'Could not verify your account. Reopen the globe from the game.',
     gLine: function (g) { return 'Grade ' + g.grade + ' · Lv.' + g.level; }, gStage: function (n) { return 'Flood stage ' + n; },
     menuOpen: 'Menu', guideTitle: 'SYSTEM GUIDE', langTitle: 'LANGUAGE',
-    stadium: 'Stadium', heritage: 'Heritage site', firstBy: 'First discovered by', gNext: 'Next gate in'
+    stadium: 'Stadium', heritage: 'Heritage site', firstBy: 'First discovered by', gNext: 'Next gate in',
+    threat: 'Threat site', nullIsland: 'Null Island'
   };
 
   var $ = function (id) { return document.getElementById(id); };
@@ -914,16 +920,24 @@
 
   // ── 발견된 유적지(최초 발견자 닉네임) — 스타디움 표식은 1005 마스터 지시로 뺐다(서버 응답 stadiums 는 쓰지 않음) ──
   var SITE_SVG = {
-    hr: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l9-5 9 5M5 9v9M10 9v9M14 9v9M19 9v9M3 20h18"/></svg>'
+    hr: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l9-5 9 5M5 9v9M10 9v9M14 9v9M19 9v9M3 20h18"/></svg>',
+    th: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9.5 17h-19zM12 10v4.5M12 17.4v.2"/></svg>'
   };
+  // 위협지(1007 마스터: 지구본 (0, 0) 에 아주 작은 점·상호작용 없음 → 발견자가 생기면 '위협지') — 이름은 페이지 문구(서버는 id·좌표·발견자만)
+  var THREAT_NAME = { NULLISLAND_EGG: T.nullIsland };
+  var niDot = null;
+  function placeNiDot(on) {
+    if (niDot) { niDot.remove(); niDot = null; }
+    if (on && map) niDot = new mapboxgl.Marker({ element: el('div', 'nidot') }).setLngLat([0, 0]).addTo(map);
+  }
   var siteMarkers = [];
   function openSite(kind, x) {
     userTouched = true;
     if (floodPopup) { floodPopup.remove(); floodPopup = null; }
     var box = el('div', 'gpop');
     box.appendChild(el('b', null, x.name));
-    box.appendChild(el('span', null, kind === 'st' ? T.stadium + (x.city ? ' · ' + x.city : '') : T.heritage));
-    if (kind === 'hr' && x.by) box.appendChild(el('em', 'ok', T.firstBy + ' · ' + x.by));
+    box.appendChild(el('span', null, kind === 'st' ? T.stadium + (x.city ? ' · ' + x.city : '') : kind === 'th' ? T.threat : T.heritage));
+    if (kind !== 'st' && x.by) box.appendChild(el('em', 'ok', T.firstBy + ' · ' + x.by));
     map.flyTo({ center: [x.lng, x.lat], zoom: Math.max(map.getZoom(), 5), duration: still ? 0 : 2200, essential: true });
     floodPopup = new mapboxgl.Popup({ offset: 18, maxWidth: '270px' }).setLngLat([x.lng, x.lat]).setDOMContent(box).addTo(map);
   }
@@ -931,7 +945,7 @@
     (rows || []).forEach(function (x) {
       var dot = el('div', 'site ' + kind);
       dot.innerHTML = SITE_SVG[kind];                    // 고정 문자열(서버 값은 넣지 않는다)
-      dot.title = x.name + (kind === 'hr' && x.by ? ' · ' + T.firstBy + ' ' + x.by : '');
+      dot.title = x.name + (kind !== 'st' && x.by ? ' · ' + T.firstBy + ' ' + x.by : '');
       dot.addEventListener('click', function (e) { e.stopPropagation(); openSite(kind, x); });
       siteMarkers.push(new mapboxgl.Marker({ element: dot }).setLngLat([x.lng, x.lat]).addTo(map));
     });
@@ -944,8 +958,12 @@
         siteMarkers.forEach(function (m) { m.remove(); });
         siteMarkers = [];
         placeSites('hr', j && j.heritage);
+        var th = ((j && j.threats) || []).filter(function (x) { return THREAT_NAME[x.id]; });
+        th.forEach(function (x) { x.name = THREAT_NAME[x.id]; });
+        placeSites('th', th);
+        placeNiDot(!th.some(function (x) { return x.id === 'NULLISLAND_EGG'; }));
       })
-      .catch(function () {});
+      .catch(function () { placeNiDot(true); });
   }
 
   function closeBurger() {
