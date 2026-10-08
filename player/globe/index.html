@@ -332,6 +332,12 @@
       .panel { left: 16px; right: 16px; width: auto; }
       .hint { display: none; }
       .gnext { bottom: max(16px, env(safe-area-inset-bottom)); }
+      /* 1009 마스터 "모바일쪽 이클립스 체험판 텍스트가 닉네임입력란을 가리네": 좁은 화면에서는 표식을 한 줄로 눕혀 검색창 위에 두고, 검색창·메뉴를 그만큼 내린다 */
+      .ecltag { top: max(66px, calc(env(safe-area-inset-top) + 54px)); left: 16px; right: 16px; padding: 5px 12px 6px; border-radius: 10px; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .ecltag b { display: inline; margin-right: 8px; }
+      .ecltag span, .ecltag i { font-size: 13px; }
+      body.ecl-crescent .panel, body.ecl-eclipse .panel, body.ecl-half .panel,
+      body.ecl-crescent .bmenu, body.ecl-eclipse .bmenu, body.ecl-half .bmenu { top: max(106px, calc(env(safe-area-inset-top) + 94px)); }
     }
   </style>
 </head>
