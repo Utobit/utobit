@@ -248,8 +248,8 @@
     body.ecl-near .eclveil, body.ecl-near .ecl, body.ecl-near .eclshade { opacity: 0 !important; transition: opacity .6s; }
     body.ecl-crescent .eclveil, body.ecl-eclipse .eclveil, body.ecl-half .eclveil { display: block; }
     body.ecl-eclipse  { --a1: rgba(140, 60, 215, .62); --a2: rgba(190, 80, 175, .46); --a3: rgba(85, 80, 225, .5);  --aop: .8; }   /* 1009 "살짝 눈 쨍하다" — 밝기·채도 낮춤 */
-    body.ecl-half     { --a1: rgba(100, 90, 245, .8);  --a2: rgba(160, 120, 255, .65); --a3: rgba(70, 160, 255, .6);  --aop: .7; }
-    body.ecl-crescent { --a1: rgba(130, 90, 225, .6);  --a2: rgba(210, 160, 255, .45); --a3: rgba(245, 220, 168, .4); --aop: .5; }
+    body.ecl-half     { --a1: rgba(140, 60, 215, .62); --a2: rgba(190, 80, 175, .46); --a3: rgba(85, 80, 225, .5);  --aop: .6; }   /* 반월 = 이클립스와 같은 빛, 조금 약하게 */
+    body.ecl-crescent { --a1: rgba(140, 60, 215, .62); --a2: rgba(190, 80, 175, .46); --a3: rgba(85, 80, 225, .5);  --aop: .5; }   /* 예열 = 이클립스와 같은 빛, 약하게 */
     /* 1009 마스터 "뭐냐 렉": 큰 그림에 흐림 필터·겹침 혼합을 걸고 돌리던 것이 원인 — 필터·혼합 없이, 고리 모양으로 미리 잘린 그림을 돌리기만 한다 */
     .eclveil i { position: absolute; left: 50%; top: var(--gy); width: calc(var(--gr) * 3.6); height: calc(var(--gr) * 3.6); margin: calc(var(--gr) * -1.8) 0 0 calc(var(--gr) * -1.8); border-radius: 50%;
       opacity: var(--aop); will-change: transform, opacity;
@@ -267,8 +267,8 @@
        지구보다 더 큰 달이 지구에 충돌하려는 느낌. 세계와 세계가 만나는 느낌"). 지구 정북(12시)에서 지구보다 큰 검은 구체가 내려와 있고, 위쪽 대부분은 화면 밖이다.
        지구와는 닿지 않고 틈이 남는다. 단계가 깊을수록 크고 가깝다: 예보(멀리·작게) → 반월 → 이클립스(지구보다 크게·바짝).
        --ms = 달 반지름 ÷ 지구 반지름, --mgap = 틈 ÷ 지구 반지름. 서로 비추는 빛: 달 아래쪽 면에는 지구 둘레의 자줏빛, 지구 꼭대기에는 달그림자. */
-    body.ecl-crescent { --ms: .55; --mgap: .8; }
-    body.ecl-half     { --ms: 1.0; --mgap: .6; }
+    body.ecl-crescent { --ms: 1.0; --mgap: .95; }   /* 예열 = 멀리서 다가오는 중 */
+    body.ecl-half     { --ms: 1.2; --mgap: .7; }   /* 반월 = 물러나는 중 */
     body.ecl-eclipse  { --ms: 1.5; --mgap: .45; }   /* 1009 "달 너무 가까이 내려옴" → "조금 더 멀리" — 틈 .1 → .3 → .45(지구 반지름의 45%) */
     .ecl { left: 50%; top: calc(var(--gy) - var(--gr) * (1 + var(--mgap) + 2 * var(--ms))); margin-left: calc(var(--gr) * var(--ms) * -1); z-index: 2; display: none; pointer-events: none;   /* 제목·검색 칸(z 5)보다 뒤 */
       opacity: 0; will-change: transform; transform-origin: 50% 100%; }
@@ -283,10 +283,10 @@
         radial-gradient(circle at 50% 78%, var(--m1) 0, var(--m2) 26%, var(--m3) 52%, var(--m4) 80%);
       box-shadow: inset 0 -.012em .03em var(--mrim, rgba(215, 180, 255, .34)), inset 0 .1em .16em rgba(0, 0, 0, .8), 0 0 .012em .003em var(--mg), 0 0 .06em var(--mg), 0 0 .16em var(--mg2, transparent); }
     body.ecl-eclipse  { --m1: #160a0c; --m2: #0a0405; --m3: #030102; --m4: #000; --mg: rgba(255, 60, 45, .75); --mr: rgba(170, 100, 240, .3); --mrim: rgba(255, 110, 85, .55); --mg2: rgba(220, 30, 30, .35); }   /* 이클립스의 달 = 검은 달 + 붉은 코로나(1009 마스터 "검은달 + 붉은 코로나") — 아래쪽 면에는 지구의 보랏빛이 옅게 비친다 */
-    body.ecl-half     { --m1: #c9d3f2; --m2: #7b86b8; --m3: #2d3158; --m4: #0b0c22; --mg: rgba(170, 200, 255, .4); --mr: rgba(150, 170, 255, .3); }
-    body.ecl-crescent { --m1: #e9d7ac; --m2: #9a876a; --m3: #2f2740; --m4: #0c0a1c; --mg: rgba(245, 220, 168, .3); --mr: rgba(170, 140, 255, .25); }
+    body.ecl-half     { --m1: #160a0c; --m2: #0a0405; --m3: #030102; --m4: #000; --mg: rgba(255, 60, 45, .55); --mr: rgba(170, 100, 240, .26); --mrim: rgba(255, 110, 85, .45); --mg2: rgba(220, 30, 30, .25); }
+    body.ecl-crescent { --m1: #160a0c; --m2: #0a0405; --m3: #030102; --m4: #000; --mg: rgba(255, 60, 45, .45); --mr: rgba(170, 100, 240, .22); --mrim: rgba(255, 110, 85, .4); --mg2: rgba(220, 30, 30, .2); }
     /* 이클립스의 달 가장자리 빛: 가만히 있는 얇은 빛 테 한 겹이 천천히 밝아졌다 어두워진다(돌리지 않는다 — 달이 화면보다 커서 돌리면 무겁다) */
-    body.ecl-eclipse .eclmoon::before { content: ''; position: absolute; inset: -1.2%; border-radius: 50%; z-index: -1;
+    .eclmoon::before { content: ''; position: absolute; inset: -1.2%; border-radius: 50%; z-index: -1;
       background: radial-gradient(circle, transparent 47.6%, rgba(255, 90, 60, .85) 48.6%, rgba(240, 50, 45, .4) 49.4%, transparent 50%); animation: coronab 6.5s ease-in-out infinite alternate; }
     @keyframes coronab { from { opacity: .55; } to { opacity: 1; } }
     /* 달그림자: 지구 꼭대기에 드리운 흐린 어둠 — 달이 클수록 넓다 */
@@ -305,8 +305,6 @@
     .ecltag span { font-size: 14px; font-weight: 800; }
     .ecltag i { font-style: normal; font-size: 14px; font-weight: 800; font-variant-numeric: tabular-nums; margin-left: 6px; }
     .ecltag i:empty { display: none; }
-    body.ecl-half .ecltag { color: #dfe9ff; background: rgba(8, 10, 34, .74); border-color: rgba(150, 185, 255, .5); }
-    body.ecl-crescent .ecltag { color: #f7e6bf; background: rgba(16, 10, 30, .74); border-color: rgba(245, 220, 168, .45); }
     @media (prefers-reduced-motion: reduce) { .eclveil i, .eclmoon::before, .eclmoon::after, .ecl, .eclshade { animation: none !important; } body.ecl-on .ecl { opacity: 1; } .eclveil, .eclshade { transition: none; } }
     .hint { bottom: max(34px, env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%);
       font-size: 11px; letter-spacing: .1em; color: var(--dim); pointer-events: none; white-space: nowrap; }
@@ -559,7 +557,7 @@
           root.setProperty('--gr', gr.toFixed(1) + 'px');
           root.setProperty('--gy', gy.toFixed(1) + 'px');
           // "달은 하단 20%만 보이면 됨": 이클립스의 달은 보이는 높이(달 밑동 = 지구 꼭대기 − 틈)의 5배가 지름. 다만 지구보다는 늘 크게(작은 화면에서는 보이는 몫이 20%보다 줄어든다)
-          if (eclPhase === 'eclipse') document.body.style.setProperty('--ms', Math.max(1.5, 2.5 * (gy - gr * 1.45) / gr).toFixed(3));
+          if (eclPhase) document.body.style.setProperty('--ms', Math.max(1.5, 2.5 * (gy - gr * 1.45) / gr).toFixed(3));
           document.body.classList.toggle('ecl-near', gy - gr * 1.45 < 24);                       // 지구 위에 달이 설 자리가 없으면(가까이 확대) 달·띠를 끈다
         };
         window.addEventListener('resize', ring);
@@ -626,12 +624,12 @@
   var ECL_BASE = { fog: [[60, 40, 140], [120, 80, 255], 0.85], land: [26, 16, 70], water: [6, 4, 24], line: [150, 130, 255, .55] };   // paintGalaxy·setFog 의 평소 값
   var ECL_LOOK = {
     eclipse:  { fog: [[74, 22, 120], [205, 96, 240], 0.6], land: [33, 16, 64], water: [7, 3, 26],  line: [214, 140, 255, .6] },
-    half:     { fog: [[44, 62, 150], [150, 186, 255], 0.8], land: [20, 26, 74], water: [5, 6, 26],  line: [160, 190, 255, .5] },
-    crescent: { fog: [[74, 52, 130], [240, 210, 150], 0.9], land: [28, 18, 70], water: [6, 4, 24],  line: [245, 220, 168, .45] }
+    half:     { fog: [[70, 28, 126], [180, 92, 244], 0.7], land: [31, 16, 66], water: [7, 3, 25],  line: [196, 137, 255, .58] },   // 이클립스 쪽으로 70%
+    crescent: { fog: [[66, 32, 131], [158, 87, 248], 0.74], land: [29, 16, 67], water: [6, 4, 25],  line: [179, 134, 255, .57] }    // 이클립스 쪽으로 45%
   };
   function paintEclipse(k) {
     if (!eclPhase || !map) return;
-    var to = ECL_LOOK[eclPhase], from = ECL_BASE;
+    var to = ECL_LOOK.eclipse, from = ECL_BASE;   // 사흘 내내 같은 빛깔
     var mix = function (a, b) { return a.map(function (v, i) { return v + (b[i] - v) * k; }); };
     var rgb = function (c) { return 'rgb(' + Math.round(c[0]) + ', ' + Math.round(c[1]) + ', ' + Math.round(c[2]) + ')'; };
     var line = mix(from.line, to.line), land = rgb(mix(from.land, to.land)), water = rgb(mix(from.water, to.water));
@@ -663,7 +661,9 @@
     }, 1800);
   }
   if (eclPhase) {
-    document.body.classList.add('ecl-' + eclPhase);
+    // 1009 마스터("나한테 보여준거랑 똑같은 디자인으로. 3일동안 같은 형태여야해"): 모습은 사흘 내내 확정안 하나(검은 달 + 붉은 코로나 · 지구 둘레 보랏빛).
+    //  단계(예열·이클립스·반월)에 따라 바뀌는 것은 오른쪽 위 글(단계 이름 : 남은 시간)뿐이다. 단계별 다른 모습은 쓰지 않는다.
+    document.body.classList.add('ecl-eclipse');
     $('ecl-title').textContent = T.eclTitle;
     $('ecl-phase').textContent = T[{ crescent: 'eclCrescent', eclipse: 'eclEclipse', half: 'eclHalf' }[eclPhase]];
     // 남은 시간 = 지금 단계가 끝나는 시각까지(1초마다). 단계가 끝나면 페이지를 다시 열어 다음 단계 모습으로 넘어간다.
