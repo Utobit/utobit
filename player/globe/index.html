@@ -119,6 +119,7 @@
     .equip h3 { font-size: 11px; font-weight: 700; letter-spacing: .08em; color: var(--muted); margin-bottom: 8px; }
     .equip.latent li { padding: 7px 10px; }
     .equip.latent li b { flex: none; min-width: 22px; color: #9ee37d; font-size: 12px; }
+    .equip.latent li img { flex: none; width: 32px; height: 32px; border-radius: 7px; object-fit: cover; background: rgba(255, 255, 255, .06); }
     .equip ul { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
     .equip li { display: flex; align-items: center; gap: 8px; padding: 6px 9px 6px 6px; border-radius: 8px;
       background: rgba(150, 130, 255, .07); border: 1px solid var(--line); font-size: 12px; min-width: 0; }
@@ -598,6 +599,10 @@
     .then(function (a) { (a || []).forEach(function (id) { iconIds[id] = true; }); })
     .catch(function () {});
 
+  // 스킬 아이콘 표(skills/index.json = { 스킬 id: 파일 이름 } — tools/export_globe_skill_icons.py 가 게임과 같은 규칙으로 만든다). 못 받으면 아이콘 없이 이름만.
+  var skillIcons = {};
+  fetch('skills/index.json').then(function (r) { return r.ok ? r.json() : {}; }).then(function (m) { skillIcons = m || {}; }).catch(function () {});
+
   function loadEquip(row) {
     var mine = cardSeq;
     $('c-equip').hidden = true;
@@ -632,6 +637,12 @@
         lu.textContent = '';
         (lat || []).forEach(function (sk) {
           var li = el('li');
+          if (skillIcons[sk.id]) {                 // 1009 마스터 "GM 잠재능력 아이콘도 인게임과 동일한걸로" — 게임과 같은 그림(전용 그림, 없으면 종류별 공용 그림)
+            var simg = document.createElement('img');
+            simg.src = 'skills/' + encodeURIComponent(skillIcons[sk.id]);
+            simg.alt = ''; simg.width = 32; simg.height = 32;
+            li.appendChild(simg);
+          }
           li.appendChild(el('b', null, sk.grade || ''));
           li.appendChild(el('span', null, sk.name));
           li.title = sk.name;
