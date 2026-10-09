@@ -206,6 +206,11 @@
     .site.th { border-color: #ff5a78; box-shadow: 0 0 10px rgba(255, 60, 95, .65); }
     .nidot { width: 4px; height: 4px; border-radius: 50%; background: #fff; opacity: .85; box-shadow: 0 0 5px rgba(255, 255, 255, .9); pointer-events: none; }
     .ranks button.sel { background: rgba(94, 230, 255, .16); box-shadow: inset 0 0 0 1px var(--cyan); }
+    /* 1010 마스터("햄버거 - 범람게이트 눌러서 1~10, 11~20 이런식으로 나열하고, 유저가 눌러서 해당레벨대 게이트 찾을 수 있게"): 레벨대 탭 + 묶음 머리글 */
+    .tabs.bands { flex-wrap: wrap; gap: 5px; }
+    .tabs.bands button { flex: 0 0 auto; height: 28px; padding: 0 10px; font-size: 12px; }
+    .ranks .gband { padding: 8px 10px 4px; font-size: 11px; font-weight: 800; letter-spacing: .04em; color: var(--muted); }
+    .fg.off { display: none; }
     .fg svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible;
       filter: drop-shadow(0 0 5px rgba(255, 60, 95, .95)) drop-shadow(0 0 14px rgba(255, 40, 80, .55)); }
     .fg .beam { animation: beam 2.6s ease-in-out infinite; }
@@ -394,6 +399,7 @@
   <div class="hud glass drawer" id="gdrawer" hidden>
     <h2 data-t="gTitle"></h2>
     <p class="gnote" id="gnote"></p>
+    <div class="tabs bands" id="gbands"></div>
     <div class="ranks" id="gates"></div>
   </div>
   <div class="hud glass drawer" id="drawer" hidden>
@@ -1045,13 +1051,34 @@
     if (window.innerWidth <= 560) toggleGates(false);   // 좁은 화면은 서랍이 지도를 덮는다
   }
 
+  // 1010: 레벨대 = (레벨-1)÷10 → 0:1~10, 1:11~20 … 글자는 '레벨 1–10'(숫자라 언어팩 없음). gateBand = -1 전체 / n 그 레벨대만(목록·지도 표식 둘 다)
+  var gateBand = -1;
+  function bandOf(g) { return Math.max(0, Math.floor(((g.level || 1) - 1) / 10)); }
+  function bandLabel(b) { return T.level + ' ' + (b * 10 + 1) + '–' + (b * 10 + 10); }
+  function drawBands() {
+    var box = $('gbands');
+    box.textContent = '';
+    if (!floods || !floods.length) return;
+    var present = {};
+    floods.forEach(function (g) { present[bandOf(g)] = (present[bandOf(g)] || 0) + 1; });
+    Object.keys(present).map(Number).sort(function (a, b) { return a - b; }).forEach(function (b) {
+      var btn = el('button', gateBand === b ? 'on' : '', bandLabel(b) + ' · ' + present[b]);
+      btn.type = 'button';
+      btn.addEventListener('click', function () { gateBand = gateBand === b ? -1 : b; drawGates(); placeGateMarkers(); });
+      box.appendChild(btn);
+    });
+  }
   function drawGates() {
     var box = $('gates');
     box.textContent = '';
     $('gnote').textContent = gateKey ? T.gNoteKey(floodMe) : T.gNoteNoKey;
+    drawBands();
     if (floods == null) { box.appendChild(el('div', 'msg', T.searching)); return; }
     if (!floods.length) { box.appendChild(el('div', 'msg', T.gEmpty)); return; }
-    floods.forEach(function (g) {
+    var lastBand = -1;
+    floods.slice().sort(function (a, b) { return bandOf(a) - bandOf(b) || (b.at || 0) - (a.at || 0); }).forEach(function (g) {
+      if (gateBand >= 0 && bandOf(g) !== gateBand) return;
+      if (gateBand < 0 && bandOf(g) !== lastBand) { lastBand = bandOf(g); box.appendChild(el('div', 'gband', bandLabel(lastBand))); }
       var b = el('button');
       b.type = 'button';
       b.appendChild(el('span', 'gr', g.grade));
@@ -1092,7 +1119,7 @@
     if (!map || !floods) return;
     floodMarkers.forEach(function (m) { m.remove(); });
     floodMarkers = floods.map(function (g) {
-      var dot = el('div', 'fg');
+      var dot = el('div', 'fg' + (gateBand >= 0 && bandOf(g) !== gateBand ? ' off' : ''));   // 1010: 고른 레벨대 밖 표식은 숨김
       dot.innerHTML = gateSvg(g.flood);                  // 고정 문자열 조합(서버 값은 단계 숫자만 — 1~3 으로 자른다)
       dot.appendChild(el('i', 'fgb', g.grade));
       dot.title = cityName(g) + ' · ' + g.name + ' · ' + T.gStage(g.flood || 1);
