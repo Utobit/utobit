@@ -553,7 +553,6 @@
     });
     map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'bottom-right');
     map.on('style.load', function () {
-      styleReady = true; placeGateMarkers();   // 1010: 범람 게이트 레이어는 스타일이 준비된 뒤에만 올릴 수 있다
       map.setFog({
         color: 'rgb(60, 40, 140)', 'high-color': 'rgb(120, 80, 255)', 'horizon-blend': 0.06,
         'space-color': 'rgba(5, 3, 15, 0)', 'star-intensity': 0.85
@@ -1122,70 +1121,20 @@
     return GATE_SVG.replace('BEAMS', s);
   }
 
-  // 1010 마스터("범람게이트는 실제로 서버에 수천개가 떠있을 수 있음; 지구본에 다표기가 되어야함" → "디자인은 바꾸라고 한적 없는데"):
-  //  표식 = 원래 빛기둥 SVG 마커 그대로. DOM 마커가 DOM_LIMIT 개를 넘을 때만 같은 SVG 를 그림으로 구워 이미지 레이어로 올린다(모양 동일, 물결 움직임만 없음).
-  var DOM_LIMIT = 400, floodLayerReady = false, styleReady = false, gateImageReady = false;
-  function floodGeo() {
-    return { type: 'FeatureCollection', features: (floods || []).map(function (g, i) {
-      return { type: 'Feature', id: i, geometry: { type: 'Point', coordinates: [g.lng, g.lat] },
-               properties: { i: i, grade: g.grade || 'F', band: bandOf(g) } };
-    }) };
-  }
-  function bakeGateImage(done) {   // 빛기둥 SVG → 2배 해상도 그림(마커와 같은 44×64)
-    var svg = gateSvg(1).replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" width="88" height="128" ');
-    var img = new Image();
-    img.onload = function () {
-      var c = document.createElement('canvas'); c.width = 88; c.height = 128;
-      c.getContext('2d').drawImage(img, 0, 0, 88, 128);
-      try { if (!map.hasImage('flood-gate')) map.addImage('flood-gate', c.getContext('2d').getImageData(0, 0, 88, 128), { pixelRatio: 2 }); gateImageReady = true; } catch (e) { console.error('[globe] gate image', e); }
-      done();
-    };
-    img.onerror = function () { done(); };
-    img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
-  }
-  function ensureFloodLayer() {
-    if (!map || floodLayerReady || !styleReady || !gateImageReady) return false;
-    if (map.getSource('floods')) { floodLayerReady = true; return true; }
-    try {
-    map.addSource('floods', { type: 'geojson', data: floodGeo() });
-    map.addLayer({ id: 'floods-gate', type: 'symbol', source: 'floods',
-      layout: { 'icon-image': 'flood-gate', 'icon-anchor': 'bottom', 'icon-offset': [0, 11], 'icon-allow-overlap': true, 'icon-ignore-placement': true,
-                'text-field': ['get', 'grade'], 'text-size': 11, 'text-offset': [1.35, -3.6], 'text-allow-overlap': true, 'text-ignore-placement': true,
-                'text-font': ['DIN Pro Bold', 'Arial Unicode MS Bold'] },
-      paint: { 'text-color': '#ffffff', 'text-halo-color': '#8a0c30', 'text-halo-width': 1.2 } });
-    map.on('click', 'floods-gate', function (e) {
-      var f = e.features && e.features[0]; if (!f) return;
-      var g = floods && floods[f.properties.i]; if (g) openGate(g);
-    });
-    map.on('mouseenter', 'floods-gate', function () { map.getCanvas().style.cursor = 'pointer'; });
-    map.on('mouseleave', 'floods-gate', function () { map.getCanvas().style.cursor = ''; });
-    } catch (e) { console.error('[globe] flood layer', e); return false; }
-    floodLayerReady = true;
-    return true;
-  }
+  // 1010 마스터("수천개 대응은 수천개 된 다음에 하면 됨"): 표식은 종전 빛기둥 DOM 마커 그대로 — 개수가 많아지면 그때 이미지 레이어로 바꾼다.
   function placeGateMarkers() {
     if (!map || !floods) return;
     floodMarkers.forEach(function (m) { m.remove(); });
-    floodMarkers = [];
-    var useLayer = floods.length > DOM_LIMIT;
-    if (!useLayer) {   // 종전 그대로 — 빛기둥 DOM 마커
-      if (floodLayerReady) map.getSource('floods').setData({ type: 'FeatureCollection', features: [] });
-      floodMarkers = floods.map(function (g) {
-        var dot = el('div', 'fg' + (gateBand >= 0 && bandOf(g) !== gateBand ? ' off' : ''));   // 1010: 고른 레벨대 밖 표식은 숨김
-        dot.innerHTML = gateSvg(g.flood);                  // 고정 문자열 조합(서버 값은 단계 숫자만 — 1~3 으로 자른다)
-        dot.appendChild(el('i', 'fgb', g.grade));
-        dot.title = (cityName(g) ? cityName(g) + ' · ' : '') + g.name + ' · ' + T.gStage(g.flood || 1);
-        dot.addEventListener('click', function (e) { e.stopPropagation(); openGate(g); });
-        return new mapboxgl.Marker({ element: dot, anchor: 'bottom', offset: [0, 11] }).setLngLat([g.lng, g.lat]).addTo(map);
-      });
-      return;
-    }
-    if (!styleReady) return;                                            // style.load 때 다시 불린다
-    if (!gateImageReady) { bakeGateImage(placeGateMarkers); return; }   // 그림을 구운 뒤 다시
-    if (!ensureFloodLayer() && !floodLayerReady) return;
-    map.getSource('floods').setData(floodGeo());
-    map.setFilter('floods-gate', gateBand >= 0 ? ['==', ['get', 'band'], gateBand] : null);
+    floodMarkers = floods.map(function (g) {
+      var dot = el('div', 'fg' + (gateBand >= 0 && bandOf(g) !== gateBand ? ' off' : ''));   // 1010: 고른 레벨대 밖 표식은 숨김
+      dot.innerHTML = gateSvg(g.flood);                  // 고정 문자열 조합(서버 값은 단계 숫자만 — 1~3 으로 자른다)
+      dot.appendChild(el('i', 'fgb', g.grade));
+      dot.title = (cityName(g) ? cityName(g) + ' · ' : '') + g.name + ' · ' + T.gStage(g.flood || 1);
+      dot.addEventListener('click', function (e) { e.stopPropagation(); openGate(g); });
+      return new mapboxgl.Marker({ element: dot, anchor: 'bottom', offset: [0, 11] }).setLngLat([g.lng, g.lat]).addTo(map);
+    });
   }
+
   function loadFloods() {
     fetch(apiBase + '/globe?floods=1&lang=' + encodeURIComponent(LANG) + (gateKey ? '&k=' + encodeURIComponent(gateKey) : ''))
       .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
