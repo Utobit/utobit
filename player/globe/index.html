@@ -1046,7 +1046,7 @@
     if (g.server !== false) box.appendChild(st);   // 1010: 유저 게이트가 범람한 것은 등록 대상이 아니다(위치만 본다)
     if (map) {
       map.flyTo({ center: [g.lng, g.lat], zoom: 12.5, duration: still ? 0 : 3000, essential: true });
-      floodPopup = new mapboxgl.Popup({ offset: 14, maxWidth: '270px' }).setLngLat([g.lng, g.lat]).setDOMContent(box).addTo(map);
+      floodPopup = new mapboxgl.Popup({ offset: 62, maxWidth: '270px' }).setLngLat([g.lng, g.lat]).setDOMContent(box).addTo(map);
     }
     if (g.server !== false) claimGate(g, st);
     if (window.innerWidth <= 560) toggleGates(false);   // 좁은 화면은 서랍이 지도를 덮는다
@@ -1122,48 +1122,70 @@
     return GATE_SVG.replace('BEAMS', s);
   }
 
-  // 1010 마스터("범람게이트는 실제로 서버에 수천개가 떠있을 수 있음; 지구본에 다표기가 되어야함"): 게이트마다 DOM 마커를 만들던 것(수백 개부터 느려짐)
-  //  → GeoJSON 소스 + 원 레이어 2겹(붉은 번짐 + 핵) + 등급 글자 레이어. 수천 개도 한 번에 그린다. 레벨대 탭은 레이어 필터로.
-  var floodLayerReady = false, styleReady = false;
+  // 1010 마스터("범람게이트는 실제로 서버에 수천개가 떠있을 수 있음; 지구본에 다표기가 되어야함" → "디자인은 바꾸라고 한적 없는데"):
+  //  표식 = 원래 빛기둥 SVG 마커 그대로. DOM 마커가 DOM_LIMIT 개를 넘을 때만 같은 SVG 를 그림으로 구워 이미지 레이어로 올린다(모양 동일, 물결 움직임만 없음).
+  var DOM_LIMIT = 400, floodLayerReady = false, styleReady = false, gateImageReady = false;
   function floodGeo() {
     return { type: 'FeatureCollection', features: (floods || []).map(function (g, i) {
       return { type: 'Feature', id: i, geometry: { type: 'Point', coordinates: [g.lng, g.lat] },
                properties: { i: i, grade: g.grade || 'F', band: bandOf(g) } };
     }) };
   }
+  function bakeGateImage(done) {   // 빛기둥 SVG → 2배 해상도 그림(마커와 같은 44×64)
+    var svg = gateSvg(1).replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" width="88" height="128" ');
+    var img = new Image();
+    img.onload = function () {
+      var c = document.createElement('canvas'); c.width = 88; c.height = 128;
+      c.getContext('2d').drawImage(img, 0, 0, 88, 128);
+      try { if (!map.hasImage('flood-gate')) map.addImage('flood-gate', c.getContext('2d').getImageData(0, 0, 88, 128), { pixelRatio: 2 }); gateImageReady = true; } catch (e) { console.error('[globe] gate image', e); }
+      done();
+    };
+    img.onerror = function () { done(); };
+    img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+  }
   function ensureFloodLayer() {
-    if (!map || floodLayerReady || !styleReady) return false;
+    if (!map || floodLayerReady || !styleReady || !gateImageReady) return false;
     if (map.getSource('floods')) { floodLayerReady = true; return true; }
     try {
     map.addSource('floods', { type: 'geojson', data: floodGeo() });
-    map.addLayer({ id: 'floods-glow', type: 'circle', source: 'floods',
-      paint: { 'circle-color': '#ff2d55', 'circle-opacity': 0.35, 'circle-blur': 0.9,
-               'circle-radius': ['interpolate', ['linear'], ['zoom'], 1, 7, 6, 12, 12, 22] } });
-    map.addLayer({ id: 'floods-dot', type: 'circle', source: 'floods',
-      paint: { 'circle-color': '#ffb3c0', 'circle-stroke-color': '#ff2d55', 'circle-stroke-width': 1.5,
-               'circle-radius': ['interpolate', ['linear'], ['zoom'], 1, 3, 6, 5, 12, 9] } });
-    map.addLayer({ id: 'floods-grade', type: 'symbol', source: 'floods', minzoom: 3.5,
-      layout: { 'text-field': ['get', 'grade'], 'text-size': 11, 'text-offset': [0, -1.3], 'text-allow-overlap': true, 'text-ignore-placement': true,
+    map.addLayer({ id: 'floods-gate', type: 'symbol', source: 'floods',
+      layout: { 'icon-image': 'flood-gate', 'icon-anchor': 'bottom', 'icon-offset': [0, 11], 'icon-allow-overlap': true, 'icon-ignore-placement': true,
+                'text-field': ['get', 'grade'], 'text-size': 11, 'text-offset': [1.35, -3.6], 'text-allow-overlap': true, 'text-ignore-placement': true,
                 'text-font': ['DIN Pro Bold', 'Arial Unicode MS Bold'] },
       paint: { 'text-color': '#ffffff', 'text-halo-color': '#8a0c30', 'text-halo-width': 1.2 } });
-    map.on('click', 'floods-dot', function (e) {
+    map.on('click', 'floods-gate', function (e) {
       var f = e.features && e.features[0]; if (!f) return;
       var g = floods && floods[f.properties.i]; if (g) openGate(g);
     });
-    map.on('mouseenter', 'floods-dot', function () { map.getCanvas().style.cursor = 'pointer'; });
-    map.on('mouseleave', 'floods-dot', function () { map.getCanvas().style.cursor = ''; });
-    } catch (e) { console.error('[globe] flood layer', e); return false; }   // 레이어가 실패해도 목록·검색은 그대로
+    map.on('mouseenter', 'floods-gate', function () { map.getCanvas().style.cursor = 'pointer'; });
+    map.on('mouseleave', 'floods-gate', function () { map.getCanvas().style.cursor = ''; });
+    } catch (e) { console.error('[globe] flood layer', e); return false; }
     floodLayerReady = true;
     return true;
   }
   function placeGateMarkers() {
     if (!map || !floods) return;
-    if (!ensureFloodLayer() && !floodLayerReady) return;   // 스타일 준비 전 — style.load 때 다시 불린다
+    floodMarkers.forEach(function (m) { m.remove(); });
+    floodMarkers = [];
+    var useLayer = floods.length > DOM_LIMIT;
+    if (!useLayer) {   // 종전 그대로 — 빛기둥 DOM 마커
+      if (floodLayerReady) map.getSource('floods').setData({ type: 'FeatureCollection', features: [] });
+      floodMarkers = floods.map(function (g) {
+        var dot = el('div', 'fg' + (gateBand >= 0 && bandOf(g) !== gateBand ? ' off' : ''));   // 1010: 고른 레벨대 밖 표식은 숨김
+        dot.innerHTML = gateSvg(g.flood);                  // 고정 문자열 조합(서버 값은 단계 숫자만 — 1~3 으로 자른다)
+        dot.appendChild(el('i', 'fgb', g.grade));
+        dot.title = (cityName(g) ? cityName(g) + ' · ' : '') + g.name + ' · ' + T.gStage(g.flood || 1);
+        dot.addEventListener('click', function (e) { e.stopPropagation(); openGate(g); });
+        return new mapboxgl.Marker({ element: dot, anchor: 'bottom', offset: [0, 11] }).setLngLat([g.lng, g.lat]).addTo(map);
+      });
+      return;
+    }
+    if (!styleReady) return;                                            // style.load 때 다시 불린다
+    if (!gateImageReady) { bakeGateImage(placeGateMarkers); return; }   // 그림을 구운 뒤 다시
+    if (!ensureFloodLayer() && !floodLayerReady) return;
     map.getSource('floods').setData(floodGeo());
-    var filter = gateBand >= 0 ? ['==', ['get', 'band'], gateBand] : null;
-    ['floods-glow', 'floods-dot', 'floods-grade'].forEach(function (id) { map.setFilter(id, filter); });
+    map.setFilter('floods-gate', gateBand >= 0 ? ['==', ['get', 'band'], gateBand] : null);
   }
-
   function loadFloods() {
     fetch(apiBase + '/globe?floods=1&lang=' + encodeURIComponent(LANG) + (gateKey ? '&k=' + encodeURIComponent(gateKey) : ''))
       .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
