@@ -28,6 +28,7 @@
       --gold: #ffd27a;
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body.bright { --space: #1b2a55; --panel: rgba(30, 44, 92, .72); }   /* 1011 밝은 판 미리보기(?bright=1): 우주 = 새벽 남색 */
     html, body { height: 100%; background: var(--space); color: var(--text); overflow: hidden;
       font-family: 'Inter', 'Noto Sans KR', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
     #map { position: fixed; inset: 0; }
@@ -439,6 +440,13 @@
   var params = new URLSearchParams(location.search);
   var apiBase = params.get('s') === 'test' ? API.test : API.live;
   var still = params.has('still');   // 시점 이동 연출 없이 바로(화면 점검용)
+  var bright = params.has('bright');   // 1011 밝은 판 미리보기(마스터 "스카이 박스랑 지구 둘다 밝은색 적용도 가능함?") — 확정 전엔 주소에 ?bright=1 을 붙였을 때만
+  if (bright) document.documentElement.classList.add('bright'), document.addEventListener('DOMContentLoaded', function () { document.body.classList.add('bright'); });
+  var GALAXY = bright
+    ? { bg: '#2a3f7f', water: '#1d2f66', land: '#4a5fae', a0: 'rgba(190, 205, 255, .7)', a1: 'rgba(190, 205, 255, .3)', road: 'rgba(140, 240, 255, .3)', text: '#eef1ff', halo: 'rgba(20, 30, 70, .85)',
+        fog: [[110, 135, 215], [185, 205, 255], 0.5], space: 'rgba(27, 42, 85, 0)' }
+    : { bg: '#120b33', water: '#060418', land: '#1a1046', a0: 'rgba(150, 130, 255, .55)', a1: 'rgba(150, 130, 255, .2)', road: 'rgba(94, 230, 255, .22)', text: '#b9aef0', halo: 'rgba(5, 3, 15, .85)',
+        fog: [[60, 40, 140], [120, 80, 255], 0.85], space: 'rgba(5, 3, 15, 0)' };
   // 이클립스 단계 = 게임과 같은 주간 일정(한국 시각 요일 고정 — 클라 EclipseSystem·서버 lambda_gate_raid.eclipse_phase 와 같은 식):
   //   금 = 예열(crescent, 토요일 0시까지) / 토 = 이클립스(일요일 0시까지) / 일 = 반월(half, 월요일 0시까지) / 월~목 = 없음.
   //   (1009 마스터 "금요일 24시간(예열), 토요일24시간(이클립스), 일요일 24시간(반월)" — 종전 수·목·금 예보에서 금요일만으로. 게임 EclipseSystem 과 같은 날 같이 바꿈)
@@ -557,8 +565,8 @@
     map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'bottom-right');
     map.on('style.load', function () {
       map.setFog({
-        color: 'rgb(60, 40, 140)', 'high-color': 'rgb(120, 80, 255)', 'horizon-blend': 0.06,
-        'space-color': 'rgba(5, 3, 15, 0)', 'star-intensity': 0.85
+        color: 'rgb(' + GALAXY.fog[0].join(', ') + ')', 'high-color': 'rgb(' + GALAXY.fog[1].join(', ') + ')', 'horizon-blend': 0.06,
+        'space-color': GALAXY.space, 'star-intensity': GALAXY.fog[2]
       });
       paintGalaxy();
       if (eclPhase) {
@@ -619,15 +627,15 @@
   function paintGalaxy() {
     map.getStyle().layers.forEach(function (l) {
       try {
-        if (l.type === 'background') map.setPaintProperty(l.id, 'background-color', '#120b33');
-        else if (l.id === 'water') map.setPaintProperty(l.id, 'fill-color', '#060418');
-        else if (l.type === 'fill' && /land|national-park|landuse/.test(l.id)) map.setPaintProperty(l.id, 'fill-color', '#1a1046');
-        else if (l.type === 'line' && /admin-0/.test(l.id)) map.setPaintProperty(l.id, 'line-color', 'rgba(150, 130, 255, .55)');
-        else if (l.type === 'line' && /admin-1/.test(l.id)) map.setPaintProperty(l.id, 'line-color', 'rgba(150, 130, 255, .2)');
-        else if (l.type === 'line' && /road|bridge|tunnel/.test(l.id)) map.setPaintProperty(l.id, 'line-color', 'rgba(94, 230, 255, .22)');
+        if (l.type === 'background') map.setPaintProperty(l.id, 'background-color', GALAXY.bg);
+        else if (l.id === 'water') map.setPaintProperty(l.id, 'fill-color', GALAXY.water);
+        else if (l.type === 'fill' && /land|national-park|landuse/.test(l.id)) map.setPaintProperty(l.id, 'fill-color', GALAXY.land);
+        else if (l.type === 'line' && /admin-0/.test(l.id)) map.setPaintProperty(l.id, 'line-color', GALAXY.a0);
+        else if (l.type === 'line' && /admin-1/.test(l.id)) map.setPaintProperty(l.id, 'line-color', GALAXY.a1);
+        else if (l.type === 'line' && /road|bridge|tunnel/.test(l.id)) map.setPaintProperty(l.id, 'line-color', GALAXY.road);
         else if (l.type === 'symbol') {
-          map.setPaintProperty(l.id, 'text-color', '#b9aef0');
-          map.setPaintProperty(l.id, 'text-halo-color', 'rgba(5, 3, 15, .85)');
+          map.setPaintProperty(l.id, 'text-color', GALAXY.text);
+          map.setPaintProperty(l.id, 'text-halo-color', GALAXY.halo);
         }
       } catch (e) { /* 스타일 판에 따라 없는 속성은 넘어간다 */ }
     });
@@ -636,13 +644,15 @@
   // 이클립스 단계의 지구 빛깔 — 대기(안개)·땅·바다·국경선. 단계가 없으면 손대지 않는다.
   // 이클립스 단계의 지구 빛깔 — 대기(안개)·땅·바다·국경선을 '평소 값 → 단계 값'으로 k(0~1)만큼 섞는다. k = 0 이면 평소 지구본 그대로.
   //  대기 번짐 폭(horizon-blend)은 평소 값 0.06 그대로 둔다 — 0.07 이상으로 올리면 이 확대 배율에서 안개가 지구 면 전체를 덮어 땅·글자가 사라진다(1009 확인).
-  var ECL_BASE = { fog: [[60, 40, 140], [120, 80, 255], 0.85], land: [26, 16, 70], water: [6, 4, 24], line: [150, 130, 255, .55] };   // paintGalaxy·setFog 의 평소 값
+  var hex = function (h) { return [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)]; };
+  var ECL_BASE = { fog: GALAXY.fog, land: hex(GALAXY.land), water: hex(GALAXY.water), line: bright ? [190, 205, 255, .7] : [150, 130, 255, .55] };   // paintGalaxy·setFog 의 평소 값
   var ECL_LOOK = {
     // 1011 마스터 "지구 오라도 보라색계열에서 하늘색 계열로" — 대기·땅·바다·국경선도 하늘빛으로(종전 보라 74,22,120 / 205,96,240)
     eclipse:  { fog: [[24, 76, 128], [110, 200, 245], 0.6], land: [16, 34, 62], water: [3, 11, 26],  line: [150, 210, 255, .6] },
     half:     { fog: [[35, 65, 132], [113, 164, 248], 0.7], land: [19, 29, 64], water: [4, 9, 25],  line: [150, 186, 255, .58] },   // 이클립스 쪽으로 70%
     crescent: { fog: [[44, 56, 135], [116, 134, 250], 0.74], land: [21, 26, 66], water: [5, 8, 25],  line: [150, 166, 255, .57] }    // 이클립스 쪽으로 45%
   };
+  if (bright) ECL_LOOK.eclipse = { fog: [[70, 150, 215], [170, 225, 255], 0.5], land: [60, 110, 170], water: [25, 70, 130], line: [200, 235, 255, .7] };   // 밝은 판: 이클립스도 밝은 하늘빛
   function paintEclipse(k) {
     if (!eclPhase || !map) return;
     var to = ECL_LOOK.eclipse, from = ECL_BASE;   // 사흘 내내 같은 빛깔
@@ -651,7 +661,7 @@
     var line = mix(from.line, to.line), land = rgb(mix(from.land, to.land)), water = rgb(mix(from.water, to.water));
     try {
       map.setFog({ color: rgb(mix(from.fog[0], to.fog[0])), 'high-color': rgb(mix(from.fog[1], to.fog[1])), 'horizon-blend': 0.06,
-        'space-color': 'rgba(5, 3, 15, 0)', 'star-intensity': from.fog[2] + (to.fog[2] - from.fog[2]) * k });
+        'space-color': GALAXY.space, 'star-intensity': from.fog[2] + (to.fog[2] - from.fog[2]) * k });
     } catch (e) {}
     map.getStyle().layers.forEach(function (l) {
       try {
