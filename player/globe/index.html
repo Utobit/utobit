@@ -289,13 +289,14 @@
         radial-gradient(circle at 50% 78%, var(--m1) 0, var(--m2) 26%, var(--m3) 52%, var(--m4) 80%);
       box-shadow: inset 0 -.012em .03em var(--mrim, rgba(215, 180, 255, .34)), inset 0 .1em .16em rgba(0, 0, 0, .8), 0 0 .012em .003em var(--mg), 0 0 .06em var(--mg), 0 0 .16em var(--mg2, transparent); }
     /* 1011 마스터(이클립스 정규 오픈) "붉은 달을 은달로" → "은달 눈아프다. 오라만 은색으로. 검은색 달에": 검은 구체는 그대로, 코로나·테만 붉은색 → 은색. 아래쪽 면에는 지구의 하늘빛이 옅게 비친다 */
-    body.ecl-eclipse  { --m1: #0e1014; --m2: #070809; --m3: #020203; --m4: #000; --mg: rgba(225, 235, 255, .7); --mr: rgba(110, 190, 245, .3); --mrim: rgba(235, 242, 255, .6); --mg2: rgba(190, 210, 255, .35); }
-    body.ecl-half     { --m1: #0e1014; --m2: #070809; --m3: #020203; --m4: #000; --mg: rgba(225, 235, 255, .5); --mr: rgba(110, 190, 245, .26); --mrim: rgba(235, 242, 255, .5); --mg2: rgba(190, 210, 255, .25); }
-    body.ecl-crescent { --m1: #0e1014; --m2: #070809; --m3: #020203; --m4: #000; --mg: rgba(225, 235, 255, .4); --mr: rgba(110, 190, 245, .22); --mrim: rgba(235, 242, 255, .45); --mg2: rgba(190, 210, 255, .2); }
+    /* 1011 마스터 "달 색상 조금만 더 자연스럽게": 새까만 구체 + 선처럼 날카로운 은테 → 짙은 흑회색 구체(아래 면에 지구 하늘빛이 살짝), 테는 낮게·넓게 번지는 은빛 */
+    body.ecl-eclipse  { --m1: #232830; --m2: #141719; --m3: #08090b; --m4: #020203; --mg: rgba(210, 222, 240, .42); --mr: rgba(120, 185, 235, .34); --mrim: rgba(225, 235, 250, .42); --mg2: rgba(180, 200, 235, .22); }
+    body.ecl-half     { --m1: #232830; --m2: #141719; --m3: #08090b; --m4: #020203; --mg: rgba(210, 222, 240, .32); --mr: rgba(120, 185, 235, .28); --mrim: rgba(225, 235, 250, .36); --mg2: rgba(180, 200, 235, .16); }
+    body.ecl-crescent { --m1: #232830; --m2: #141719; --m3: #08090b; --m4: #020203; --mg: rgba(210, 222, 240, .26); --mr: rgba(120, 185, 235, .24); --mrim: rgba(225, 235, 250, .32); --mg2: rgba(180, 200, 235, .12); }
     /* 이클립스의 달 가장자리 빛: 가만히 있는 얇은 빛 테 한 겹이 천천히 밝아졌다 어두워진다(돌리지 않는다 — 달이 화면보다 커서 돌리면 무겁다) */
-    .eclmoon::before { content: ''; position: absolute; inset: -1.2%; border-radius: 50%; z-index: -1;
-      background: radial-gradient(circle, transparent 47.6%, rgba(240, 245, 255, .85) 48.6%, rgba(200, 215, 250, .4) 49.4%, transparent 50%); animation: coronab 6.5s ease-in-out infinite alternate; }
-    @keyframes coronab { from { opacity: .55; } to { opacity: 1; } }
+    .eclmoon::before { content: ''; position: absolute; inset: -2.4%; border-radius: 50%; z-index: -1;
+      background: radial-gradient(circle, transparent 46.6%, rgba(235, 242, 255, .5) 47.8%, rgba(205, 220, 245, .22) 48.8%, rgba(190, 210, 240, .08) 49.6%, transparent 50%); animation: coronab 6.5s ease-in-out infinite alternate; }
+    @keyframes coronab { from { opacity: .7; } to { opacity: 1; } }
     /* 달그림자: 지구 꼭대기에 드리운 흐린 어둠 — 달이 클수록 넓다 */
     .eclshade { position: fixed; z-index: 1; left: 50%; top: calc(var(--gy) - var(--gr) * .995); width: calc(var(--gr) * min(1.7, .7 + .55 * var(--ms))); height: calc(var(--gr) * min(.62, .3 + .22 * var(--ms)));
       margin-left: calc(var(--gr) * min(1.7, .7 + .55 * var(--ms)) * -.5); border-radius: 50%; pointer-events: none; display: none; transition: opacity .6s;
