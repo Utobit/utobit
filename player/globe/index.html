@@ -287,12 +287,13 @@
         radial-gradient(ellipse 62% 30% at 50% 103%, var(--mr), transparent 74%),   /* 지구에서 비쳐 든 빛 — 지구를 향한 아래쪽 면 */
         radial-gradient(circle at 50% 78%, var(--m1) 0, var(--m2) 26%, var(--m3) 52%, var(--m4) 80%);
       box-shadow: inset 0 -.012em .03em var(--mrim, rgba(215, 180, 255, .34)), inset 0 .1em .16em rgba(0, 0, 0, .8), 0 0 .012em .003em var(--mg), 0 0 .06em var(--mg), 0 0 .16em var(--mg2, transparent); }
-    body.ecl-eclipse  { --m1: #160a0c; --m2: #0a0405; --m3: #030102; --m4: #000; --mg: rgba(255, 60, 45, .75); --mr: rgba(170, 100, 240, .3); --mrim: rgba(255, 110, 85, .55); --mg2: rgba(220, 30, 30, .35); }   /* 이클립스의 달 = 검은 달 + 붉은 코로나(1009 마스터 "검은달 + 붉은 코로나") — 아래쪽 면에는 지구의 보랏빛이 옅게 비친다 */
-    body.ecl-half     { --m1: #160a0c; --m2: #0a0405; --m3: #030102; --m4: #000; --mg: rgba(255, 60, 45, .55); --mr: rgba(170, 100, 240, .26); --mrim: rgba(255, 110, 85, .45); --mg2: rgba(220, 30, 30, .25); }
-    body.ecl-crescent { --m1: #160a0c; --m2: #0a0405; --m3: #030102; --m4: #000; --mg: rgba(255, 60, 45, .45); --mr: rgba(170, 100, 240, .22); --mrim: rgba(255, 110, 85, .4); --mg2: rgba(220, 30, 30, .2); }
+    /* 1011 마스터 "붉은 달을 은달로"(이클립스 정규 오픈): 검은 달 + 붉은 코로나 → 은빛 달 — 은회색 구체(지구 쪽 아래 면이 밝고 위로 갈수록 어둡게), 희푸른 은빛 테. 아래쪽 면에는 지구의 보랏빛이 옅게 비친다 */
+    body.ecl-eclipse  { --m1: #e4e9f2; --m2: #b9c2d0; --m3: #7f8a9b; --m4: #3a414d; --mg: rgba(225, 235, 255, .7); --mr: rgba(170, 100, 240, .3); --mrim: rgba(245, 248, 255, .7); --mg2: rgba(190, 205, 255, .35); }
+    body.ecl-half     { --m1: #e4e9f2; --m2: #b9c2d0; --m3: #7f8a9b; --m4: #3a414d; --mg: rgba(225, 235, 255, .5); --mr: rgba(170, 100, 240, .26); --mrim: rgba(245, 248, 255, .55); --mg2: rgba(190, 205, 255, .25); }
+    body.ecl-crescent { --m1: #e4e9f2; --m2: #b9c2d0; --m3: #7f8a9b; --m4: #3a414d; --mg: rgba(225, 235, 255, .4); --mr: rgba(170, 100, 240, .22); --mrim: rgba(245, 248, 255, .45); --mg2: rgba(190, 205, 255, .2); }
     /* 이클립스의 달 가장자리 빛: 가만히 있는 얇은 빛 테 한 겹이 천천히 밝아졌다 어두워진다(돌리지 않는다 — 달이 화면보다 커서 돌리면 무겁다) */
     .eclmoon::before { content: ''; position: absolute; inset: -1.2%; border-radius: 50%; z-index: -1;
-      background: radial-gradient(circle, transparent 47.6%, rgba(255, 90, 60, .85) 48.6%, rgba(240, 50, 45, .4) 49.4%, transparent 50%); animation: coronab 6.5s ease-in-out infinite alternate; }
+      background: radial-gradient(circle, transparent 47.6%, rgba(240, 245, 255, .85) 48.6%, rgba(200, 215, 250, .4) 49.4%, transparent 50%); animation: coronab 6.5s ease-in-out infinite alternate; }
     @keyframes coronab { from { opacity: .55; } to { opacity: 1; } }
     /* 달그림자: 지구 꼭대기에 드리운 흐린 어둠 — 달이 클수록 넓다 */
     .eclshade { position: fixed; z-index: 1; left: 50%; top: calc(var(--gy) - var(--gr) * .995); width: calc(var(--gr) * min(1.7, .7 + .55 * var(--ms))); height: calc(var(--gr) * min(.62, .3 + .22 * var(--ms)));
@@ -481,7 +482,7 @@
     gDone: '등록됨', gGone: '이미 닫힌 게이트입니다.', gBadKey: '계정을 확인하지 못했습니다. 게임에서 지구본을 다시 열어 주세요.',
     gLine: function (g) { return g.grade + '급 · Lv.' + g.level; }, gStage: function (n) { return '범람 ' + n + '단계'; },
     menuOpen: '메뉴', guideTitle: '시스템 안내서', langTitle: '언어',
-    stadium: '스타디움', heritage: '유적지', firstBy: '최초 발견자', gNext: '다음 게이트 등장까지', eclCrescent: '예보', eclEclipse: '이클립스', eclHalf: '반월', eclTitle: '이클립스 체험판',
+    stadium: '스타디움', heritage: '유적지', firstBy: '최초 발견자', gNext: '다음 게이트 등장까지', eclCrescent: '예보', eclEclipse: '이클립스', eclHalf: '반월', eclTitle: '이클립스',
     threat: '위협지', nullIsland: '널 아일랜드', latent: '개방한 잠재능력'
   } : {
     ph: 'Nickname or #hunter number', go: 'Search', level: 'LEVEL', stat: 'TOTAL STATS', power: 'COMBAT POWER',
@@ -502,7 +503,7 @@
     gDone: 'Added', gGone: 'This gate has already closed.', gBadKey: 'Could not verify your account. Reopen the globe from the game.',
     gLine: function (g) { return 'Grade ' + g.grade + ' · Lv.' + g.level; }, gStage: function (n) { return 'Flood stage ' + n; },
     menuOpen: 'Menu', guideTitle: 'SYSTEM GUIDE', langTitle: 'LANGUAGE',
-    stadium: 'Stadium', heritage: 'Heritage site', firstBy: 'First discovered by', gNext: 'Next gate in', eclCrescent: 'Forecast', eclEclipse: 'Eclipse', eclHalf: 'Half Moon', eclTitle: 'Eclipse Trial',
+    stadium: 'Stadium', heritage: 'Heritage site', firstBy: 'First discovered by', gNext: 'Next gate in', eclCrescent: 'Forecast', eclEclipse: 'Eclipse', eclHalf: 'Half Moon', eclTitle: 'Eclipse',
     threat: 'Threat site', nullIsland: 'Null Island', latent: 'LATENT ABILITIES UNLOCKED'
   };
 
