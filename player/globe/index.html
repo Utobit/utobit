@@ -252,9 +252,10 @@
     body.ecl-on .eclveil { opacity: 1; }
     body.ecl-near .eclveil, body.ecl-near .ecl, body.ecl-near .eclshade { opacity: 0 !important; transition: opacity .6s; }
     body.ecl-crescent .eclveil, body.ecl-eclipse .eclveil, body.ecl-half .eclveil { display: block; }
-    body.ecl-eclipse  { --a1: rgba(140, 60, 215, .62); --a2: rgba(190, 80, 175, .46); --a3: rgba(85, 80, 225, .5);  --aop: .8; }   /* 1009 "살짝 눈 쨍하다" — 밝기·채도 낮춤 */
-    body.ecl-half     { --a1: rgba(140, 60, 215, .62); --a2: rgba(190, 80, 175, .46); --a3: rgba(85, 80, 225, .5);  --aop: .6; }   /* 반월 = 이클립스와 같은 빛, 조금 약하게 */
-    body.ecl-crescent { --a1: rgba(140, 60, 215, .62); --a2: rgba(190, 80, 175, .46); --a3: rgba(85, 80, 225, .5);  --aop: .5; }   /* 예열 = 이클립스와 같은 빛, 약하게 */
+    /* 1011 마스터 "지구 오라도 보라색계열에서 하늘색 계열로 변경" — 종전 보라(140,60,215 / 190,80,175 / 85,80,225) → 하늘빛 */
+    body.ecl-eclipse  { --a1: rgba(70, 165, 235, .62); --a2: rgba(120, 205, 250, .46); --a3: rgba(60, 120, 230, .5);  --aop: .8; }   /* 1009 "살짝 눈 쨍하다" — 밝기·채도 낮춤 */
+    body.ecl-half     { --a1: rgba(70, 165, 235, .62); --a2: rgba(120, 205, 250, .46); --a3: rgba(60, 120, 230, .5);  --aop: .6; }   /* 반월 = 이클립스와 같은 빛, 조금 약하게 */
+    body.ecl-crescent { --a1: rgba(70, 165, 235, .62); --a2: rgba(120, 205, 250, .46); --a3: rgba(60, 120, 230, .5);  --aop: .5; }   /* 예열 = 이클립스와 같은 빛, 약하게 */
     /* 1009 마스터 "뭐냐 렉": 큰 그림에 흐림 필터·겹침 혼합을 걸고 돌리던 것이 원인 — 필터·혼합 없이, 고리 모양으로 미리 잘린 그림을 돌리기만 한다 */
     .eclveil i { position: absolute; left: 50%; top: var(--gy); width: calc(var(--gr) * 3.6); height: calc(var(--gr) * 3.6); margin: calc(var(--gr) * -1.8) 0 0 calc(var(--gr) * -1.8); border-radius: 50%;
       opacity: var(--aop); will-change: transform, opacity;
@@ -287,10 +288,10 @@
         radial-gradient(ellipse 62% 30% at 50% 103%, var(--mr), transparent 74%),   /* 지구에서 비쳐 든 빛 — 지구를 향한 아래쪽 면 */
         radial-gradient(circle at 50% 78%, var(--m1) 0, var(--m2) 26%, var(--m3) 52%, var(--m4) 80%);
       box-shadow: inset 0 -.012em .03em var(--mrim, rgba(215, 180, 255, .34)), inset 0 .1em .16em rgba(0, 0, 0, .8), 0 0 .012em .003em var(--mg), 0 0 .06em var(--mg), 0 0 .16em var(--mg2, transparent); }
-    /* 1011 마스터 "붉은 달을 은달로"(이클립스 정규 오픈): 검은 달 + 붉은 코로나 → 은빛 달 — 은회색 구체(지구 쪽 아래 면이 밝고 위로 갈수록 어둡게), 희푸른 은빛 테. 아래쪽 면에는 지구의 보랏빛이 옅게 비친다 */
-    body.ecl-eclipse  { --m1: #e4e9f2; --m2: #b9c2d0; --m3: #7f8a9b; --m4: #3a414d; --mg: rgba(225, 235, 255, .7); --mr: rgba(170, 100, 240, .3); --mrim: rgba(245, 248, 255, .7); --mg2: rgba(190, 205, 255, .35); }
-    body.ecl-half     { --m1: #e4e9f2; --m2: #b9c2d0; --m3: #7f8a9b; --m4: #3a414d; --mg: rgba(225, 235, 255, .5); --mr: rgba(170, 100, 240, .26); --mrim: rgba(245, 248, 255, .55); --mg2: rgba(190, 205, 255, .25); }
-    body.ecl-crescent { --m1: #e4e9f2; --m2: #b9c2d0; --m3: #7f8a9b; --m4: #3a414d; --mg: rgba(225, 235, 255, .4); --mr: rgba(170, 100, 240, .22); --mrim: rgba(245, 248, 255, .45); --mg2: rgba(190, 205, 255, .2); }
+    /* 1011 마스터(이클립스 정규 오픈) "붉은 달을 은달로" → "은달 눈아프다. 오라만 은색으로. 검은색 달에": 검은 구체는 그대로, 코로나·테만 붉은색 → 은색. 아래쪽 면에는 지구의 하늘빛이 옅게 비친다 */
+    body.ecl-eclipse  { --m1: #0e1014; --m2: #070809; --m3: #020203; --m4: #000; --mg: rgba(225, 235, 255, .7); --mr: rgba(110, 190, 245, .3); --mrim: rgba(235, 242, 255, .6); --mg2: rgba(190, 210, 255, .35); }
+    body.ecl-half     { --m1: #0e1014; --m2: #070809; --m3: #020203; --m4: #000; --mg: rgba(225, 235, 255, .5); --mr: rgba(110, 190, 245, .26); --mrim: rgba(235, 242, 255, .5); --mg2: rgba(190, 210, 255, .25); }
+    body.ecl-crescent { --m1: #0e1014; --m2: #070809; --m3: #020203; --m4: #000; --mg: rgba(225, 235, 255, .4); --mr: rgba(110, 190, 245, .22); --mrim: rgba(235, 242, 255, .45); --mg2: rgba(190, 210, 255, .2); }
     /* 이클립스의 달 가장자리 빛: 가만히 있는 얇은 빛 테 한 겹이 천천히 밝아졌다 어두워진다(돌리지 않는다 — 달이 화면보다 커서 돌리면 무겁다) */
     .eclmoon::before { content: ''; position: absolute; inset: -1.2%; border-radius: 50%; z-index: -1;
       background: radial-gradient(circle, transparent 47.6%, rgba(240, 245, 255, .85) 48.6%, rgba(200, 215, 250, .4) 49.4%, transparent 50%); animation: coronab 6.5s ease-in-out infinite alternate; }
@@ -636,9 +637,10 @@
   //  대기 번짐 폭(horizon-blend)은 평소 값 0.06 그대로 둔다 — 0.07 이상으로 올리면 이 확대 배율에서 안개가 지구 면 전체를 덮어 땅·글자가 사라진다(1009 확인).
   var ECL_BASE = { fog: [[60, 40, 140], [120, 80, 255], 0.85], land: [26, 16, 70], water: [6, 4, 24], line: [150, 130, 255, .55] };   // paintGalaxy·setFog 의 평소 값
   var ECL_LOOK = {
-    eclipse:  { fog: [[74, 22, 120], [205, 96, 240], 0.6], land: [33, 16, 64], water: [7, 3, 26],  line: [214, 140, 255, .6] },
-    half:     { fog: [[70, 28, 126], [180, 92, 244], 0.7], land: [31, 16, 66], water: [7, 3, 25],  line: [196, 137, 255, .58] },   // 이클립스 쪽으로 70%
-    crescent: { fog: [[66, 32, 131], [158, 87, 248], 0.74], land: [29, 16, 67], water: [6, 4, 25],  line: [179, 134, 255, .57] }    // 이클립스 쪽으로 45%
+    // 1011 마스터 "지구 오라도 보라색계열에서 하늘색 계열로" — 대기·땅·바다·국경선도 하늘빛으로(종전 보라 74,22,120 / 205,96,240)
+    eclipse:  { fog: [[24, 76, 128], [110, 200, 245], 0.6], land: [16, 34, 62], water: [3, 11, 26],  line: [150, 210, 255, .6] },
+    half:     { fog: [[35, 65, 132], [113, 164, 248], 0.7], land: [19, 29, 64], water: [4, 9, 25],  line: [150, 186, 255, .58] },   // 이클립스 쪽으로 70%
+    crescent: { fog: [[44, 56, 135], [116, 134, 250], 0.74], land: [21, 26, 66], water: [5, 8, 25],  line: [150, 166, 255, .57] }    // 이클립스 쪽으로 45%
   };
   function paintEclipse(k) {
     if (!eclPhase || !map) return;
