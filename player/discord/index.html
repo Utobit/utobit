@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Player : Final Raid — Discord</title>
+<style>
+  html, body { height: 100%; margin: 0; background: #0b1220; }
+  .s { position: fixed; left: 50%; top: 50%; width: 36px; height: 36px; margin: -18px 0 0 -18px;
+       border: 3px solid rgba(255,255,255,.18); border-top-color: #8fb8ff; border-radius: 50%; animation: r .8s linear infinite; }
+  @keyframes r { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+<div class="s"></div>
+<script>
+// 1013 공식 디스코드 입장 주소(초대자 이름이 뜨지 않는 서버 위젯 초대).
+//  위젯 초대는 하루마다 새로 만들어지므로 고정 주소 대신 여기서 그때의 초대 주소를 받아 넘긴다.
+//  받지 못하면 만료 없는 예비 초대로 넘긴다.
+(function () {
+  var FALLBACK = 'https://discord.gg/4X5TGYzRWd';
+  var done = false;
+  function go(u) { if (done) return; done = true; location.replace(u); }
+  setTimeout(function () { go(FALLBACK); }, 4000);
+  try {
+    fetch('https://discord.com/api/guilds/1559226623335731352/widget.json', { cache: 'no-store' })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (j) { go(j && j.instant_invite ? j.instant_invite : FALLBACK); })
+      .catch(function () { go(FALLBACK); });
+  } catch (e) { go(FALLBACK); }
+})();
+</script>
+</body>
+</html>
