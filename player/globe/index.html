@@ -147,7 +147,10 @@
     .tabs button { flex: 1; height: 34px; border-radius: 9px; border: 1px solid var(--line); background: transparent; cursor: pointer;
       color: var(--muted); font: inherit; font-size: 12px; font-weight: 700; transition: background .15s, color .15s; }
     .tabs button.on { background: rgba(150, 130, 255, .2); border-color: var(--line-strong); color: var(--text); }
+    .tabs button[hidden] { display: none; }
     .ranks { flex: 1; overflow-y: auto; padding: 0 8px 10px; }
+    .ranks button.flat { cursor: default; }   /* 본부가 없는 길드 줄 — 눌러도 갈 곳이 없다 */
+    .ranks button.flat:hover { background: transparent; }
     .ranks button { display: grid; grid-template-columns: 34px 1fr auto; align-items: center; gap: 8px; width: 100%; padding: 9px 10px;
       background: transparent; border: 0; border-radius: 9px; cursor: pointer; color: var(--text); font: inherit; text-align: left; transition: background .15s; }
     .ranks button:hover { background: rgba(150, 130, 255, .14); }
@@ -409,10 +412,15 @@
   </div>
   <div class="hud glass drawer" id="drawer" hidden>
     <h2 data-t="rankTitle"></h2>
+    <div class="tabs" id="scopes">
+      <button type="button" data-scope="solo" data-t="solo"></button>
+      <button type="button" data-scope="guild" data-t="guild"></button>
+    </div>
     <div class="tabs" id="tabs">
       <button type="button" data-board="points" data-t="rankPoints"></button>
-      <button type="button" data-board="level" data-t="level"></button>
+      <button type="button" data-board="level" data-for="solo" data-t="level"></button>
       <button type="button" data-board="power" data-t="power"></button>
+      <button type="button" data-board="members" data-for="guild" data-t="members" hidden></button>
     </div>
     <div class="ranks" id="ranks"></div>
   </div>
@@ -494,7 +502,8 @@
     gLine: function (g) { return g.grade + '급 · Lv.' + g.level; }, gStage: function (n) { return '범람 ' + n + '단계'; },
     menuOpen: '메뉴', guideTitle: '시스템 안내서', langTitle: '언어', community: '커뮤니티',
     stadium: '스타디움', heritage: '유적지', firstBy: '최초 발견자', gNext: '다음 게이트 등장까지', eclCrescent: '예보', eclEclipse: '이클립스', eclHalf: '반월', eclTitle: '이클립스',
-    threat: '위협지', nullIsland: '널 아일랜드', latent: '개방한 잠재능력'
+    threat: '위협지', nullIsland: '널 아일랜드', latent: '개방한 잠재능력',
+    solo: '개인', members: '인원', memberN: function (n) { return '인원 ' + n + '명'; }, master: '마스터'
   } : {
     ph: 'Nickname or #hunter number', go: 'Search', level: 'LEVEL', stat: 'TOTAL STATS', power: 'COMBAT POWER',
     hint: 'DRAG TO ROTATE · SCROLL TO ZOOM', searching: 'Searching…', none: 'No hunter found.',
@@ -515,7 +524,8 @@
     gLine: function (g) { return 'Grade ' + g.grade + ' · Lv.' + g.level; }, gStage: function (n) { return 'Flood stage ' + n; },
     menuOpen: 'Menu', guideTitle: 'SYSTEM GUIDE', langTitle: 'LANGUAGE', community: 'COMMUNITY',
     stadium: 'Stadium', heritage: 'Heritage site', firstBy: 'First discovered by', gNext: 'Next gate in', eclCrescent: 'Forecast', eclEclipse: 'Eclipse', eclHalf: 'Half Moon', eclTitle: 'Eclipse',
-    threat: 'Threat site', nullIsland: 'Null Island', latent: 'LATENT ABILITIES UNLOCKED'
+    threat: 'Threat site', nullIsland: 'Null Island', latent: 'LATENT ABILITIES UNLOCKED',
+    solo: 'Individual', members: 'MEMBERS', memberN: function (n) { return n + (n === 1 ? ' member' : ' members'); }, master: 'Master'
   };
 
   var $ = function (id) { return document.getElementById(id); };
@@ -540,6 +550,7 @@
       else if (k === 'gClaimed') T.gClaimed = function (n) { return (n ? n + ' — ' : '') + v; };
       else if (k === 'gLine') T.gLine = function (g) { return fill(v, { g: g.grade, l: g.level }); };
       else if (k === 'gStage') T.gStage = function (n) { return fill(v, { n: n }); };
+      else if (k === 'memberN') T.memberN = function (n) { return fill(v, { n: n }); };
       else T[k] = v;
     });
   })();
@@ -969,7 +980,7 @@
   }
 
   // ── 랭킹 서랍 ───────────────────────────────────────────────────────
-  var rankCache = {}, rankBoard = 'points', rankSeq = 0;
+  var rankCache = {}, rankBoard = 'points', rankScope = 'solo', rankSeq = 0;   // rankScope = 'solo'(개인) | 'guild'(길드)
 
   function rankNote(text) {
     var box = $('ranks');
@@ -977,10 +988,39 @@
     box.appendChild(el('div', 'msg', text));
   }
 
+  // 길드 줄: 이름 / 인원 · 마스터 · 본부 국가 / 점수. 본부가 있는 길드는 누르면 본부로 날아간다.
+  function drawGuildRanks(rows) {
+    var box = $('ranks');
+    rows.forEach(function (g) {
+      var hq = !!(g.hqLat || g.hqLng), can = hq && !!map;
+      var b = el('button', (g.rank <= 3 ? 'top' : '') + (can ? '' : ' flat'));
+      b.type = 'button';
+      b.appendChild(el('span', 'no', g.rank));
+      var who = el('span', 'who');
+      who.appendChild(el('b', null, g.name));
+      var bits = [];
+      if (rankBoard !== 'members') bits.push(T.memberN(g.members));
+      if (g.master) bits.push(T.master + ' ' + g.master);
+      bits.push(hq ? countryName(g.hqCountry || '') || T.guildHq : T.guildHq + ' ' + T.noHq);
+      who.appendChild(el('small', null, bits.join(' · ')));
+      b.appendChild(who);
+      b.appendChild(el('span', 'sc', num(g.score)));
+      if (can) b.addEventListener('click', function () {
+        if (!mapReady) return;
+        clearHunter();                           // 헌터를 보던 중이면 그 강조를 끄고 본부만 남긴다
+        spinning = false; map.stop();
+        focusHq(g); flyHq(g);
+        if (window.innerWidth <= 560) toggleDrawer(false);
+      });
+      box.appendChild(b);
+    });
+  }
+
   function drawRanks(rows) {
     var box = $('ranks');
     box.textContent = '';
     if (!rows.length) return rankNote(T.rankEmpty);
+    if (rankScope === 'guild') return drawGuildRanks(rows);
     rows.forEach(function (r) {
       var b = el('button', r.rank <= 3 ? 'top' : null);
       b.type = 'button';
@@ -1004,17 +1044,25 @@
     });
   }
 
-  function loadRank(board) {
+  function loadRank(board, scope) {
+    if (scope) rankScope = scope;
+    var guild = rankScope === 'guild';
+    if (board === (guild ? 'level' : 'members')) board = 'points';   // 그 구분에 없는 보드 = 공략 포인트로
     rankBoard = board;
-    document.querySelectorAll('#tabs button').forEach(function (b) { b.classList.toggle('on', b.getAttribute('data-board') === board); });
-    if (rankCache[board]) return drawRanks(rankCache[board]);
-    var mine = ++rankSeq;
+    document.querySelectorAll('#scopes button').forEach(function (b) { b.classList.toggle('on', b.getAttribute('data-scope') === rankScope); });
+    document.querySelectorAll('#tabs button').forEach(function (b) {
+      var only = b.getAttribute('data-for');
+      b.hidden = !!only && only !== rankScope;
+      b.classList.toggle('on', b.getAttribute('data-board') === board);
+    });
+    var key = rankScope + ':' + board, mine = ++rankSeq;
+    if (rankCache[key]) return drawRanks(rankCache[key]);
     rankNote(T.searching);
-    fetch(apiBase + '/globe?rank=' + board)
+    fetch(apiBase + '/globe?rank=' + board + (guild ? '&scope=guild' : ''))
       .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
       .then(function (j) {
-        rankCache[board] = (j && j.rows) || [];
-        if (mine === rankSeq) drawRanks(rankCache[board]);
+        rankCache[key] = (j && j.rows) || [];
+        if (mine === rankSeq) drawRanks(rankCache[key]);
       })
       .catch(function () { if (mine === rankSeq) rankNote(T.fail); });
   }
@@ -1291,10 +1339,14 @@
   document.querySelectorAll('#tabs button').forEach(function (b) {
     b.addEventListener('click', function () { loadRank(b.getAttribute('data-board')); });
   });
+  document.querySelectorAll('#scopes button').forEach(function (b) {
+    b.addEventListener('click', function () { loadRank(rankBoard, b.getAttribute('data-scope')); });
+  });
 
   $('form').addEventListener('submit', function (e) { e.preventDefault(); search($('q').value, true); });
 
   if (!initMap()) { $('map').hidden = true; message(T.noMap); }
+  if (params.get('rank') === 'guild') rankScope = 'guild';   // ?rank=guild = 길드 랭킹부터
   if (params.has('rank')) toggleDrawer(true);   // ?rank = 랭킹을 연 채로 시작
   loadFloods();
   tickNext(); setInterval(tickNext, 1000);
