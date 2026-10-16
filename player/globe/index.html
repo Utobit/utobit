@@ -625,6 +625,7 @@
       map.addLayer({ id: 'trail-edge', type: 'line', source: 'trail-cell', minzoom: 6, paint: {
         'line-color': tone, 'line-width': 1.2, 'line-blur': 1.5, 'line-opacity': 0.8 } });
       mapReady = true;
+      placeGateMarkers();   // 1017: 게이트 목록이 지도 준비보다 먼저 왔으면 여기서 그린다
       if (pendingRow) { focusRow(pendingRow); pendingRow = null; }
     });
     ['mousedown', 'touchstart', 'wheel'].forEach(function (ev) {
@@ -876,6 +877,7 @@
     ['msg', 'list', 'card'].forEach(function (id) { $(id).hidden = id !== which; });
     // 헌터 한 명을 보는 동안에는 범람 게이트·스타디움·유적지 표식을 끈다 — 그 헌터의 자취만 보이게
     document.body.classList.toggle('hunter', which === 'card');
+    syncGateLayer();
     if (which === 'card' && floodPopup) { floodPopup.remove(); floodPopup = null; }
     if (which !== 'card') { selName = ''; markRanks(); }
   }
@@ -1109,6 +1111,8 @@
     if (map) {
       map.flyTo({ center: [g.lng, g.lat], zoom: 12.5, duration: still ? 0 : 3000, essential: true });
       floodPopup = new mapboxgl.Popup({ offset: 62, maxWidth: '270px' }).setLngLat([g.lng, g.lat]).setDOMContent(box).addTo(map);
+      markSelGate(g);
+      var pop = floodPopup; pop.on('close', function () { if (floodPopup === pop || !floodPopup) markSelGate(null); });
     }
     if (g.server !== false) claimGate(g, st);
     if (window.innerWidth <= 560) toggleGates(false);   // 좁은 화면은 서랍이 지도를 덮는다
@@ -1184,18 +1188,76 @@
     return GATE_SVG.replace('BEAMS', s);
   }
 
-  // 1010 마스터("수천개 대응은 수천개 된 다음에 하면 됨"): 표식은 종전 빛기둥 DOM 마커 그대로 — 개수가 많아지면 그때 이미지 레이어로 바꾼다.
+  // 1017 마스터("범람게이트가 좀 크던데. 100개 넘어가서그런지. 그런데 점으로 처리하는건 또 안됨"): 표식 = 같은 빛기둥 그림을 지도 아이콘 층(symbol)으로 —
+  //  종전 DOM 마커 100여 개(그림자 2겹·애니메이션)가 매 프레임 자리 잡기·다시 칠하기를 했다. 움직이는 빛기둥·파동은 고른 게이트 1곳(selGateMarker)에만.
+  var GATE_PAD = 16, gateImgs = {}, selGateMarker = null;
+  function gateImageId(grade) { return 'fg-' + String(grade || '-'); }
+  function makeGateImage(grade, done) {
+    var svg = gateSvg(1).replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" width="44" height="64" ')
+      .replace(/<ellipse class="wave[^>]*\/>/g, '').replace('<g class="beam">', '<g opacity=".85">');   // 정지 그림: 파동 빼고 기둥은 중간 밝기
+    var img = new Image();
+    img.onload = function () {
+      var r = 2, txt = String(grade || ''), c = document.createElement('canvas'), x = c.getContext('2d');
+      x.font = '800 11px Inter, "Noto Sans KR", system-ui, sans-serif';
+      var bw = txt ? Math.max(18, Math.ceil(x.measureText(txt).width) + 8) : 0;
+      var hw = Math.max(GATE_PAD + 22, bw + 11), hh = GATE_PAD + 53;   // 받침 중심(22,53)이 그림 한가운데 → 아이콘 기준점 = 게이트 자리
+      c.width = hw * 2 * r; c.height = hh * 2 * r; x.scale(r, r);
+      var ox = hw - 22, oy = hh - 53;
+      x.shadowColor = 'rgba(255, 40, 80, .55)'; x.shadowBlur = 14; x.drawImage(img, ox, oy, 44, 64);
+      x.shadowColor = 'rgba(255, 60, 95, .95)'; x.shadowBlur = 5; x.drawImage(img, ox, oy, 44, 64);
+      if (txt) {   // 등급 칸(종전 .fgb 와 같은 자리·색)
+        var bx = ox + 29, by = oy + 12, rr = 6;
+        x.beginPath(); x.moveTo(bx + rr, by); x.arcTo(bx + bw, by, bx + bw, by + 18, rr); x.arcTo(bx + bw, by + 18, bx, by + 18, rr);
+        x.arcTo(bx, by + 18, bx, by, rr); x.arcTo(bx, by, bx + bw, by, rr); x.closePath();
+        x.shadowColor = 'rgba(255, 60, 95, .6)'; x.shadowBlur = 10; x.fillStyle = 'rgba(120, 12, 40, .92)'; x.fill();
+        x.shadowBlur = 0; x.lineWidth = 1; x.strokeStyle = 'rgba(255, 150, 170, .9)'; x.stroke();
+        x.font = '800 11px Inter, "Noto Sans KR", system-ui, sans-serif'; x.fillStyle = '#fff'; x.textAlign = 'center'; x.textBaseline = 'middle';
+        x.fillText(txt, bx + bw / 2, by + 9.5);
+      }
+      done(x.getImageData(0, 0, c.width, c.height));
+    };
+    img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+  }
+  function syncGateLayer() {
+    if (!map || !mapReady || !map.getLayer('flood-gates')) return;
+    map.setLayoutProperty('flood-gates', 'visibility', document.body.classList.contains('hunter') ? 'none' : 'visible');
+    map.setFilter('flood-gates', gateBand >= 0 ? ['==', ['get', 'band'], gateBand] : null);   // 1010: 고른 레벨대 밖 표식은 숨김
+  }
   function placeGateMarkers() {
-    if (!map || !floods) return;
-    floodMarkers.forEach(function (m) { m.remove(); });
-    floodMarkers = floods.map(function (g) {
-      var dot = el('div', 'fg' + (gateBand >= 0 && bandOf(g) !== gateBand ? ' off' : ''));   // 1010: 고른 레벨대 밖 표식은 숨김
-      dot.innerHTML = gateSvg(g.flood);                  // 고정 문자열 조합(서버 값은 단계 숫자만 — 1~3 으로 자른다)
-      dot.appendChild(el('i', 'fgb', g.grade));
-      dot.title = (cityName(g) ? cityName(g) + ' · ' : '') + g.name + ' · ' + T.gStage(g.flood || 1);
-      dot.addEventListener('click', function (e) { e.stopPropagation(); openGate(g); });
-      return new mapboxgl.Marker({ element: dot, anchor: 'bottom', offset: [0, 11] }).setLngLat([g.lng, g.lat]).addTo(map);
+    if (!map || !mapReady || !floods) return;
+    var grades = {}, waiting = 0;
+    floods.forEach(function (g) { grades[gateImageId(g.grade)] = g.grade; });
+    var draw = function () {
+      var fc = { type: 'FeatureCollection', features: floods.map(function (g, i) {
+        return { type: 'Feature', geometry: { type: 'Point', coordinates: [g.lng, g.lat] }, properties: { i: i, img: gateImageId(g.grade), band: bandOf(g) } };
+      }) };
+      if (map.getSource('flood-gates')) map.getSource('flood-gates').setData(fc);
+      else {
+        map.addSource('flood-gates', { type: 'geojson', data: fc });
+        map.addLayer({ id: 'flood-gates', type: 'symbol', source: 'flood-gates', layout: {
+          'icon-image': ['get', 'img'], 'icon-allow-overlap': true, 'icon-ignore-placement': true,
+          'icon-size': ['interpolate', ['linear'], ['zoom'], 1, 0.62, 3, 0.8, 6, 1] } });   // 멀리서는 작게, 가까이 가면 종전 크기
+        map.on('click', 'flood-gates', function (e) { var f = e.features && e.features[0]; if (f && floods[f.properties.i]) openGate(floods[f.properties.i]); });
+        map.on('mouseenter', 'flood-gates', function () { map.getCanvas().style.cursor = 'pointer'; });
+        map.on('mouseleave', 'flood-gates', function () { map.getCanvas().style.cursor = ''; });
+      }
+      syncGateLayer();
+    };
+    Object.keys(grades).forEach(function (id) {
+      if (gateImgs[id] || map.hasImage(id)) return;
+      waiting++; gateImgs[id] = true;
+      makeGateImage(grades[id], function (data) { if (!map.hasImage(id)) map.addImage(id, data, { pixelRatio: 2 }); if (--waiting === 0) draw(); });
     });
+    if (waiting === 0) draw();
+  }
+  // 고른 게이트 1곳만 종전 움직이는 빛기둥 표식(DOM)을 얹는다 — 팝업이 닫히면 뗀다
+  function markSelGate(g) {
+    if (selGateMarker) { selGateMarker.remove(); selGateMarker = null; }
+    if (!map || !g) return;
+    var dot = el('div', 'fg');
+    dot.innerHTML = gateSvg(g.flood);
+    dot.appendChild(el('i', 'fgb', g.grade));
+    selGateMarker = new mapboxgl.Marker({ element: dot, anchor: 'bottom', offset: [0, 11] }).setLngLat([g.lng, g.lat]).addTo(map);
   }
 
   function loadFloods() {
