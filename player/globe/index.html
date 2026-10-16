@@ -314,6 +314,17 @@
     .ecltag { position: fixed; z-index: 5; top: max(74px, calc(env(safe-area-inset-top) + 74px)); right: 20px; display: none; pointer-events: none; padding: 8px 14px 9px; border-radius: 14px; text-align: right; line-height: 1.35; font-size: 12px; font-weight: 700; letter-spacing: .04em; white-space: nowrap;
       color: #f1dcff; background: rgba(16, 6, 30, .74); border: 1px solid rgba(190, 120, 255, .55); }
     body.ecl-crescent .ecltag, body.ecl-eclipse .ecltag, body.ecl-half .ecltag { display: block; }
+    /* 1017 마스터(스샷 "pc에서 이클립스 띄워둔 ui가 메뉴 ui를 가리거든. 아얘 별도 공간에 배치하고, 누르면 현황판도 볼 수 있게"):
+       오른쪽 위(메뉴·랭킹 서랍 자리) → 화면 위 가운데 별도 자리, 누르면 이클립스 현황판(이번 주 일정·지금 단계·남은 시간) */
+    .ecltag { top: max(20px, calc(env(safe-area-inset-top) + 14px)); left: 50%; right: auto; transform: translateX(-50%); text-align: center; pointer-events: auto; cursor: pointer; font: inherit; font-size: 12px; font-weight: 700; }
+    .ecltag:hover { border-color: rgba(220, 160, 255, .85); }
+    /* 1017 마스터("이클립스랑 랭킹이랑 ui 뜨는 곳 같은 위치라 겹침"): 현황판은 오른쪽 서랍 자리(랭킹·메뉴)가 아니라 위 가운데 표식 바로 아래 */
+    #eclboard { left: 50%; right: auto; transform: translateX(-50%); top: max(64px, calc(env(safe-area-inset-top) + 58px)); bottom: auto; width: 360px; max-height: calc(100vh - 160px); }
+    .eclrows { padding: 0 14px 14px; display: flex; flex-direction: column; gap: 8px; overflow-y: auto; }
+    .eclrow { border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+    .eclrow b { font-size: 14px; } .eclrow small { display: block; color: var(--muted); font-size: 12px; margin-top: 2px; }
+    .eclrow em { font-style: normal; font-size: 12px; font-weight: 700; color: var(--muted); white-space: nowrap; }
+    .eclrow.now { border-color: rgba(255, 110, 85, .7); background: rgba(255, 60, 45, .08); } .eclrow.now em { color: #ffb4a6; }
     /* 1009 마스터 "이클립스 체험판 / 현재단계 : 잔여시간": 윗줄 = 제목, 아랫줄 = 지금 단계 : 남은 시간 */
     .ecltag b { display: block; font-size: 11px; font-weight: 700; letter-spacing: .08em; opacity: .78; }
     .ecltag span { font-size: 14px; font-weight: 800; }
@@ -347,8 +358,9 @@
       .hint { display: none; }
       .gnext { bottom: max(16px, env(safe-area-inset-bottom)); }
       /* 1009 마스터 "모바일쪽 이클립스 체험판 텍스트가 닉네임입력란을 가리네": 좁은 화면에서는 표식을 한 줄로 눕혀 검색창 위에 두고, 검색창·메뉴를 그만큼 내린다 */
-      .ecltag { top: max(66px, calc(env(safe-area-inset-top) + 54px)); left: 16px; right: 16px; padding: 5px 12px 6px; border-radius: 10px; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .ecltag { top: max(66px, calc(env(safe-area-inset-top) + 54px)); left: 16px; right: 16px; transform: none; padding: 5px 12px 6px; border-radius: 10px; text-align: center; white-space: nowrap; }
       .ecltag b { display: inline; margin-right: 8px; }
+      #eclboard { top: max(104px, calc(env(safe-area-inset-top) + 92px)); width: auto; left: 16px; right: 16px; transform: none; }
       .ecltag span, .ecltag i { font-size: 13px; }
       body.ecl-crescent .panel, body.ecl-eclipse .panel, body.ecl-half .panel,
       body.ecl-crescent .bmenu, body.ecl-eclipse .bmenu, body.ecl-half .bmenu { top: max(106px, calc(env(safe-area-inset-top) + 94px)); }
@@ -430,7 +442,8 @@
   <div class="eclveil" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
   <div class="eclshade" aria-hidden="true"></div>
   <div class="hud ecl" aria-hidden="true"><div class="eclmoon"></div></div>
-  <div class="ecltag" id="ecl-t"><b id="ecl-title"></b><span id="ecl-phase"></span><i id="ecl-left"></i></div>
+  <button class="ecltag" id="ecl-t" type="button" aria-expanded="false"><b id="ecl-title"></b><span id="ecl-phase"></span><i id="ecl-left"></i></button>
+  <div class="hud glass drawer" id="eclboard" hidden><h2 id="eclb-title"></h2><div class="eclrows" id="eclb-rows"></div></div>
   <div class="hud gnext" id="gnext" hidden><span data-t="gNext"></span><b id="gnext-t"></b></div>
   <div class="hud hint" data-t="hint"></div>
 
@@ -503,7 +516,7 @@
     gDone: '등록됨', gGone: '이미 닫힌 게이트입니다.', gBadKey: '계정을 확인하지 못했습니다. 게임에서 지구본을 다시 열어 주세요.',
     gLine: function (g) { return g.grade + '급 · Lv.' + g.level; }, gStage: function (n) { return '범람 ' + n + '단계'; },
     menuOpen: '메뉴', guideTitle: '시스템 안내서', langTitle: '언어', community: '커뮤니티',
-    stadium: '스타디움', heritage: '유적지', firstBy: '최초 발견자', gNext: '다음 게이트 등장까지', eclCrescent: '예보', eclEclipse: '이클립스', eclHalf: '반월', eclTitle: '이클립스',
+    stadium: '스타디움', heritage: '유적지', firstBy: '최초 발견자', gNext: '다음 게이트 등장까지', eclTitle: "이클립스", eclCrescent: "손톱달", eclEclipse: "이클립스", eclHalf: "반월", eclNow: "진행 중", eclDone: "완료", eclSoon: "예정", eclEmpty: "아직 획득 기록이 없습니다.",
     threat: '위협지', nullIsland: '널 아일랜드', latent: '개방한 잠재능력',
     solo: '개인', members: '인원', memberN: function (n) { return '인원 ' + n + '명'; }, master: '마스터'
   } : {
@@ -525,7 +538,7 @@
     gDone: 'Added', gGone: 'This gate has already closed.', gBadKey: 'Could not verify your account. Reopen the globe from the game.',
     gLine: function (g) { return 'Grade ' + g.grade + ' · Lv.' + g.level; }, gStage: function (n) { return 'Flood stage ' + n; },
     menuOpen: 'Menu', guideTitle: 'SYSTEM GUIDE', langTitle: 'LANGUAGE', community: 'COMMUNITY',
-    stadium: 'Stadium', heritage: 'Heritage site', firstBy: 'First discovered by', gNext: 'Next gate in', eclCrescent: 'Forecast', eclEclipse: 'Eclipse', eclHalf: 'Half Moon', eclTitle: 'Eclipse',
+    stadium: 'Stadium', heritage: 'Heritage site', firstBy: 'First discovered by', gNext: 'Next gate in', eclTitle: "Eclipse", eclCrescent: "Crescent", eclEclipse: "Eclipse", eclHalf: "Half Moon", eclNow: "In progress", eclDone: "Complete", eclSoon: "Upcoming", eclEmpty: "No points earned yet.",
     threat: 'Threat site', nullIsland: 'Null Island', latent: 'LATENT ABILITIES UNLOCKED',
     solo: 'Individual', members: 'MEMBERS', memberN: function (n) { return n + (n === 1 ? ' member' : ' members'); }, master: 'Master'
   };
@@ -718,6 +731,41 @@
       if (s <= 0 && !eclForced) location.reload();
     };
     eclTick(); setInterval(eclTick, 1000);
+    var eclBoard = function () {
+      var DAY = 86400, now = Date.now() / 1000, inWeek = ((now + 9 * 3600 + 4 * DAY) % (7 * DAY) + 7 * DAY) % (7 * DAY);
+      var sun = now - inWeek;   // 이번 주 일요일 0시(KST)에 해당하는 epoch(초)
+      // 이클립스 주 = 금(예열) → 토(이클립스) → 일(반월). 일요일이면 지난 금·토, 월~목이면 다가오는 금·토·일
+      var dow = Math.floor(inWeek / DAY), base = dow === 0 ? sun - 7 * DAY : sun;
+      var days = [['crescent', base + 5 * DAY], ['eclipse', base + 6 * DAY], ['half', base + 7 * DAY]];
+      var fmt; try { fmt = new Intl.DateTimeFormat(LANG, { timeZone: 'Asia/Seoul', month: 'numeric', day: 'numeric', weekday: 'short' }); } catch (e) { fmt = null; }
+      var two = function (n) { return (n < 10 ? '0' : '') + n; };
+      $('eclb-title').textContent = T.eclTitle;
+      $('eclb-rows').innerHTML = days.map(function (d) {
+        var st = d[1], en = st + DAY, name = T[{ crescent: 'eclCrescent', eclipse: 'eclEclipse', half: 'eclHalf' }[d[0]]];
+        var when = fmt ? fmt.format(new Date((st - 9 * 3600 + 9 * 3600) * 1000)) : '';
+        var state, cls = '';
+        if (now >= en) state = T.eclDone;
+        else if (now >= st) { var s = Math.ceil(en - now); state = T.eclNow + ' · ' + Math.floor(s / 3600) + ':' + two(Math.floor(s % 3600 / 60)); cls = ' now'; }
+        else state = T.eclSoon;
+        return '<div class="eclrow' + cls + '"><div><b>' + name + '</b><small>' + when + ' (KST)</small></div><em>' + state + '</em></div>';
+      }).join('') + '<h2 style="padding:6px 0 0">' + T.rankTitle + '</h2><div id="eclb-rank"></div>';
+      // 1017 마스터("스코어도 띄워주면 더 좋을듯"): 이번 이클립스 기간 개인 적립 상위 10(게임 이클립스 랭킹과 같은 값)
+      fetch(apiBase + '/globe?rank=eclipse').then(function (r) { return r.json(); }).then(function (j) {
+        var box = $('eclb-rank'); if (!box) return;
+        var rows = (j && j.rows) || [];
+        box.innerHTML = rows.length ? rows.slice(0, 10).map(function (r) {
+          var nm = String(r.name || '').replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; });
+          return '<div class="eclrow"><div><b>' + r.rank + '. ' + nm + '</b><small>Lv.' + r.level + '</small></div><em>' + num(r.score) + '</em></div>';
+        }).join('') : '<div class="eclrow"><small>' + T.eclEmpty + '</small></div>';
+      }).catch(function () {});
+    };
+    $('ecl-t').addEventListener('click', function () {
+      var b = $('eclboard'), open = b.hidden;
+      ['drawer', 'gdrawer', 'guide', 'bmenu', 'lmenu'].forEach(function (id) { if ($(id)) $(id).hidden = true; });
+      b.hidden = !open; $('ecl-t').setAttribute('aria-expanded', open ? 'true' : 'false');
+      if (open) eclBoard();
+    });
+    setInterval(function () { if (!$('eclboard').hidden) eclBoard(); }, 30000);
   }
 
   // 아무도 만지지 않았을 때만 천천히 돈다
@@ -1076,6 +1124,7 @@
     var d = $('drawer');
     if (open == null) open = d.hidden;
     if (open) closeBurger();                      // 서랍은 같은 자리 — 하나만 연다
+    if (open && $('eclboard')) { $('eclboard').hidden = true; if ($('ecl-t')) $('ecl-t').setAttribute('aria-expanded', 'false'); }   // 1017 이클립스 현황판과 동시에 열지 않는다
     d.hidden = !open;
     $('rankbar').setAttribute('aria-expanded', open ? 'true' : 'false');
     if (open) loadRank(rankBoard);
