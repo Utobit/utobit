@@ -297,6 +297,8 @@
     body.ecl-eclipse  { --m1: #232830; --m2: #141719; --m3: #08090b; --m4: #020203; --mg: rgba(210, 222, 240, .42); --mr: rgba(120, 185, 235, .34); --mrim: rgba(225, 235, 250, .42); --mg2: rgba(180, 200, 235, .22); }
     body.ecl-half     { --m1: #232830; --m2: #141719; --m3: #08090b; --m4: #020203; --mg: rgba(210, 222, 240, .32); --mr: rgba(120, 185, 235, .28); --mrim: rgba(225, 235, 250, .36); --mg2: rgba(180, 200, 235, .16); }
     body.ecl-crescent { --m1: #232830; --m2: #141719; --m3: #08090b; --m4: #020203; --mg: rgba(210, 222, 240, .26); --mr: rgba(120, 185, 235, .24); --mrim: rgba(225, 235, 250, .32); --mg2: rgba(180, 200, 235, .12); }
+    /* 1017 마스터("첫날 셋째날은 은달, 둘째날(당일)은 붉은달 … 두가지 형태가 공존해야하는거여"): 이클립스 당일(토)만 검은 달 + 붉은 코로나(1009 확정안 색), 예열(금)·반월(일)은 은달 그대로 */
+    body.ecl-eclipse.ecl-red { --m1: #160a0c; --m2: #0a0405; --m3: #030102; --m4: #000; --mg: rgba(255, 60, 45, .75); --mrim: rgba(255, 110, 85, .55); --mg2: rgba(220, 30, 30, .35); }
     /* 이클립스의 달 가장자리 빛: 가만히 있는 얇은 빛 테 한 겹이 천천히 밝아졌다 어두워진다(돌리지 않는다 — 달이 화면보다 커서 돌리면 무겁다) */
     .eclmoon::before { content: ''; position: absolute; inset: -2.4%; border-radius: 50%; z-index: -1;
       background: radial-gradient(circle, transparent 46.6%, rgba(235, 242, 255, .5) 47.8%, rgba(205, 220, 245, .22) 48.8%, rgba(190, 210, 240, .08) 49.6%, transparent 50%); animation: coronab 6.5s ease-in-out infinite alternate; }
@@ -703,6 +705,7 @@
     // 1009 마스터("나한테 보여준거랑 똑같은 디자인으로. 3일동안 같은 형태여야해"): 모습은 사흘 내내 확정안 하나(검은 달 + 붉은 코로나 · 지구 둘레 보랏빛).
     //  단계(예열·이클립스·반월)에 따라 바뀌는 것은 오른쪽 위 글(단계 이름 : 남은 시간)뿐이다. 단계별 다른 모습은 쓰지 않는다.
     document.body.classList.add('ecl-eclipse');
+    if (eclPhase === 'eclipse') document.body.classList.add('ecl-red');   // 1017 당일(토) = 붉은 달, 금·일 = 은달
     $('ecl-title').textContent = T.eclTitle;
     $('ecl-phase').textContent = T[{ crescent: 'eclCrescent', eclipse: 'eclEclipse', half: 'eclHalf' }[eclPhase]];
     // 남은 시간 = 지금 단계가 끝나는 시각까지(1초마다). 단계가 끝나면 페이지를 다시 열어 다음 단계 모습으로 넘어간다.
