@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>장비 옵션 표 — PLAYER GLOBE</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#05030f">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--space:#05030f;--panel:rgba(14,10,34,.72);--line:rgba(150,130,255,.22);--line-strong:rgba(150,130,255,.5);--text:#f2efff;--muted:#a39cc9;--dim:#6f6896;--violet:#9d7bff;--cyan:#5ee6ff;--gold:#ffd27a;--warn:#ff9f6b}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--space);color:var(--text);font-family:'Inter','Noto Sans KR',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+body{padding:20px 16px 60px;max-width:1500px;margin:0 auto;font-size:14px;line-height:1.5}
+a{color:var(--cyan);text-decoration:none}
+header h1{font-size:22px;font-weight:700;letter-spacing:-.01em}
+header p{color:var(--muted);margin-top:6px;font-size:13px}
+header .back{display:inline-block;margin-bottom:10px;color:var(--muted);font-size:13px}
+nav.toc{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}
+nav.toc a{border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:6px 12px;font-size:13px;color:var(--text)}
+nav.toc a small{color:var(--muted);margin-left:4px}
+details.rules{border:1px solid var(--line);background:var(--panel);border-radius:12px;padding:12px 14px;margin:10px 0}
+details.rules summary{cursor:pointer;font-weight:600;color:var(--gold)}
+details.rules .cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-top:12px}
+details.rules h3{font-size:14px;color:var(--cyan);margin-bottom:6px}
+details.rules table{border-collapse:collapse;width:100%;font-size:13px}
+details.rules th,details.rules td{border-bottom:1px solid var(--line);padding:4px 6px;text-align:left;white-space:nowrap}
+details.rules .tw{overflow-x:auto}
+details.rules ul{padding-left:18px;color:var(--muted);font-size:13px}
+section{margin-top:28px}
+section h2{font-size:18px;font-weight:700;color:var(--gold)}
+section h2 small{color:var(--muted);font-weight:400;font-size:13px;margin-left:6px}
+p.desc{color:var(--muted);font-size:13px;margin:4px 0 10px}
+.wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+table.grid{border-collapse:collapse;width:100%;min-width:980px}
+table.grid thead th{position:sticky;top:0;background:#120d2e;color:var(--muted);font-weight:600;font-size:12px;text-align:left;padding:8px 10px;border-bottom:1px solid var(--line-strong)}
+table.grid td{padding:10px;border-bottom:1px solid var(--line);vertical-align:top}
+tr.item:hover td{background:rgba(157,123,255,.06)}
+td.ic{width:56px} td.ic img{width:44px;height:44px;object-fit:contain;border-radius:8px;background:rgba(255,255,255,.04)}
+td.nm{width:210px} td.nm code{color:var(--dim);font-size:11px} .meta{color:var(--muted);font-size:12px}
+td.main{width:300px} table.mini{border-collapse:collapse;width:100%;font-size:13px}
+table.mini th{color:var(--dim);font-weight:500;font-size:11px;text-align:left;padding:2px 6px}
+table.mini td{padding:2px 6px;border-top:1px solid var(--line)} table.mini td:nth-child(2){color:var(--text)} table.mini td:nth-child(3){color:var(--cyan)}
+td.sub{width:330px} td.sub ul,td.src ul{padding-left:16px;font-size:13px} td.sub li{color:var(--muted)} td.src li{color:var(--text)}
+td.opt{width:150px;font-size:13px;color:var(--muted)}
+.badge{display:inline-block;margin:4px 4px 0 0;padding:1px 7px;border-radius:999px;font-size:11px;border:1px solid var(--line-strong);color:var(--muted)}
+.badge.warn{color:var(--warn);border-color:var(--warn)} .badge.dim{color:var(--dim)}
+.dim{color:var(--dim)}
+footer{margin-top:30px;color:var(--dim);font-size:12px;line-height:1.6}
+@media (max-width:700px){body{padding:14px 16px 40px} header h1{font-size:19px}}
+</style>
+</head>
+<body>
+<header>
+<a class=back href="../">← PLAYER GLOBE</a>
+<h1>장비 아이템 · 옵션 표</h1>
+<p>구간별 획득 가능한 장비와 주옵션(강화 배율이 곱해지는 칸) · 부가옵션(%·속도류, 세트·승급) · 추가옵션(랜덤 13종) 범위. 생성 2026-10-17 12:14 · 자료 = ItemSO·item_tiers·reward_pool·monster_fixed_levels·출시 인덱스·서버 거래 상수(읽기만). 가정값 표식 = 출시 인덱스 비고에 '가정값'.</p>
+</header>
+<nav class=toc><a href='#s0'>시작 · 상점 · 제작 <small>28</small></a><a href='#s1'>Lv.1~10 구간 드랍 <small>3</small></a><a href='#s2'>Lv.11~20 구간 드랍 <small>1</small></a><a href='#s3'>Lv.21~30 구간 드랍 <small>2</small></a><a href='#s4'>Lv.31~40 구간 드랍 <small>6</small></a><a href='#s5'>Lv.41~50 구간 드랍 <small>1</small></a><a href='#s6'>Lv.51~60 구간 드랍 <small>13</small></a><a href='#s7'>Lv.71~80 구간 드랍 <small>2</small></a><a href='#s8'>Lv.81~90 구간 드랍 <small>2</small></a><a href='#s9'>Lv.91~100 구간 드랍 <small>2</small></a><a href='#s10'>전 구간 공통 — 미드나이트 세트 <small>6</small></a><a href='#s11'>이클립스 이벤트 <small>7</small></a><a href='#s12'>획득 경로 없음 · 미연결 <small>23</small></a><a href="#rules">규칙 표</a></nav>
+
+<details class=rules id=rules open>
+<summary>공통 규칙 — 강화 · 추가옵션 · 승급 · 미드나이트 (서버 tx_ops/enhance.py · craft.py · niva.py, 클라 ItemLevelScaling · ItemRandomOption 과 같은 값)</summary>
+<div class=cols>
+<div><h3>강화(+1~+5)</h3>
+<div class=tw><table><tr><th>단계</th><th>누적 배율</th><th>골드 하급(T1·T2)</th><th>중급(T3·T4)</th><th>상급(T5·T6·세트)</th><th>성공률</th><th>재료</th></tr><tr><td>+1</td><td>10%</td><td>1,000</td><td>3,000</td><td>8,000</td><td>100%</td><td>1개</td></tr><tr><td>+2</td><td>30%</td><td>3,000</td><td>9,000</td><td>24,000</td><td>100%</td><td>2개</td></tr><tr><td>+3</td><td>60%</td><td>8,000</td><td>24,000</td><td>64,000</td><td>70%</td><td>3개</td></tr><tr><td>+4</td><td>100%</td><td>20,000</td><td>60,000</td><td>160,000</td><td>50%</td><td>4개</td></tr><tr><td>+5</td><td>150%</td><td>50,000</td><td>150,000</td><td>400,000</td><td>30%</td><td>5개</td></tr></table></div>
+<ul><li>배율은 공격력·마법공격력·방어력·마법방어력·HP·MP(+스킬 피해량)에만 곱한다. 공격속도·시전속도·치명타·명중·회피·피해 감소 등 %칸은 강화해도 그대로(모든 ItemSO enhanceFlatOnly = 1).</li>
+<li>재료 = 하급/중급/상급 강화석(티어 2개당 1등급) · 세트 장비는 전용 재료(이클립스 달빛조각 · 미드나이트 시간의 파편 · 월드 차원석), 개수 = 다음 단계 수.</li>
+<li>실패 시 단계 유지. 분해 페이백 35%.</li></ul></div>
+<div><h3>추가옵션(랜덤) — 종류 13종 같은 확률, 값 = 범위 안 정수 같은 확률</h3>
+<div class=tw><table><tr><th>종류</th><th>범위</th></tr><tr><td>치명타 확률</td><td>1~5%</td></tr><tr><td>치명타 피해</td><td>2~20%</td></tr><tr><td>회피</td><td>1~5%</td></tr><tr><td>명중</td><td>1~5%</td></tr><tr><td>피해 감소</td><td>1~3%</td></tr><tr><td>공격속도</td><td>1~5%</td></tr><tr><td>시전속도</td><td>1~5%</td></tr><tr><td>공격력</td><td>3~15</td></tr><tr><td>마법공격력</td><td>3~15</td></tr><tr><td>방어력</td><td>2~10</td></tr><tr><td>마법방어력</td><td>2~10</td></tr><tr><td>최대 HP</td><td>30~150</td></tr><tr><td>최대 MP</td><td>20~100</td></tr></table></div>
+<ul><li>칸 수: T3 이상 장비 1칸(엘리트 헌터 장비 포함) · 이클립스 T3·T4 1칸 / T5·T6 2칸 / E 3칸 · T1·T2 없음.</li><li>굴림 = 서버(roll_option) · 옵션 초기화권으로 전부 다시 굴림. 강화 배율 적용 안 함.</li></ul></div>
+<div><h3>이클립스 승급 T1→E</h3>
+<div class=tw><table><tr><th>부위</th><th>T1</th><th>T2</th><th>T3</th><th>T4</th><th>T5</th><th>T6</th><th>E</th></tr>
+<tr><td>사이드 공·마공</td><td>600</td><td>900</td><td>1,800</td><td>1,950</td><td>2,100</td><td>2,250</td><td>2,400</td></tr>
+<tr><td>서클릿 방·마방</td><td>50</td><td>75</td><td>150</td><td>163</td><td>175</td><td>188</td><td>200</td></tr>
+<tr><td>로브 HP</td><td>1,500</td><td>2,250</td><td>4,500</td><td>4,875</td><td>5,250</td><td>5,625</td><td>6,000</td></tr>
+<tr><td>로브 MP</td><td>500</td><td>750</td><td>1,500</td><td>1,625</td><td>1,750</td><td>1,875</td><td>2,000</td></tr>
+<tr><td>레깅스·건틀릿·그리브 %</td><td>15</td><td>22</td><td>35</td><td>36</td><td>37</td><td>38</td><td>40</td></tr></table></div>
+<ul><li>승급 재료 달빛조각 10 / 20 / 30 / 40 / 50 / 60 + 골드 50,000(단계마다). 기준 = 미드나이트 Lv.100 값 × 0.5/0.75/1.5/1.625/1.75/1.875/2.0.</li></ul>
+<h3 style="margin-top:12px">오퍼레이터의 증표 T1→T6</h3>
+<div class=tw><table><tr><th></th><th>T1</th><th>T2</th><th>T3</th><th>T4</th><th>T5</th><th>T6</th></tr>
+<tr><td>공·마공</td><td>150</td><td>225</td><td>450</td><td>500</td><td>550</td><td>700</td></tr><tr><td>HP</td><td>1,000</td><td>1,500</td><td>3,000</td><td>3,500</td><td>4,000</td><td>5,000</td></tr><tr><td>치명타 피해 %</td><td>10</td><td>15</td><td>25</td><td>30</td><td>35</td><td>50</td></tr></table></div></div>
+<div><h3>미드나이트(레벨 비례, L = 플레이어 레벨 ≤ 100)</h3>
+<ul><li>후드 방·마방 +L · 로브 HP +30L MP +10L · 팬츠 피해 감소 5+0.25L% · 글러브 치명타 5+0.25L% · 부츠 회피 5+0.25L% · 소드 공·마공 200+10L + 치명타 피해 15%</li>
+<li>세트 효과: 6부위 전부 장착 시 기초 스탯 6종 각 +40 (링·오브는 세트 수에 안 셈)</li><li>자정의 힘: 자정 ±1시간 전투 진입 시 미드나이트 장비 8종 전체 ×1.5</li>
+<li>획득: 모든 몬스터 부위당 0.01%(야생·게이트 공통)</li></ul>
+<h3 style="margin-top:12px">세트 성격(1009 마스터)</h3>
+<ul><li>미드나이트 = 레벨 비례 단장·검사 / 이클립스 = 극딜 근접(고정 수치, T3부터 미드나이트를 넘음) / 여명 = 탱커(미구현)</li></ul></div>
+</div></details>
+
+<section id=s0><h2>시작 · 상점 · 제작 <small>28종</small></h2><p class=desc>튜토리얼 지급 보급형, 일반 상점 보급 무기(100골드), 제작소 엘리트 헌터 장비(보급형 +5 + 골드)</p>
+<div class=wrap><table class=grid><thead><tr><th></th><th>장비</th><th>주옵션(강화 배율 적용 칸)</th><th>부가옵션 · 세트 · 승급</th><th>추가옵션 칸</th><th>획득</th></tr></thead>
+<tbody><tr class=item id="EQ_WEAPON_000">
+<td class=ic><img src="../items/EQ_WEAPON_000.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>보급형 장검</b><br><code>EQ_WEAPON_000</code><br><span class=meta>무기 · T1 · 등급 F</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>공격력</td><td>15</td><td>38</td></tr></table></td>
+<td class=sub><ul><li class=dim>없음</li></ul></td>
+<td class=opt>없음(T3 미만)</td>
+<td class=src><ul><li>튜토리얼 클리어 지급</li><li>일반 상점 100 골드</li></ul></td></tr><tr class=item id="EQ_HEAD_000">
+<td class=ic><img src="../items/EQ_HEAD_000.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>보급형 전투안경</b><br><code>EQ_HEAD_000</code><br><span class=meta>투구 · T1 · 등급 F</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>방어력</td><td>3</td><td>8</td></tr></table></td>
+<td class=sub><ul><li class=dim>없음</li></ul></td>
+<td class=opt>없음(T3 미만)</td>
+<td class=src><ul><li>튜토리얼 클리어 지급</li></ul></td></tr><tr class=item id="EQ_TOP_000">
+<td class=ic><img src="../items/EQ_TOP_000.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>보급형 전투복 상의</b><br><code>EQ_TOP_000</code><br><span class=meta>상의 · T1 · 등급 F</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>방어력</td><td>5</td><td>12</td></tr><tr><td>최대 HP</td><td>200</td><td>500</td></tr></table></td>
+<td class=sub><ul><li class=dim>없음</li></ul></td>
+<td class=opt>없음(T3 미만)</td>
+<td class=src><ul><li>튜토리얼 클리어 지급</li></ul></td></tr><tr class=item id="EQ_BOTTOM_000">
+<td class=ic><img src="../items/EQ_BOTTOM_000.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>보급형 전투복 하의</b><br><code>EQ_BOTTOM_000</code><br><span class=meta>하의 · T1 · 등급 F</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>방어력</td><td>4</td><td>10</td></tr><tr><td>최대 HP</td><td>150</td><td>375</td></tr></table></td>
+<td class=sub><ul><li class=dim>없음</li></ul></td>
+<td class=opt>없음(T3 미만)</td>
+<td class=src><ul><li>튜토리얼 클리어 지급</li></ul></td></tr><tr class=item id="EQ_GLOVES_000">
+<td class=ic><img src="../items/EQ_GLOVES_000.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>보급형 전투장갑</b><br><code>EQ_GLOVES_000</code><br><span class=meta>장갑 · T1 · 등급 F</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>방어력</td><td>3</td><td>8</td></tr></table></td>
+<td class=sub><ul><li class=dim>없음</li></ul></td>
+<td class=opt>없음(T3 미만)</td>
+<td class=src><ul><li>튜토리얼 클리어 지급</li></ul></td></tr><tr class=item id="EQ_SHOES_000">
+<td class=ic><img src="../items/EQ_SHOES_000.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>보급형 전투화</b><br><code>EQ_SHOES_000</code><br><span class=meta>신발 · T1 · 등급 F</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>최대 HP</td><td>100</td><td>250</td></tr></table></td>
+<td class=sub><ul><li class=dim>없음</li></ul></td>
+<td class=opt>없음(T3 미만)</td>
+<td class=src><ul><li>튜토리얼 클리어 지급</li></ul></td></tr><tr class=item id="EQ_SHIELD_001">
+<td class=ic><img src="../items/EQ_SHIELD_001.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>보급형 방패</b><br><code>EQ_SHIELD_001</code><br><span class=meta>무기 · T1 · 등급 F</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>공격력</td><td>12</td><td>30</td></tr></table></td>
+<td class=sub><ul><li class=dim>없음</li></ul></td>
+<td class=opt>없음(T3 미만)</td>
+<td class=src><ul><li>일반 상점 100 골드</li></ul></td></tr><tr class=item id="EQ_BASIC_CROSSBOW">
+<td class=ic><img src="../items/EQ_BASIC_CROSSBOW.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>보급형 석궁</b><br><code>EQ_BASIC_CROSSBOW</code><br><span class=meta>무기 · T1 · 등급 F</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>공격력</td><td>16</td><td>40</td></tr></table></td>
+<td class=sub><ul><li class=dim>없음</li></ul></td>
+<td class=opt>없음(T3 미만)</td>
+<td class=src><ul><li>일반 상점 100 골드</li></ul></td></tr><tr class=item id="EQ_BASIC_DAGGER">
+<td class=ic><img src="../items/EQ_BASIC_DAGGER.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>보급형 단검</b><br><code>EQ_BASIC_DAGGER</code><br><span class=meta>무기 · T1 · 등급 F</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>공격력</td><td>12</td><td>30</td></tr></table></td>
+<td class=sub><ul><li class=dim>없음</li></ul></td>
+<td class=opt>없음(T3 미만)</td>
+<td class=src><ul><li>일반 상점 100 골드</li></ul></td></tr><tr class=item id="EQ_BASIC_GREATSWORD">
+<td class=ic><img src="../items/EQ_BASIC_GREATSWORD.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>보급형 대검</b><br><code>EQ_BASIC_GREATSWORD</code><br><span class=meta>무기 · T1 · 등급 F</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>공격력</td><td>25</td><td>62</td></tr></table></td>
+<td class=sub><ul><li class=dim>없음</li></ul></td>
+<td class=opt>없음(T3 미만)</td>
+<td class=src><ul><li>일반 상점 100 골드</li></ul></td></tr><tr class=item id="EQ_BASIC_KNUCKLE">
+<td class=ic><img src="../items/EQ_BASIC_KNUCKLE.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>보급형 너클</b><br><code>EQ_BASIC_KNUCKLE</code><br><span class=meta>무기 · T1 · 등급 F</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>공격력</td><td>14</td><td>35</td></tr></table></td>
+<td class=sub><ul><li class=dim>없음</li></ul></td>
+<td class=opt>없음(T3 미만)</td>
+<td class=src><ul><li>일반 상점 100 골드</li></ul></td></tr><tr class=item id="EQ_BASIC_ORB">
+<td class=ic><img src="../items/EQ_BASIC_ORB.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>보급형 마도구</b><br><code>EQ_BASIC_ORB</code><br><span class=meta>무기 · T1 · 등급 F</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>마법공격력</td><td>20</td><td>50</td></tr></table></td>
+<td class=sub><ul><li class=dim>없음</li></ul></td>
+<td class=opt>없음(T3 미만)</td>
+<td class=src><ul><li>일반 상점 100 골드</li></ul></td></tr><tr class=item id="EQ_BASIC_SPEAR">
+<td class=ic><img src="../items/EQ_BASIC_SPEAR.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>보급형 창</b><br><code>EQ_BASIC_SPEAR</code><br><span class=meta>무기 · T1 · 등급 F</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>공격력</td><td>18</td><td>45</td></tr></table></td>
+<td class=sub><ul><li class=dim>없음</li></ul></td>
+<td class=opt>없음(T3 미만)</td>
+<td class=src><ul><li>일반 상점 100 골드</li></ul></td></tr><tr class=item id="ACC_EAR_ELITE">
+<td class=ic><img src="../items/ACC_EAR_ELITE.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>엘리트 헌터의 귀걸이</b><br><code>ACC_EAR_ELITE</code><br><span class=meta>귀걸이 · T4 · 등급 C</span><span class='badge dim'>인덱스 밖</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>값</th><th></th></tr><tr><td colspan=3 class=dim>—</td></tr></table></td>
+<td class=sub><ul><li>부가(강화 무관): 회피 6% · 드랍 보너스 4% · 탐지 4</li></ul></td>
+<td class=opt>1칸</td>
+<td class=src><ul><li>제작소: 헌터의 귀걸이 +5 1개 + 골드 50,000</li></ul></td></tr><tr class=item id="EQ_ELITE_BOTTOM">
+<td class=ic><img src="../items/EQ_ELITE_BOTTOM.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>엘리트 헌터의 제복 바지</b><br><code>EQ_ELITE_BOTTOM</code><br><span class=meta>하의 · T3 · 등급 E</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>방어력</td><td>30</td><td>75</td></tr><tr><td>마법방어력</td><td>30</td><td>75</td></tr><tr><td>최대 HP</td><td>600</td><td>1500</td></tr></table></td>
+<td class=sub><ul><li class=dim>없음</li></ul></td>
+<td class=opt>1칸</td>
+<td class=src><ul><li>제작소: 보급형 전투복 하의 +5 1개 + 골드 10,000</li></ul></td></tr><tr class=item id="EQ_ELITE_CROSSBOW">
+<td class=ic><img src="../items/EQ_ELITE_CROSSBOW.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>엘리트 헌터의 석궁</b><br><code>EQ_ELITE_CROSSBOW</code><br><span class=meta>무기 · T3 · 등급 E</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>공격력</td><td>48</td><td>120</td></tr></table></td>
+<td class=sub><ul><li>부가(강화 무관): 명중 5% · 방어 관통 10%</li></ul></td>
+<td class=opt>1칸</td>
+<td class=src><ul><li>제작소: 보급형 석궁 +5 1개 + 골드 10,000</li></ul></td></tr><tr class=item id="EQ_ELITE_DAGGER">
+<td class=ic><img src="../items/EQ_ELITE_DAGGER.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>엘리트 헌터의 단검</b><br><code>EQ_ELITE_DAGGER</code><br><span class=meta>무기 · T3 · 등급 E</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>공격력</td><td>36</td><td>90</td></tr></table></td>
+<td class=sub><ul><li class=dim>없음</li></ul></td>
+<td class=opt>1칸</td>
+<td class=src><ul><li>제작소: 보급형 단검 +5 1개 + 골드 10,000</li></ul></td></tr><tr class=item id="EQ_ELITE_GLOVES">
+<td class=ic><img src="../items/EQ_ELITE_GLOVES.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>엘리트 헌터의 장갑</b><br><code>EQ_ELITE_GLOVES</code><br><span class=meta>장갑 · T3 · 등급 E</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>방어력</td><td>15</td><td>38</td></tr><tr><td>마법방어력</td><td>15</td><td>38</td></tr></table></td>
+<td class=sub><ul><li>부가(강화 무관): 공격속도 3% · 시전속도 3%</li></ul></td>
+<td class=opt>1칸</td>
+<td class=src><ul><li>제작소: 보급형 전투장갑 +5 1개 + 골드 10,000</li></ul></td></tr><tr class=item id="EQ_ELITE_GREATSWORD">
+<td class=ic><img src="../items/EQ_ELITE_GREATSWORD.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>엘리트 헌터의 대검</b><br><code>EQ_ELITE_GREATSWORD</code><br><span class=meta>무기 · T3 · 등급 E</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>공격력</td><td>75</td><td>188</td></tr></table></td>
+<td class=sub><ul><li class=dim>없음</li></ul></td>
+<td class=opt>1칸</td>
+<td class=src><ul><li>제작소: 보급형 대검 +5 1개 + 골드 10,000</li></ul></td></tr><tr class=item id="EQ_ELITE_HEAD">
+<td class=ic><img src="../items/EQ_ELITE_HEAD.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>엘리트 헌터의 전투안경</b><br><code>EQ_ELITE_HEAD</code><br><span class=meta>투구 · T3 · 등급 E</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>방어력</td><td>20</td><td>50</td></tr><tr><td>마법방어력</td><td>20</td><td>50</td></tr></table></td>
+<td class=sub><ul><li>부가(강화 무관): 명중 3%</li></ul></td>
+<td class=opt>1칸</td>
+<td class=src><ul><li>제작소: 보급형 전투안경 +5 1개 + 골드 10,000</li></ul></td></tr><tr class=item id="EQ_ELITE_KNUCKLE">
+<td class=ic><img src="../items/EQ_ELITE_KNUCKLE.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>엘리트 헌터의 너클</b><br><code>EQ_ELITE_KNUCKLE</code><br><span class=meta>무기 · T3 · 등급 E</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>공격력</td><td>42</td><td>105</td></tr></table></td>
+<td class=sub><ul><li class=dim>없음</li></ul></td>
+<td class=opt>1칸</td>
+<td class=src><ul><li>제작소: 보급형 너클 +5 1개 + 골드 10,000</li></ul></td></tr><tr class=item id="EQ_ELITE_ORB">
+<td class=ic><img src="../items/EQ_ELITE_ORB.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>엘리트 헌터의 마도구</b><br><code>EQ_ELITE_ORB</code><br><span class=meta>무기 · T3 · 등급 E</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>마법공격력</td><td>60</td><td>150</td></tr></table></td>
+<td class=sub><ul><li>부가(강화 무관): 시전속도 5% · MP 재생 2</li></ul></td>
+<td class=opt>1칸</td>
+<td class=src><ul><li>제작소: 보급형 마도구 +5 1개 + 골드 10,000</li></ul></td></tr><tr class=item id="EQ_ELITE_SHOES">
+<td class=ic><img src="../items/EQ_ELITE_SHOES.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>엘리트 헌터의 부츠</b><br><code>EQ_ELITE_SHOES</code><br><span class=meta>신발 · T3 · 등급 E</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>방어력</td><td>15</td><td>38</td></tr><tr><td>마법방어력</td><td>15</td><td>38</td></tr><tr><td>최대 HP</td><td>300</td><td>750</td></tr></table></td>
+<td class=sub><ul><li>부가(강화 무관): 회피 3%</li></ul></td>
+<td class=opt>1칸</td>
+<td class=src><ul><li>제작소: 보급형 전투화 +5 1개 + 골드 10,000</li></ul></td></tr><tr class=item id="EQ_ELITE_SPEAR">
+<td class=ic><img src="../items/EQ_ELITE_SPEAR.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>엘리트 헌터의 창</b><br><code>EQ_ELITE_SPEAR</code><br><span class=meta>무기 · T3 · 등급 E</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>공격력</td><td>54</td><td>135</td></tr></table></td>
+<td class=sub><ul><li class=dim>없음</li></ul></td>
+<td class=opt>1칸</td>
+<td class=src><ul><li>제작소: 보급형 창 +5 1개 + 골드 10,000</li></ul></td></tr><tr class=item id="EQ_ELITE_SWORD">
+<td class=ic><img src="../items/EQ_ELITE_SWORD.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>엘리트 헌터의 장검</b><br><code>EQ_ELITE_SWORD</code><br><span class=meta>무기 · T3 · 등급 E</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>공격력</td><td>45</td><td>112</td></tr></table></td>
+<td class=sub><ul><li class=dim>없음</li></ul></td>
+<td class=opt>1칸</td>
+<td class=src><ul><li>제작소: 보급형 장검 +5 1개 + 골드 10,000</li></ul></td></tr><tr class=item id="EQ_ELITE_TOP">
+<td class=ic><img src="../items/EQ_ELITE_TOP.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>엘리트 헌터의 코트</b><br><code>EQ_ELITE_TOP</code><br><span class=meta>상의 · T3 · 등급 E</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>방어력</td><td>40</td><td>100</td></tr><tr><td>마법방어력</td><td>40</td><td>100</td></tr><tr><td>최대 HP</td><td>800</td><td>2000</td></tr></table></td>
+<td class=sub><ul><li class=dim>없음</li></ul></td>
+<td class=opt>1칸</td>
+<td class=src><ul><li>제작소: 보급형 전투복 상의 +5 1개 + 골드 10,000</li></ul></td></tr><tr class=item id="ACC_NECK_OPERATOR">
+<td class=ic><img src="../items/ACC_NECK_OPERATOR.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>오퍼레이터의 증표</b><br><code>ACC_NECK_OPERATOR</code><br><span class=meta>목걸이 · T1→T6(승급) · 등급 S</span><span class='badge dim'>인덱스 밖</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>값</th><th></th></tr><tr><td>공격력·마법공격력</td><td>T1:150 / T2:225 / T3:450 / T4:500 / T5:550 / T6:700</td><td></td></tr><tr><td>최대 HP</td><td>T1:1,000 / T2:1,500 / T3:3,000 / T4:3,500 / T5:4,000 / T6:5,000</td><td></td></tr><tr><td>치명타 피해 %</td><td>T1:10 / T2:15 / T3:25 / T4:30 / T5:35 / T6:50</td><td></td></tr></table></td>
+<td class=sub><ul><li>강화 불가(+0 고정) · 승급 재료 = 미장착 +0 T1 증표 1/2/3/4/5개(T1→T2 … T5→T6)</li><li>T6 소지 시 콘솔 방문마다 옵션 초기화권 10 또는 에이전트 계약서 10</li></ul></td>
+<td class=opt>T3 이상 1칸</td>
+<td class=src><ul><li>니바 시스템 콘솔(그랜드 퀘스트 50 보상 동행) 방문 상자</li></ul></td></tr><tr class=item id="EQ_ELITE_SHIELD">
+<td class=ic><img src="../items/EQ_ELITE_SHIELD.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>엘리트 헌터의 방패</b><br><code>EQ_ELITE_SHIELD</code><br><span class=meta>무기 · T3 · 등급 E</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>공격력</td><td>36</td><td>90</td></tr><tr><td>방어력</td><td>30</td><td>75</td></tr></table></td>
+<td class=sub><ul><li class=dim>없음</li></ul></td>
+<td class=opt>1칸</td>
+<td class=src><ul><li>제작소: 보급형 방패 +5 1개 + 골드 10,000</li></ul></td></tr></tbody></table></div></section><section id=s1><h2>Lv.1~10 구간 드랍 <small>3종</small></h2><p class=desc>몬스터 출현 레벨(가장 낮은 레벨 기준으로 구간 배정) · 확률 = reward_pool</p>
+<div class=wrap><table class=grid><thead><tr><th></th><th>장비</th><th>주옵션(강화 배율 적용 칸)</th><th>부가옵션 · 세트 · 승급</th><th>추가옵션 칸</th><th>획득</th></tr></thead>
+<tbody><tr class=item id="EQ_WEAPON_105">
+<td class=ic><img src="../items/EQ_WEAPON_105.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>고블린의 단검</b><br><code>EQ_WEAPON_105</code><br><span class=meta>무기 · T1 · 등급 F</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>공격력</td><td>13</td><td>32</td></tr></table></td>
+<td class=sub><ul><li class=dim>없음</li></ul></td>
+<td class=opt>없음(T3 미만)</td>
+<td class=src><ul><li>고블린 Lv.1~4 1%</li></ul></td></tr><tr class=item id="EQ_TOP_605">
+<td class=ic><img src="../items/EQ_TOP_605.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>스콜피온의 상갑</b><br><code>EQ_TOP_605</code><br><span class=meta>상의 · T1 · 등급 F</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>방어력</td><td>7</td><td>18</td></tr><tr><td>최대 HP</td><td>250</td><td>625</td></tr></table></td>
+<td class=sub><ul><li class=dim>없음</li></ul></td>
+<td class=opt>없음(T3 미만)</td>
+<td class=src><ul><li>스콜피온 Lv.1~8 1%</li></ul></td></tr><tr class=item id="EQ_BOTTOM_605">
+<td class=ic><img src="../items/EQ_BOTTOM_605.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>스콜피온의 하갑</b><br><code>EQ_BOTTOM_605</code><br><span class=meta>하의 · T1 · 등급 F</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>방어력</td><td>5</td><td>12</td></tr><tr><td>최대 HP</td><td>175</td><td>438</td></tr></table></td>
+<td class=sub><ul><li class=dim>없음</li></ul></td>
+<td class=opt>없음(T3 미만)</td>
+<td class=src><ul><li>스콜피온 Lv.1~8 1%</li></ul></td></tr></tbody></table></div></section><section id=s2><h2>Lv.11~20 구간 드랍 <small>1종</small></h2><p class=desc>몬스터 출현 레벨(가장 낮은 레벨 기준으로 구간 배정) · 확률 = reward_pool</p>
+<div class=wrap><table class=grid><thead><tr><th></th><th>장비</th><th>주옵션(강화 배율 적용 칸)</th><th>부가옵션 · 세트 · 승급</th><th>추가옵션 칸</th><th>획득</th></tr></thead>
+<tbody><tr class=item id="ACC_ARTIFACT_101">
+<td class=ic><img src="../items/ACC_ARTIFACT_101.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>이세계 전구체</b><br><code>ACC_ARTIFACT_101</code><br><span class=meta>아티팩트 · T2 · 등급 E</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>마법방어력</td><td>20</td><td>50</td></tr></table></td>
+<td class=sub><ul><li>부가(강화 무관): 기초 스탯 6종 각 +3(ItemBaseBonus)</li></ul></td>
+<td class=opt>없음(T3 미만)</td>
+<td class=src><ul><li>추적자 사역마 Lv.17~19 0.5%</li></ul></td></tr></tbody></table></div></section><section id=s3><h2>Lv.21~30 구간 드랍 <small>2종</small></h2><p class=desc>몬스터 출현 레벨(가장 낮은 레벨 기준으로 구간 배정) · 확률 = reward_pool</p>
+<div class=wrap><table class=grid><thead><tr><th></th><th>장비</th><th>주옵션(강화 배율 적용 칸)</th><th>부가옵션 · 세트 · 승급</th><th>추가옵션 칸</th><th>획득</th></tr></thead>
+<tbody><tr class=item id="EQ_WEAPON_RUIN_DAGGER">
+<td class=ic><img src="../items/EQ_WEAPON_RUIN_DAGGER.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>폐허의 비수</b><br><code>EQ_WEAPON_RUIN_DAGGER</code><br><span class=meta>무기 · T3 · 등급 E</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>공격력</td><td>34</td><td>85</td></tr></table></td>
+<td class=sub><ul><li>부가(강화 무관): 치명타 확률 4%</li></ul></td>
+<td class=opt>1칸</td>
+<td class=src><ul><li>폐허의 습격자 Lv.30~35 1%</li></ul></td></tr><tr class=item id="EQ_HEAD_RUIN">
+<td class=ic><img src="../items/EQ_HEAD_RUIN.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>습격자의 검은 모자</b><br><code>EQ_HEAD_RUIN</code><br><span class=meta>투구 · T3 · 등급 E</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>방어력</td><td>16</td><td>40</td></tr><tr><td>마법방어력</td><td>12</td><td>30</td></tr></table></td>
+<td class=sub><ul><li>부가(강화 무관): 회피 3%</li></ul></td>
+<td class=opt>1칸</td>
+<td class=src><ul><li>폐허의 습격자 Lv.30~35 1%</li></ul></td></tr></tbody></table></div></section><section id=s4><h2>Lv.31~40 구간 드랍 <small>6종</small></h2><p class=desc>몬스터 출현 레벨(가장 낮은 레벨 기준으로 구간 배정) · 확률 = reward_pool</p>
+<div class=wrap><table class=grid><thead><tr><th></th><th>장비</th><th>주옵션(강화 배율 적용 칸)</th><th>부가옵션 · 세트 · 승급</th><th>추가옵션 칸</th><th>획득</th></tr></thead>
+<tbody><tr class=item id="EQ_WEAPON_GREGOR_KNUCKLE">
+<td class=ic><img src="../items/EQ_WEAPON_GREGOR_KNUCKLE.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>그레고르의 철권</b><br><code>EQ_WEAPON_GREGOR_KNUCKLE</code><br><span class=meta>무기 · T3 · 등급 E</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>공격력</td><td>40</td><td>100</td></tr><tr><td>최대 HP</td><td>200</td><td>500</td></tr></table></td>
+<td class=sub><ul><li class=dim>없음</li></ul></td>
+<td class=opt>1칸</td>
+<td class=src><ul><li>그레고르 Lv.31~35 1%</li></ul></td></tr><tr class=item id="EQ_TOP_GREGOR">
+<td class=ic><img src="../items/EQ_TOP_GREGOR.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>그레고르의 도복</b><br><code>EQ_TOP_GREGOR</code><br><span class=meta>상의 · T3 · 등급 E</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>방어력</td><td>30</td><td>75</td></tr><tr><td>마법방어력</td><td>25</td><td>62</td></tr><tr><td>최대 HP</td><td>600</td><td>1500</td></tr></table></td>
+<td class=sub><ul><li>부가(강화 무관): 회피 4%</li></ul></td>
+<td class=opt>1칸</td>
+<td class=src><ul><li>그레고르 Lv.31~35 1%</li></ul></td></tr><tr class=item id="EQ_GLOVES_GREGOR">
+<td class=ic><img src="../items/EQ_GLOVES_GREGOR.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>그레고르의 수련 장갑</b><br><code>EQ_GLOVES_GREGOR</code><br><span class=meta>장갑 · T3 · 등급 E</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>방어력</td><td>18</td><td>45</td></tr><tr><td>마법방어력</td><td>10</td><td>25</td></tr></table></td>
+<td class=sub><ul><li>부가(강화 무관): 명중 4%</li></ul></td>
+<td class=opt>1칸</td>
+<td class=src><ul><li>그레고르 Lv.31~35 1%</li></ul></td></tr><tr class=item id="EQ_WEAPON_VEIL_BOW">
+<td class=ic><img src="../items/EQ_WEAPON_VEIL_BOW.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>베일의 활</b><br><code>EQ_WEAPON_VEIL_BOW</code><br><span class=meta>무기 · T3 · 등급 E</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>공격력</td><td>46</td><td>115</td></tr></table></td>
+<td class=sub><ul><li>부가(강화 무관): 치명타 확률 3% · 명중 5%</li></ul></td>
+<td class=opt>1칸</td>
+<td class=src><ul><li>베일 Lv.34~39 1%</li></ul></td></tr><tr class=item id="ACC_CLOAK_VEIL">
+<td class=ic><img src="../items/ACC_CLOAK_VEIL.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>베일의 망토</b><br><code>ACC_CLOAK_VEIL</code><br><span class=meta>망토 · T3 · 등급 E</span><span class='badge dim'>인덱스 밖</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>방어력</td><td>15</td><td>38</td></tr><tr><td>마법방어력</td><td>20</td><td>50</td></tr></table></td>
+<td class=sub><ul><li>부가(강화 무관): 회피 4%</li></ul></td>
+<td class=opt>1칸</td>
+<td class=src><ul><li>베일 Lv.34~39 1%</li></ul></td></tr><tr class=item id="ACC_ARTIFACT_MIRROR_MASK">
+<td class=ic><img src="../items/ACC_ARTIFACT_MIRROR_MASK.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>분신인형의 마스크</b><br><code>ACC_ARTIFACT_MIRROR_MASK</code><br><span class=meta>아티팩트 · T3 · 등급 D</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>방어력</td><td>30</td><td>75</td></tr></table></td>
+<td class=sub><ul><li>부가(강화 무관): 치명타 확률 8% · 회피 8%</li></ul></td>
+<td class=opt>1칸</td>
+<td class=src><ul><li>분신인형 Lv.40~45 0.2%</li></ul></td></tr></tbody></table></div></section><section id=s5><h2>Lv.41~50 구간 드랍 <small>1종</small></h2><p class=desc>몬스터 출현 레벨(가장 낮은 레벨 기준으로 구간 배정) · 확률 = reward_pool</p>
+<div class=wrap><table class=grid><thead><tr><th></th><th>장비</th><th>주옵션(강화 배율 적용 칸)</th><th>부가옵션 · 세트 · 승급</th><th>추가옵션 칸</th><th>획득</th></tr></thead>
+<tbody><tr class=item id="ACC_ARTIFACT_WYVERN_EYE">
+<td class=ic><img src="../items/ACC_ARTIFACT_WYVERN_EYE.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>와이번의 눈</b><br><code>ACC_ARTIFACT_WYVERN_EYE</code><br><span class=meta>아티팩트 · T4 · 등급 C</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>최대 MP</td><td>300</td><td>750</td></tr><tr><td>스킬 피해량</td><td>10%</td><td>25%</td></tr></table></td>
+<td class=sub><ul><li class=dim>없음</li></ul></td>
+<td class=opt>1칸</td>
+<td class=src><ul><li>와이번 Lv.42~48 0.2%</li></ul></td></tr></tbody></table></div></section><section id=s6><h2>Lv.51~60 구간 드랍 <small>13종</small></h2><p class=desc>몬스터 출현 레벨(가장 낮은 레벨 기준으로 구간 배정) · 확률 = reward_pool</p>
+<div class=wrap><table class=grid><thead><tr><th></th><th>장비</th><th>주옵션(강화 배율 적용 칸)</th><th>부가옵션 · 세트 · 승급</th><th>추가옵션 칸</th><th>획득</th></tr></thead>
+<tbody><tr class=item id="EQ_WEAPON_201">
+<td class=ic><img src="../items/EQ_WEAPON_201.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>오르넬의 마도서</b><br><code>EQ_WEAPON_201</code><br><span class=meta>무기 · T5 · 등급 A</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>마법공격력</td><td>270</td><td>675</td></tr><tr><td>최대 HP</td><td>20</td><td>50</td></tr><tr><td>최대 MP</td><td>60</td><td>150</td></tr></table></td>
+<td class=sub><ul><li>부가(강화 무관): 시전속도 6% · 치명타 확률 9% · 치명타 피해 30% · 명중 3%</li></ul></td>
+<td class=opt>1칸</td>
+<td class=src><ul><li>오르넬 Lv.51~53 0.1%</li></ul></td></tr><tr class=item id="EQ_HEAD_201">
+<td class=ic><img src="../items/EQ_HEAD_201.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>오르넬의 후드</b><br><code>EQ_HEAD_201</code><br><span class=meta>투구 · T5 · 등급 A</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>방어력</td><td>45</td><td>112</td></tr><tr><td>마법방어력</td><td>75</td><td>188</td></tr><tr><td>최대 HP</td><td>500</td><td>1250</td></tr><tr><td>최대 MP</td><td>60</td><td>150</td></tr></table></td>
+<td class=sub><ul><li>부가(강화 무관): 명중 6%</li></ul></td>
+<td class=opt>1칸</td>
+<td class=src><ul><li>오르넬 Lv.51~53 0.1%</li></ul></td></tr><tr class=item id="EQ_TOP_201">
+<td class=ic><img src="../items/EQ_TOP_201.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>오르넬의 로브</b><br><code>EQ_TOP_201</code><br><span class=meta>상의 · T5 · 등급 A</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>방어력</td><td>60</td><td>150</td></tr><tr><td>마법방어력</td><td>100</td><td>250</td></tr><tr><td>최대 HP</td><td>800</td><td>2000</td></tr><tr><td>최대 MP</td><td>90</td><td>225</td></tr></table></td>
+<td class=sub><ul><li>부가(강화 무관): 피해 감소 4.5%</li></ul></td>
+<td class=opt>1칸</td>
+<td class=src><ul><li>오르넬 Lv.51~53 0.1%</li></ul></td></tr><tr class=item id="EQ_BOTTOM_201">
+<td class=ic><img src="../items/EQ_BOTTOM_201.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>오르넬의 하의</b><br><code>EQ_BOTTOM_201</code><br><span class=meta>하의 · T5 · 등급 A</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>방어력</td><td>50</td><td>125</td></tr><tr><td>마법방어력</td><td>85</td><td>212</td></tr><tr><td>최대 HP</td><td>650</td><td>1625</td></tr><tr><td>최대 MP</td><td>60</td><td>150</td></tr></table></td>
+<td class=sub><ul><li>부가(강화 무관): 회피 4.5%</li></ul></td>
+<td class=opt>1칸</td>
+<td class=src><ul><li>오르넬 Lv.51~53 0.1%</li></ul></td></tr><tr class=item id="EQ_GLOVES_201">
+<td class=ic><img src="../items/EQ_GLOVES_201.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>오르넬의 장갑</b><br><code>EQ_GLOVES_201</code><br><span class=meta>장갑 · T5 · 등급 A</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>방어력</td><td>15</td><td>38</td></tr><tr><td>마법공격력</td><td>60</td><td>150</td></tr><tr><td>마법방어력</td><td>25</td><td>62</td></tr><tr><td>최대 HP</td><td>250</td><td>625</td></tr><tr><td>최대 MP</td><td>40</td><td>100</td></tr></table></td>
+<td class=sub><ul><li>부가(강화 무관): 공격속도 4.5% · 시전속도 6% · 치명타 확률 6% · 치명타 피해 9%</li></ul></td>
+<td class=opt>1칸</td>
+<td class=src><ul><li>오르넬 Lv.51~53 0.1%</li></ul></td></tr><tr class=item id="EQ_SHOES_201">
+<td class=ic><img src="../items/EQ_SHOES_201.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>오르넬의 부츠</b><br><code>EQ_SHOES_201</code><br><span class=meta>신발 · T5 · 등급 A</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>방어력</td><td>30</td><td>75</td></tr><tr><td>마법방어력</td><td>50</td><td>125</td></tr><tr><td>최대 HP</td><td>350</td><td>875</td></tr><tr><td>최대 MP</td><td>80</td><td>200</td></tr></table></td>
+<td class=sub><ul><li>부가(강화 무관): 공격속도 7.5% · 시전속도 9% · 회피 6%</li></ul></td>
+<td class=opt>1칸</td>
+<td class=src><ul><li>오르넬 Lv.51~53 0.1%</li></ul></td></tr><tr class=item id="EQ_WEAPON_202">
+<td class=ic><img src="../items/EQ_WEAPON_202.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>이그넬의 롱소드</b><br><code>EQ_WEAPON_202</code><br><span class=meta>무기 · T5 · 등급 A</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>공격력</td><td>330</td><td>825</td></tr><tr><td>최대 HP</td><td>20</td><td>50</td></tr></table></td>
+<td class=sub><ul><li>부가(강화 무관): 치명타 확률 10.5% · 치명타 피해 35% · 명중 3.5%</li></ul></td>
+<td class=opt>1칸</td>
+<td class=src><ul><li>이그넬 Lv.54~56 0.1%</li></ul></td></tr><tr class=item id="EQ_HEAD_202">
+<td class=ic><img src="../items/EQ_HEAD_202.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>이그넬의 투구</b><br><code>EQ_HEAD_202</code><br><span class=meta>투구 · T5 · 등급 A</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>방어력</td><td>75</td><td>188</td></tr><tr><td>마법방어력</td><td>45</td><td>112</td></tr><tr><td>최대 HP</td><td>800</td><td>2000</td></tr><tr><td>최대 MP</td><td>10</td><td>25</td></tr></table></td>
+<td class=sub><ul><li>부가(강화 무관): 명중 7%</li></ul></td>
+<td class=opt>1칸</td>
+<td class=src><ul><li>이그넬 Lv.54~56 0.1%</li></ul></td></tr><tr class=item id="EQ_TOP_202">
+<td class=ic><img src="../items/EQ_TOP_202.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>이그넬의 갑옷</b><br><code>EQ_TOP_202</code><br><span class=meta>상의 · T5 · 등급 A</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>방어력</td><td>100</td><td>250</td></tr><tr><td>마법방어력</td><td>60</td><td>150</td></tr><tr><td>최대 HP</td><td>1200</td><td>3000</td></tr><tr><td>최대 MP</td><td>15</td><td>38</td></tr></table></td>
+<td class=sub><ul><li>부가(강화 무관): 피해 감소 5.2%</li></ul></td>
+<td class=opt>1칸</td>
+<td class=src><ul><li>이그넬 Lv.54~56 0.1%</li></ul></td></tr><tr class=item id="EQ_BOTTOM_202">
+<td class=ic><img src="../items/EQ_BOTTOM_202.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>이그넬의 하갑</b><br><code>EQ_BOTTOM_202</code><br><span class=meta>하의 · T5 · 등급 A</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>방어력</td><td>85</td><td>212</td></tr><tr><td>마법방어력</td><td>50</td><td>125</td></tr><tr><td>최대 HP</td><td>1000</td><td>2500</td></tr><tr><td>최대 MP</td><td>10</td><td>25</td></tr></table></td>
+<td class=sub><ul><li>부가(강화 무관): 회피 5.2%</li></ul></td>
+<td class=opt>1칸</td>
+<td class=src><ul><li>이그넬 Lv.54~56 0.1%</li></ul></td></tr><tr class=item id="EQ_GLOVES_202">
+<td class=ic><img src="../items/EQ_GLOVES_202.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>이그넬의 장갑</b><br><code>EQ_GLOVES_202</code><br><span class=meta>장갑 · T5 · 등급 A</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>공격력</td><td>60</td><td>150</td></tr><tr><td>방어력</td><td>25</td><td>62</td></tr><tr><td>마법방어력</td><td>15</td><td>38</td></tr><tr><td>최대 HP</td><td>400</td><td>1000</td></tr><tr><td>최대 MP</td><td>10</td><td>25</td></tr></table></td>
+<td class=sub><ul><li>부가(강화 무관): 공격속도 8% · 시전속도 3.5% · 치명타 확률 7% · 치명타 피해 10.5%</li></ul></td>
+<td class=opt>1칸</td>
+<td class=src><ul><li>이그넬 Lv.54~56 0.1%</li></ul></td></tr><tr class=item id="EQ_SHOES_202">
+<td class=ic><img src="../items/EQ_SHOES_202.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>이그넬의 부츠</b><br><code>EQ_SHOES_202</code><br><span class=meta>신발 · T5 · 등급 A</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>방어력</td><td>50</td><td>125</td></tr><tr><td>마법방어력</td><td>30</td><td>75</td></tr><tr><td>최대 HP</td><td>550</td><td>1375</td></tr><tr><td>최대 MP</td><td>30</td><td>75</td></tr></table></td>
+<td class=sub><ul><li>부가(강화 무관): 공격속도 10% · 시전속도 5.2% · 회피 7%</li></ul></td>
+<td class=opt>1칸</td>
+<td class=src><ul><li>이그넬 Lv.54~56 0.1%</li></ul></td></tr><tr class=item id="ACC_EAR_JYAKO">
+<td class=ic><img src="../items/ACC_EAR_JYAKO.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>쟈코의 귀걸이</b><br><code>ACC_EAR_JYAKO</code><br><span class=meta>귀걸이 · T5 · 등급 A</span><span class='badge dim'>인덱스 밖</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>값</th><th></th></tr><tr><td colspan=3 class=dim>—</td></tr></table></td>
+<td class=sub><ul><li>부가(강화 무관): 공격속도 5% · 회피 5%</li></ul></td>
+<td class=opt>1칸</td>
+<td class=src><ul><li>쟈코 Lv.60~75 0.2%</li></ul></td></tr></tbody></table></div></section><section id=s7><h2>Lv.71~80 구간 드랍 <small>2종</small></h2><p class=desc>몬스터 출현 레벨(가장 낮은 레벨 기준으로 구간 배정) · 확률 = reward_pool</p>
+<div class=wrap><table class=grid><thead><tr><th></th><th>장비</th><th>주옵션(강화 배율 적용 칸)</th><th>부가옵션 · 세트 · 승급</th><th>추가옵션 칸</th><th>획득</th></tr></thead>
+<tbody><tr class=item id="EQ_WEAPON_YETI_KNUCKLE">
+<td class=ic><img src="../items/EQ_WEAPON_YETI_KNUCKLE.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>예티의 서리 주먹</b><br><code>EQ_WEAPON_YETI_KNUCKLE</code><br><span class=meta>무기 · T5 · 등급 A</span><span class='badge warn'>가정값</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>공격력</td><td>355</td><td>888</td></tr></table></td>
+<td class=sub><ul><li>부가(강화 무관): 치명타 확률 12% · 치명타 피해 42% · 명중 4%</li></ul></td>
+<td class=opt>1칸</td>
+<td class=src><ul><li>예티 Lv.71~95 0.2%</li></ul></td></tr><tr class=item id="ACC_CLOAK_YETI">
+<td class=ic><img src="../items/ACC_CLOAK_YETI.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>예티의 털가죽 망토</b><br><code>ACC_CLOAK_YETI</code><br><span class=meta>망토 · T5 · 등급 A</span><span class='badge dim'>인덱스 밖</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>방어력</td><td>60</td><td>150</td></tr><tr><td>마법방어력</td><td>60</td><td>150</td></tr><tr><td>최대 HP</td><td>900</td><td>2250</td></tr></table></td>
+<td class=sub><ul><li>부가(강화 무관): 피해 감소 5%</li></ul></td>
+<td class=opt>1칸</td>
+<td class=src><ul><li>예티 Lv.71~95 0.2%</li></ul></td></tr></tbody></table></div></section><section id=s8><h2>Lv.81~90 구간 드랍 <small>2종</small></h2><p class=desc>몬스터 출현 레벨(가장 낮은 레벨 기준으로 구간 배정) · 확률 = reward_pool</p>
+<div class=wrap><table class=grid><thead><tr><th></th><th>장비</th><th>주옵션(강화 배율 적용 칸)</th><th>부가옵션 · 세트 · 승급</th><th>추가옵션 칸</th><th>획득</th></tr></thead>
+<tbody><tr class=item id="EQ_WEAPON_FROZEN_GREATSWORD">
+<td class=ic><img src="../items/EQ_WEAPON_FROZEN_GREATSWORD.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>프로즌 워리어의 대검</b><br><code>EQ_WEAPON_FROZEN_GREATSWORD</code><br><span class=meta>무기 · T5 · 등급 A</span><span class='badge warn'>가정값</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>공격력</td><td>705</td><td>1762</td></tr></table></td>
+<td class=sub><ul><li>부가(강화 무관): 치명타 확률 14% · 치명타 피해 46% · 명중 5%</li></ul></td>
+<td class=opt>1칸</td>
+<td class=src><ul><li>프로즌 워리어 Lv.85~95 0.2%</li></ul></td></tr><tr class=item id="EQ_TOP_FROZEN">
+<td class=ic><img src="../items/EQ_TOP_FROZEN.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>프로즌 워리어의 갑주</b><br><code>EQ_TOP_FROZEN</code><br><span class=meta>상의 · T5 · 등급 A</span><span class='badge warn'>가정값</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>방어력</td><td>115</td><td>288</td></tr><tr><td>마법방어력</td><td>106</td><td>265</td></tr><tr><td>최대 HP</td><td>1380</td><td>3450</td></tr><tr><td>최대 MP</td><td>15</td><td>38</td></tr></table></td>
+<td class=sub><ul><li>부가(강화 무관): 피해 감소 7%</li></ul></td>
+<td class=opt>1칸</td>
+<td class=src><ul><li>프로즌 워리어 Lv.85~95 0.2%</li></ul></td></tr></tbody></table></div></section><section id=s9><h2>Lv.91~100 구간 드랍 <small>2종</small></h2><p class=desc>몬스터 출현 레벨(가장 낮은 레벨 기준으로 구간 배정) · 확률 = reward_pool</p>
+<div class=wrap><table class=grid><thead><tr><th></th><th>장비</th><th>주옵션(강화 배율 적용 칸)</th><th>부가옵션 · 세트 · 승급</th><th>추가옵션 칸</th><th>획득</th></tr></thead>
+<tbody><tr class=item id="EQ_WEAPON_501">
+<td class=ic><img src="../items/EQ_WEAPON_501.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>서리송곳니</b><br><code>EQ_WEAPON_501</code><br><span class=meta>무기 · T6 · 등급 S</span><span class='badge dim'>인덱스 밖</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>공격력</td><td>360</td><td>900</td></tr></table></td>
+<td class=sub><ul><li>부가(강화 무관): 치명타 확률 8% · 치명타 피해 30% · 명중 3%</li></ul></td>
+<td class=opt>1칸</td>
+<td class=src><ul><li>서리늑대(보스) Lv.100~100 1%</li></ul></td></tr><tr class=item id="ACC_CLOAK_501">
+<td class=ic><img src="../items/ACC_CLOAK_501.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>설원 군주의 망토</b><br><code>ACC_CLOAK_501</code><br><span class=meta>망토 · T5 · 등급 A</span><span class='badge dim'>인덱스 밖</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>방어력</td><td>80</td><td>200</td></tr><tr><td>마법방어력</td><td>80</td><td>200</td></tr><tr><td>최대 HP</td><td>300</td><td>750</td></tr></table></td>
+<td class=sub><ul><li class=dim>없음</li></ul></td>
+<td class=opt>1칸</td>
+<td class=src><ul><li>서리늑대(보스) Lv.100~100 0.5%</li></ul></td></tr></tbody></table></div></section><section id=s10><h2>전 구간 공통 — 미드나이트 세트 <small>6종</small></h2><p class=desc>모든 몬스터 부위당 0.01% · 레벨 비례 장비(Lv.100 상한) · 6부위 세트 효과</p>
+<div class=wrap><table class=grid><thead><tr><th></th><th>장비</th><th>주옵션(강화 배율 적용 칸)</th><th>부가옵션 · 세트 · 승급</th><th>추가옵션 칸</th><th>획득</th></tr></thead>
+<tbody><tr class=item id="EQ_WEAPON_301">
+<td class=ic><img src="../items/EQ_WEAPON_301.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>미드나이트 소드</b><br><code>EQ_WEAPON_301</code><br><span class=meta>무기 · M(레벨 비례) · 등급 S</span><span class='badge warn'>가정값</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>값</th><th></th></tr><tr><td>레벨 비례(L = 플레이어 레벨, 상한 100)</td><td>공격력·마법공격력 200+10L (Lv.100: 1,200) + 치명타 피해 +15%</td><td></td></tr></table></td>
+<td class=sub><ul><li>세트 효과: 6부위 전부 장착 시 기초 스탯 6종 각 +40</li><li>자정의 힘: 자정 ±1시간 전투 진입 시 미드나이트 장비 전체 ×1.5</li><li>강화 배율: 레벨 비례분 포함 평면 칸(공격·방어·HP·MP)에만 ×(1+누적%) · %칸은 강화 무관</li></ul></td>
+<td class=opt>1칸</td>
+<td class=src><ul><li>전 몬스터 공통 드랍(야생·게이트) 부위당 0.01%</li></ul></td></tr><tr class=item id="EQ_HEAD_301">
+<td class=ic><img src="../items/EQ_HEAD_301.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>미드나이트 후드</b><br><code>EQ_HEAD_301</code><br><span class=meta>투구 · M(레벨 비례) · 등급 S</span><span class='badge warn'>가정값</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>값</th><th></th></tr><tr><td>레벨 비례(L = 플레이어 레벨, 상한 100)</td><td>방어력·마법방어력 +L (Lv.100: +100)</td><td></td></tr></table></td>
+<td class=sub><ul><li>세트 효과: 6부위 전부 장착 시 기초 스탯 6종 각 +40</li><li>자정의 힘: 자정 ±1시간 전투 진입 시 미드나이트 장비 전체 ×1.5</li><li>강화 배율: 레벨 비례분 포함 평면 칸(공격·방어·HP·MP)에만 ×(1+누적%) · %칸은 강화 무관</li></ul></td>
+<td class=opt>1칸</td>
+<td class=src><ul><li>전 몬스터 공통 드랍(야생·게이트) 부위당 0.01%</li></ul></td></tr><tr class=item id="EQ_TOP_301">
+<td class=ic><img src="../items/EQ_TOP_301.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>미드나이트 로브</b><br><code>EQ_TOP_301</code><br><span class=meta>상의 · M(레벨 비례) · 등급 S</span><span class='badge warn'>가정값</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>값</th><th></th></tr><tr><td>레벨 비례(L = 플레이어 레벨, 상한 100)</td><td>HP +30L · MP +10L (Lv.100: HP 3,000 · MP 1,000)</td><td></td></tr></table></td>
+<td class=sub><ul><li>세트 효과: 6부위 전부 장착 시 기초 스탯 6종 각 +40</li><li>자정의 힘: 자정 ±1시간 전투 진입 시 미드나이트 장비 전체 ×1.5</li><li>강화 배율: 레벨 비례분 포함 평면 칸(공격·방어·HP·MP)에만 ×(1+누적%) · %칸은 강화 무관</li></ul></td>
+<td class=opt>1칸</td>
+<td class=src><ul><li>전 몬스터 공통 드랍(야생·게이트) 부위당 0.01%</li></ul></td></tr><tr class=item id="EQ_BOTTOM_301">
+<td class=ic><img src="../items/EQ_BOTTOM_301.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>미드나이트 팬츠</b><br><code>EQ_BOTTOM_301</code><br><span class=meta>하의 · M(레벨 비례) · 등급 S</span><span class='badge warn'>가정값</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>값</th><th></th></tr><tr><td>레벨 비례(L = 플레이어 레벨, 상한 100)</td><td>피해 감소 5+0.25L% (Lv.100: 30%)</td><td></td></tr></table></td>
+<td class=sub><ul><li>세트 효과: 6부위 전부 장착 시 기초 스탯 6종 각 +40</li><li>자정의 힘: 자정 ±1시간 전투 진입 시 미드나이트 장비 전체 ×1.5</li><li>강화 배율: 레벨 비례분 포함 평면 칸(공격·방어·HP·MP)에만 ×(1+누적%) · %칸은 강화 무관</li></ul></td>
+<td class=opt>1칸</td>
+<td class=src><ul><li>전 몬스터 공통 드랍(야생·게이트) 부위당 0.01%</li></ul></td></tr><tr class=item id="EQ_GLOVES_301">
+<td class=ic><img src="../items/EQ_GLOVES_301.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>미드나이트 글러브</b><br><code>EQ_GLOVES_301</code><br><span class=meta>장갑 · M(레벨 비례) · 등급 S</span><span class='badge warn'>가정값</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>값</th><th></th></tr><tr><td>레벨 비례(L = 플레이어 레벨, 상한 100)</td><td>치명타 확률 5+0.25L% (Lv.100: 30%)</td><td></td></tr></table></td>
+<td class=sub><ul><li>세트 효과: 6부위 전부 장착 시 기초 스탯 6종 각 +40</li><li>자정의 힘: 자정 ±1시간 전투 진입 시 미드나이트 장비 전체 ×1.5</li><li>강화 배율: 레벨 비례분 포함 평면 칸(공격·방어·HP·MP)에만 ×(1+누적%) · %칸은 강화 무관</li></ul></td>
+<td class=opt>1칸</td>
+<td class=src><ul><li>전 몬스터 공통 드랍(야생·게이트) 부위당 0.01%</li></ul></td></tr><tr class=item id="EQ_SHOES_301">
+<td class=ic><img src="../items/EQ_SHOES_301.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>미드나이트 부츠</b><br><code>EQ_SHOES_301</code><br><span class=meta>신발 · M(레벨 비례) · 등급 S</span><span class='badge warn'>가정값</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>값</th><th></th></tr><tr><td>레벨 비례(L = 플레이어 레벨, 상한 100)</td><td>회피 5+0.25L% (Lv.100: 30%)</td><td></td></tr></table></td>
+<td class=sub><ul><li>세트 효과: 6부위 전부 장착 시 기초 스탯 6종 각 +40</li><li>자정의 힘: 자정 ±1시간 전투 진입 시 미드나이트 장비 전체 ×1.5</li><li>강화 배율: 레벨 비례분 포함 평면 칸(공격·방어·HP·MP)에만 ×(1+누적%) · %칸은 강화 무관</li></ul></td>
+<td class=opt>1칸</td>
+<td class=src><ul><li>전 몬스터 공통 드랍(야생·게이트) 부위당 0.01%</li></ul></td></tr></tbody></table></div></section><section id=s11><h2>이클립스 이벤트 <small>7종</small></h2><p class=desc>교환상점(포인트) + 이클립스 추적자 드랍 · 승급 T1→T6→E(달빛조각)</p>
+<div class=wrap><table class=grid><thead><tr><th></th><th>장비</th><th>주옵션(강화 배율 적용 칸)</th><th>부가옵션 · 세트 · 승급</th><th>추가옵션 칸</th><th>획득</th></tr></thead>
+<tbody><tr class=item id="EQ_WEAPON_302">
+<td class=ic><img src="../items/EQ_WEAPON_302.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>이클립스 사이드</b><br><code>EQ_WEAPON_302</code><br><span class=meta>무기 · E(승급 T1→E) · 등급 A</span><span class='badge warn'>가정값</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>값</th><th></th></tr><tr><td>공격력·마법공격력</td><td>T1:600 / T2:900 / T3:1,800 / T4:1,950 / T5:2,100 / T6:2,250 / E:2,400</td><td></td></tr></table></td>
+<td class=sub><ul><li>승급: 달빛조각 10/20/30/40/50/60 + 골드 50,000(단계마다) · T1→T2→…→T6→E</li><li>강화 배율: 평면 칸에 ×(1+누적%) — 승급 단계 값 기준</li></ul></td>
+<td class=opt>T1·T2 0칸 / T3·T4 1칸 / T5·T6 2칸 / E 3칸</td>
+<td class=src><ul><li>이클립스 교환상점 10,000P (주 2회)</li><li>추적자(이클립스 기간, 유저 레벨 기준) 0.3333%</li><li>추적자(광폭)(이클립스 기간, 유저 레벨 기준) 0.3333%</li></ul></td></tr><tr class=item id="EQ_HEAD_302">
+<td class=ic><img src="../items/EQ_HEAD_302.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>이클립스 서클릿</b><br><code>EQ_HEAD_302</code><br><span class=meta>투구 · E(승급 T1→E) · 등급 A</span><span class='badge warn'>가정값</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>값</th><th></th></tr><tr><td>방어력·마법방어력</td><td>T1:50 / T2:75 / T3:150 / T4:163 / T5:175 / T6:188 / E:200</td><td></td></tr></table></td>
+<td class=sub><ul><li>승급: 달빛조각 10/20/30/40/50/60 + 골드 50,000(단계마다) · T1→T2→…→T6→E</li><li>강화 배율: 평면 칸에 ×(1+누적%) — 승급 단계 값 기준</li></ul></td>
+<td class=opt>T1·T2 0칸 / T3·T4 1칸 / T5·T6 2칸 / E 3칸</td>
+<td class=src><ul><li>이클립스 교환상점 10,000P (주 2회)</li><li>추적자(이클립스 기간, 유저 레벨 기준) 0.3333%</li><li>추적자(광폭)(이클립스 기간, 유저 레벨 기준) 0.3333%</li></ul></td></tr><tr class=item id="EQ_TOP_302">
+<td class=ic><img src="../items/EQ_TOP_302.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>이클립스 로브</b><br><code>EQ_TOP_302</code><br><span class=meta>상의 · E(승급 T1→E) · 등급 A</span><span class='badge warn'>가정값</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>값</th><th></th></tr><tr><td>최대 HP</td><td>T1:1,500 / T2:2,250 / T3:4,500 / T4:4,875 / T5:5,250 / T6:5,625 / E:6,000</td><td></td></tr><tr><td>최대 MP</td><td>T1:500 / T2:750 / T3:1,500 / T4:1,625 / T5:1,750 / T6:1,875 / E:2,000</td><td></td></tr></table></td>
+<td class=sub><ul><li>승급: 달빛조각 10/20/30/40/50/60 + 골드 50,000(단계마다) · T1→T2→…→T6→E</li><li>강화 배율: 평면 칸에 ×(1+누적%) — 승급 단계 값 기준</li></ul></td>
+<td class=opt>T1·T2 0칸 / T3·T4 1칸 / T5·T6 2칸 / E 3칸</td>
+<td class=src><ul><li>이클립스 교환상점 10,000P (주 2회)</li><li>추적자(이클립스 기간, 유저 레벨 기준) 0.3333%</li><li>추적자(광폭)(이클립스 기간, 유저 레벨 기준) 0.3333%</li></ul></td></tr><tr class=item id="EQ_BOTTOM_302">
+<td class=ic><img src="../items/EQ_BOTTOM_302.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>이클립스 레깅스</b><br><code>EQ_BOTTOM_302</code><br><span class=meta>하의 · E(승급 T1→E) · 등급 A</span><span class='badge warn'>가정값</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>값</th><th></th></tr><tr><td>피해 감소 %</td><td>T1:15 / T2:22 / T3:35 / T4:36 / T5:37 / T6:38 / E:40</td><td></td></tr></table></td>
+<td class=sub><ul><li>승급: 달빛조각 10/20/30/40/50/60 + 골드 50,000(단계마다) · T1→T2→…→T6→E</li><li>⚠ %칸만 있어 강화해도 수치 변화 없음(강화 배율은 평면 칸에만) — 1017 のゆ 건의</li></ul></td>
+<td class=opt>T1·T2 0칸 / T3·T4 1칸 / T5·T6 2칸 / E 3칸</td>
+<td class=src><ul><li>이클립스 교환상점 10,000P (주 2회)</li><li>추적자(이클립스 기간, 유저 레벨 기준) 0.3333%</li><li>추적자(광폭)(이클립스 기간, 유저 레벨 기준) 0.3333%</li></ul></td></tr><tr class=item id="EQ_GLOVES_302">
+<td class=ic><img src="../items/EQ_GLOVES_302.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>이클립스 건틀릿</b><br><code>EQ_GLOVES_302</code><br><span class=meta>장갑 · E(승급 T1→E) · 등급 A</span><span class='badge warn'>가정값</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>값</th><th></th></tr><tr><td>치명타 확률 %</td><td>T1:15 / T2:22 / T3:35 / T4:36 / T5:37 / T6:38 / E:40</td><td></td></tr></table></td>
+<td class=sub><ul><li>승급: 달빛조각 10/20/30/40/50/60 + 골드 50,000(단계마다) · T1→T2→…→T6→E</li><li>⚠ %칸만 있어 강화해도 수치 변화 없음(강화 배율은 평면 칸에만) — 1017 のゆ 건의</li></ul></td>
+<td class=opt>T1·T2 0칸 / T3·T4 1칸 / T5·T6 2칸 / E 3칸</td>
+<td class=src><ul><li>이클립스 교환상점 10,000P (주 2회)</li><li>추적자(이클립스 기간, 유저 레벨 기준) 0.3333%</li><li>추적자(광폭)(이클립스 기간, 유저 레벨 기준) 0.3333%</li></ul></td></tr><tr class=item id="EQ_SHOES_302">
+<td class=ic><img src="../items/EQ_SHOES_302.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>이클립스 그리브</b><br><code>EQ_SHOES_302</code><br><span class=meta>신발 · E(승급 T1→E) · 등급 A</span><span class='badge warn'>가정값</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>값</th><th></th></tr><tr><td>회피 %</td><td>T1:15 / T2:22 / T3:35 / T4:36 / T5:37 / T6:38 / E:40</td><td></td></tr></table></td>
+<td class=sub><ul><li>승급: 달빛조각 10/20/30/40/50/60 + 골드 50,000(단계마다) · T1→T2→…→T6→E</li><li>⚠ %칸만 있어 강화해도 수치 변화 없음(강화 배율은 평면 칸에만) — 1017 のゆ 건의</li></ul></td>
+<td class=opt>T1·T2 0칸 / T3·T4 1칸 / T5·T6 2칸 / E 3칸</td>
+<td class=src><ul><li>이클립스 교환상점 10,000P (주 2회)</li><li>추적자(이클립스 기간, 유저 레벨 기준) 0.3333%</li><li>추적자(광폭)(이클립스 기간, 유저 레벨 기준) 0.3333%</li></ul></td></tr><tr class=item id="ACC_RING_302">
+<td class=ic><img src="../items/ACC_RING_302.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>이클립스 링</b><br><code>ACC_RING_302</code><br><span class=meta>반지 · T1 · 등급 S</span><span class='badge dim'>인덱스 밖</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>공격력</td><td>60</td><td>150</td></tr><tr><td>마법공격력</td><td>60</td><td>150</td></tr></table></td>
+<td class=sub><ul><li>부가(강화 무관): 치명타 확률 5% · 치명타 피해 15%</li></ul></td>
+<td class=opt>없음(T3 미만)</td>
+<td class=src><ul><li>이클립스 교환상점 100,000P (주 1회)</li></ul></td></tr></tbody></table></div></section><section id=s12><h2>획득 경로 없음 · 미연결 <small>23종</small></h2><p class=desc>ItemSO 에는 있으나 드랍표·상점·제작 어디에도 연결되지 않은 장비</p>
+<div class=wrap><table class=grid><thead><tr><th></th><th>장비</th><th>주옵션(강화 배율 적용 칸)</th><th>부가옵션 · 세트 · 승급</th><th>추가옵션 칸</th><th>획득</th></tr></thead>
+<tbody><tr class=item id="ACC_RING_101">
+<td class=ic><img src="../items/ACC_RING_101.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>헌터의 반지</b><br><code>ACC_RING_101</code><br><span class=meta>반지 · T2 · 등급 E</span><span class='badge dim'>인덱스 밖</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>값</th><th></th></tr><tr><td colspan=3 class=dim>—</td></tr></table></td>
+<td class=sub><ul><li>부가(강화 무관): 치명타 확률 2% · 명중 3% · 행운 1</li></ul></td>
+<td class=opt>없음(T3 미만)</td>
+<td class=src><ul><li>획득 경로 없음(ItemSO 는 &#x27;몬스터 드랍 - 전체&#x27;지만 드랍표 미등재)</li></ul></td></tr><tr class=item id="ACC_NECK_101">
+<td class=ic><img src="../items/ACC_NECK_101.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>헌터의 목걸이</b><br><code>ACC_NECK_101</code><br><span class=meta>목걸이 · T2 · 등급 E</span><span class='badge dim'>인덱스 밖</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>마법방어력</td><td>15</td><td>38</td></tr><tr><td>최대 HP</td><td>60</td><td>150</td></tr><tr><td>최대 MP</td><td>20</td><td>50</td></tr></table></td>
+<td class=sub><ul><li class=dim>없음</li></ul></td>
+<td class=opt>없음(T3 미만)</td>
+<td class=src><ul><li>획득 경로 없음(ItemSO 는 &#x27;몬스터 드랍 - 전체&#x27;지만 드랍표 미등재)</li></ul></td></tr><tr class=item id="ACC_EAR_101">
+<td class=ic><img src="../items/ACC_EAR_101.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>헌터의 귀걸이</b><br><code>ACC_EAR_101</code><br><span class=meta>귀걸이 · T2 · 등급 E</span><span class='badge dim'>인덱스 밖</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>값</th><th></th></tr><tr><td colspan=3 class=dim>—</td></tr></table></td>
+<td class=sub><ul><li>부가(강화 무관): 회피 3% · 드랍 보너스 2% · 탐지 2</li></ul></td>
+<td class=opt>없음(T3 미만)</td>
+<td class=src><ul><li>획득 경로 없음(ItemSO 는 &#x27;몬스터 드랍 - 전체&#x27;지만 드랍표 미등재)</li></ul></td></tr><tr class=item id="EQ_WEAPON_203">
+<td class=ic><img src="../items/EQ_WEAPON_203.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>고대 마법사의 지팡이</b><br><code>EQ_WEAPON_203</code><br><span class=meta>무기 · T3 · 등급 A</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>마법공격력</td><td>450</td><td>1125</td></tr><tr><td>최대 HP</td><td>60</td><td>150</td></tr></table></td>
+<td class=sub><ul><li>부가(강화 무관): 치명타 확률 15% · 치명타 피해 50% · 명중 5%</li></ul></td>
+<td class=opt>1칸</td>
+<td class=src><ul><li>고대의 마법사 — 드랍표에는 있으나 레벨표에 없음(출현 안 함) 0.0833%</li></ul></td></tr><tr class=item id="EQ_HEAD_203">
+<td class=ic><img src="../items/EQ_HEAD_203.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>고대 마법사의 후드</b><br><code>EQ_HEAD_203</code><br><span class=meta>투구 · T3 · 등급 A</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>방어력</td><td>90</td><td>225</td></tr><tr><td>마법방어력</td><td>90</td><td>225</td></tr><tr><td>최대 HP</td><td>150</td><td>375</td></tr><tr><td>최대 MP</td><td>30</td><td>75</td></tr></table></td>
+<td class=sub><ul><li>부가(강화 무관): 명중 10%</li></ul></td>
+<td class=opt>1칸</td>
+<td class=src><ul><li>고대의 마법사 — 드랍표에는 있으나 레벨표에 없음(출현 안 함) 0.0833%</li></ul></td></tr><tr class=item id="EQ_TOP_203">
+<td class=ic><img src="../items/EQ_TOP_203.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>고대 마법사의 로브</b><br><code>EQ_TOP_203</code><br><span class=meta>상의 · T3 · 등급 A</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>방어력</td><td>120</td><td>300</td></tr><tr><td>마법방어력</td><td>120</td><td>300</td></tr><tr><td>최대 HP</td><td>240</td><td>600</td></tr><tr><td>최대 MP</td><td>45</td><td>112</td></tr></table></td>
+<td class=sub><ul><li>부가(강화 무관): 피해 감소 7.5%</li></ul></td>
+<td class=opt>1칸</td>
+<td class=src><ul><li>고대의 마법사 — 드랍표에는 있으나 레벨표에 없음(출현 안 함) 0.0833%</li></ul></td></tr><tr class=item id="EQ_BOTTOM_203">
+<td class=ic><img src="../items/EQ_BOTTOM_203.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>고대 마법사의 하의</b><br><code>EQ_BOTTOM_203</code><br><span class=meta>하의 · T3 · 등급 A</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>방어력</td><td>105</td><td>262</td></tr><tr><td>마법방어력</td><td>105</td><td>262</td></tr><tr><td>최대 HP</td><td>180</td><td>450</td></tr><tr><td>최대 MP</td><td>30</td><td>75</td></tr></table></td>
+<td class=sub><ul><li>부가(강화 무관): 회피 7.5%</li></ul></td>
+<td class=opt>1칸</td>
+<td class=src><ul><li>고대의 마법사 — 드랍표에는 있으나 레벨표에 없음(출현 안 함) 0.0833%</li></ul></td></tr><tr class=item id="EQ_GLOVES_203">
+<td class=ic><img src="../items/EQ_GLOVES_203.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>고대 마법사의 장갑</b><br><code>EQ_GLOVES_203</code><br><span class=meta>장갑 · T3 · 등급 A</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>방어력</td><td>30</td><td>75</td></tr><tr><td>마법공격력</td><td>90</td><td>225</td></tr><tr><td>마법방어력</td><td>30</td><td>75</td></tr><tr><td>최대 HP</td><td>60</td><td>150</td></tr><tr><td>최대 MP</td><td>30</td><td>75</td></tr></table></td>
+<td class=sub><ul><li>부가(강화 무관): 공격속도 7.5% · 시전속도 5% · 치명타 확률 10% · 치명타 피해 15%</li></ul></td>
+<td class=opt>1칸</td>
+<td class=src><ul><li>고대의 마법사 — 드랍표에는 있으나 레벨표에 없음(출현 안 함) 0.0833%</li></ul></td></tr><tr class=item id="EQ_SHOES_203">
+<td class=ic><img src="../items/EQ_SHOES_203.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>고대 마법사의 부츠</b><br><code>EQ_SHOES_203</code><br><span class=meta>신발 · T3 · 등급 A</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>방어력</td><td>60</td><td>150</td></tr><tr><td>마법방어력</td><td>60</td><td>150</td></tr><tr><td>최대 HP</td><td>90</td><td>225</td></tr><tr><td>최대 MP</td><td>90</td><td>225</td></tr></table></td>
+<td class=sub><ul><li>부가(강화 무관): 공격속도 12.5% · 시전속도 7.5% · 회피 10%</li></ul></td>
+<td class=opt>1칸</td>
+<td class=src><ul><li>고대의 마법사 — 드랍표에는 있으나 레벨표에 없음(출현 안 함) 0.0833%</li></ul></td></tr><tr class=item id="ACC_RING_301">
+<td class=ic><img src="../items/ACC_RING_301.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>미드나이트 링</b><br><code>ACC_RING_301</code><br><span class=meta>반지 · T1 · 등급 S</span><span class='badge dim'>인덱스 밖</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>공격력</td><td>40</td><td>100</td></tr><tr><td>마법공격력</td><td>40</td><td>100</td></tr></table></td>
+<td class=sub><ul><li>부가(강화 무관): 치명타 확률 5%</li></ul></td>
+<td class=opt>없음(T3 미만)</td>
+<td class=src><ul><li>획득 경로 없음 — ItemSO 표기: 획득처 미정 / 더미</li></ul></td></tr><tr class=item id="ACC_ARTIFACT_301">
+<td class=ic><img src="../items/ACC_ARTIFACT_301.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>미드나이트 오브</b><br><code>ACC_ARTIFACT_301</code><br><span class=meta>아티팩트 · T1 · 등급 S</span><span class='badge dim'>인덱스 밖</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>마법공격력</td><td>100</td><td>250</td></tr><tr><td>최대 MP</td><td>150</td><td>375</td></tr></table></td>
+<td class=sub><ul><li class=dim>없음</li></ul></td>
+<td class=opt>없음(T3 미만)</td>
+<td class=src><ul><li>획득 경로 없음 — ItemSO 표기: 획득처 미정 / 더미</li></ul></td></tr><tr class=item id="EQ_WEAPON_401">
+<td class=ic><img src="../items/EQ_WEAPON_401.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>월드 브레이커</b><br><code>EQ_WEAPON_401</code><br><span class=meta>무기 · W · 등급 S</span><span class='badge warn'>가정값</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>공격력</td><td>360</td><td>900</td></tr><tr><td>마법공격력</td><td>360</td><td>900</td></tr><tr><td>최대 HP</td><td>96</td><td>240</td></tr></table></td>
+<td class=sub><ul><li>부가(강화 무관): 치명타 확률 24% · 치명타 피해 80% · 명중 8%</li></ul></td>
+<td class=opt>없음(T3 미만)</td>
+<td class=src><ul><li>월드보스 드랍 예정(미연결)</li></ul></td></tr><tr class=item id="EQ_HEAD_401">
+<td class=ic><img src="../items/EQ_HEAD_401.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>월드 크라운</b><br><code>EQ_HEAD_401</code><br><span class=meta>투구 · W · 등급 S</span><span class='badge warn'>가정값</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>방어력</td><td>144</td><td>360</td></tr><tr><td>마법방어력</td><td>144</td><td>360</td></tr><tr><td>최대 HP</td><td>240</td><td>600</td></tr><tr><td>최대 MP</td><td>48</td><td>120</td></tr></table></td>
+<td class=sub><ul><li>부가(강화 무관): 명중 16%</li></ul></td>
+<td class=opt>없음(T3 미만)</td>
+<td class=src><ul><li>월드보스 드랍 예정(미연결)</li></ul></td></tr><tr class=item id="EQ_TOP_401">
+<td class=ic><img src="../items/EQ_TOP_401.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>월드 플레이트</b><br><code>EQ_TOP_401</code><br><span class=meta>상의 · W · 등급 S</span><span class='badge warn'>가정값</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>방어력</td><td>192</td><td>480</td></tr><tr><td>마법방어력</td><td>192</td><td>480</td></tr><tr><td>최대 HP</td><td>384</td><td>960</td></tr><tr><td>최대 MP</td><td>72</td><td>180</td></tr></table></td>
+<td class=sub><ul><li>부가(강화 무관): 피해 감소 12%</li></ul></td>
+<td class=opt>없음(T3 미만)</td>
+<td class=src><ul><li>월드보스 드랍 예정(미연결)</li></ul></td></tr><tr class=item id="EQ_BOTTOM_401">
+<td class=ic><img src="../items/EQ_BOTTOM_401.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>월드 레깅스</b><br><code>EQ_BOTTOM_401</code><br><span class=meta>하의 · W · 등급 S</span><span class='badge warn'>가정값</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>방어력</td><td>168</td><td>420</td></tr><tr><td>마법방어력</td><td>168</td><td>420</td></tr><tr><td>최대 HP</td><td>288</td><td>720</td></tr><tr><td>최대 MP</td><td>48</td><td>120</td></tr></table></td>
+<td class=sub><ul><li>부가(강화 무관): 회피 12%</li></ul></td>
+<td class=opt>없음(T3 미만)</td>
+<td class=src><ul><li>월드보스 드랍 예정(미연결)</li></ul></td></tr><tr class=item id="EQ_GLOVES_401">
+<td class=ic><img src="../items/EQ_GLOVES_401.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>월드 가드</b><br><code>EQ_GLOVES_401</code><br><span class=meta>장갑 · W · 등급 S</span><span class='badge warn'>가정값</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>공격력</td><td>72</td><td>180</td></tr><tr><td>방어력</td><td>48</td><td>120</td></tr><tr><td>마법공격력</td><td>72</td><td>180</td></tr><tr><td>마법방어력</td><td>48</td><td>120</td></tr><tr><td>최대 HP</td><td>96</td><td>240</td></tr><tr><td>최대 MP</td><td>48</td><td>120</td></tr></table></td>
+<td class=sub><ul><li>부가(강화 무관): 공격속도 12% · 시전속도 8% · 치명타 확률 16% · 치명타 피해 24%</li></ul></td>
+<td class=opt>없음(T3 미만)</td>
+<td class=src><ul><li>월드보스 드랍 예정(미연결)</li></ul></td></tr><tr class=item id="EQ_SHOES_401">
+<td class=ic><img src="../items/EQ_SHOES_401.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>월드 워커</b><br><code>EQ_SHOES_401</code><br><span class=meta>신발 · W · 등급 S</span><span class='badge warn'>가정값</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>방어력</td><td>96</td><td>240</td></tr><tr><td>마법방어력</td><td>96</td><td>240</td></tr><tr><td>최대 HP</td><td>144</td><td>360</td></tr><tr><td>최대 MP</td><td>144</td><td>360</td></tr></table></td>
+<td class=sub><ul><li>부가(강화 무관): 공격속도 20% · 시전속도 12% · 회피 16%</li></ul></td>
+<td class=opt>없음(T3 미만)</td>
+<td class=src><ul><li>월드보스 드랍 예정(미연결)</li></ul></td></tr><tr class=item id="EQ_T6_ABS_BOTTOM">
+<td class=ic><img src="../items/EQ_T6_ABS_BOTTOM.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>절대자의 하의</b><br><code>EQ_T6_ABS_BOTTOM</code><br><span class=meta>하의 · T6 · 등급 S</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>방어력</td><td>3500</td><td>8750</td></tr><tr><td>마법방어력</td><td>3500</td><td>8750</td></tr><tr><td>최대 HP</td><td>6000</td><td>15000</td></tr><tr><td>최대 MP</td><td>1000</td><td>2500</td></tr></table></td>
+<td class=sub><ul><li>부가(강화 무관): 회피 15%</li></ul></td>
+<td class=opt>1칸</td>
+<td class=src><ul><li>획득 불가(절대자 세트 — 경로 없음)</li></ul></td></tr><tr class=item id="EQ_T6_ABS_GLOVES">
+<td class=ic><img src="../items/EQ_T6_ABS_GLOVES.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>절대자의 장갑</b><br><code>EQ_T6_ABS_GLOVES</code><br><span class=meta>장갑 · T6 · 등급 S</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>공격력</td><td>3000</td><td>7500</td></tr><tr><td>방어력</td><td>1000</td><td>2500</td></tr><tr><td>마법공격력</td><td>3000</td><td>7500</td></tr><tr><td>마법방어력</td><td>1000</td><td>2500</td></tr><tr><td>최대 HP</td><td>2000</td><td>5000</td></tr><tr><td>최대 MP</td><td>1000</td><td>2500</td></tr></table></td>
+<td class=sub><ul><li>부가(강화 무관): 공격속도 15% · 시전속도 10% · 치명타 확률 20% · 치명타 피해 30%</li></ul></td>
+<td class=opt>1칸</td>
+<td class=src><ul><li>획득 불가(절대자 세트 — 경로 없음)</li></ul></td></tr><tr class=item id="EQ_T6_ABS_HEAD">
+<td class=ic><img src="../items/EQ_T6_ABS_HEAD.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>절대자의 후드</b><br><code>EQ_T6_ABS_HEAD</code><br><span class=meta>투구 · T6 · 등급 S</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>방어력</td><td>3000</td><td>7500</td></tr><tr><td>마법방어력</td><td>3000</td><td>7500</td></tr><tr><td>최대 HP</td><td>5000</td><td>12500</td></tr><tr><td>최대 MP</td><td>1000</td><td>2500</td></tr></table></td>
+<td class=sub><ul><li>부가(강화 무관): 명중 20%</li></ul></td>
+<td class=opt>1칸</td>
+<td class=src><ul><li>획득 불가(절대자 세트 — 경로 없음)</li></ul></td></tr><tr class=item id="EQ_T6_ABS_SHOES">
+<td class=ic><img src="../items/EQ_T6_ABS_SHOES.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>절대자의 부츠</b><br><code>EQ_T6_ABS_SHOES</code><br><span class=meta>신발 · T6 · 등급 S</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>방어력</td><td>2000</td><td>5000</td></tr><tr><td>마법방어력</td><td>2000</td><td>5000</td></tr><tr><td>최대 HP</td><td>3000</td><td>7500</td></tr><tr><td>최대 MP</td><td>3000</td><td>7500</td></tr></table></td>
+<td class=sub><ul><li>부가(강화 무관): 공격속도 25% · 시전속도 15% · 회피 20%</li></ul></td>
+<td class=opt>1칸</td>
+<td class=src><ul><li>획득 불가(절대자 세트 — 경로 없음)</li></ul></td></tr><tr class=item id="EQ_T6_ABS_TOP">
+<td class=ic><img src="../items/EQ_T6_ABS_TOP.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>절대자의 코트</b><br><code>EQ_T6_ABS_TOP</code><br><span class=meta>상의 · T6 · 등급 S</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>방어력</td><td>4000</td><td>10000</td></tr><tr><td>마법방어력</td><td>4000</td><td>10000</td></tr><tr><td>최대 HP</td><td>8000</td><td>20000</td></tr><tr><td>최대 MP</td><td>1500</td><td>3750</td></tr></table></td>
+<td class=sub><ul><li>부가(강화 무관): 피해 감소 15%</li></ul></td>
+<td class=opt>1칸</td>
+<td class=src><ul><li>획득 불가(절대자 세트 — 경로 없음)</li></ul></td></tr><tr class=item id="EQ_T6_ABS_WEAPON">
+<td class=ic><img src="../items/EQ_T6_ABS_WEAPON.png" alt="" loading=lazy onerror="this.style.visibility='hidden'"></td>
+<td class=nm><b>절대자의 검</b><br><code>EQ_T6_ABS_WEAPON</code><br><span class=meta>무기 · T6 · 등급 S</span></td>
+<td class=main><table class=mini><tr><th>칸</th><th>+0</th><th>+5</th></tr><tr><td>공격력</td><td>18000</td><td>45000</td></tr><tr><td>마법공격력</td><td>9000</td><td>22500</td></tr><tr><td>최대 HP</td><td>2000</td><td>5000</td></tr></table></td>
+<td class=sub><ul><li>부가(강화 무관): 치명타 확률 30% · 치명타 피해 100% · 명중 10%</li></ul></td>
+<td class=opt>1칸</td>
+<td class=src><ul><li>획득 불가(절대자 세트 — 경로 없음)</li></ul></td></tr></tbody></table></div></section>
+
+<footer>
+<p>표기: 주옵션 '+5' = 기본 수치 × 2.5(누적 150%). 이클립스·미드나이트·오퍼레이터는 단계·레벨 표를 그대로 적음(강화 배율은 그 위에 곱함). 등급 = ItemSO grade 글자. 티어 = item_tiers.json(추가옵션 칸 기준).</p>
+<p>인덱스 밖·수치 없는 ItemSO 53종은 표에서 뺐다(미출시 더미·0806 폐기 악세): 큐브 코어(ACC_ARTIFACT_620), 쾌속의 망토(ACC_Back_001), 스텔스 망토(ACC_Back_002), 마법사의 망토(ACC_Back_003), 슬레이어(ACC_Back_004), 절멸자의 망토(ACC_Back_007), 습격자의 망토(ACC_CLOAK_616), 코빈 깃털 망토(ACC_CLOAK_624), 별빛 눈물 귀걸이(ACC_EAR_503), 랩터 이빨 귀걸이(ACC_EAR_606), 여명의 날개 목걸이(ACC_NECK_502), 호문클루스의 플라스크 목걸이(ACC_NECK_623), 화염이 깃든 목걸이(ACC_Neck_001), 수룡의 팬던트(ACC_Neck_002), 기원자의 반지(ACC_RING_001), 푸른 심연의 반지(ACC_RING_502), 리자드맨 전사의 반지(ACC_RING_612), 기사의 의지(ACC_Shoulder_001), 성전사의 휘광(ACC_Shoulder_002), 밤사냥꾼의 하의(EQ_BOTTOM_502), 흑철 추적자의 각반(EQ_BOTTOM_503), 보물 사냥꾼의 바지(EQ_BOTTOM_631), 흑철 수호 장갑(EQ_GLOVES_502), 하울 가죽 장갑(EQ_GLOVES_602), 골렘 파편 건틀릿(EQ_GLOVES_610), 인형사의 실장갑(EQ_GLOVES_628), 빙결 추적자의 투구(EQ_HEAD_502), 추적자의 고글(EQ_HEAD_601), 레시아의 화관(EQ_HEAD_608), 알타니아의 뿔투구(EQ_HEAD_614), 습격자의 후드(EQ_HEAD_617), 분신인형의 가면(EQ_HEAD_627), 황금 왕관(EQ_HEAD_629), 서리길 장화(EQ_SHOES_502), 습격자의 장화(EQ_SHOES_619), 와이번 비늘 장화(EQ_SHOES_625), 흑철 수호 흉갑(EQ_TOP_502), 잿불 군주의 흉갑(EQ_TOP_503), 녹스 날개막 조끼(EQ_TOP_604), 보물 사냥꾼의 코트(EQ_TOP_630), 타로스의 석판 방패(EQ_SHIELD_601), 전갈 독침 단검(EQ_WEAPON_605), 오우거의 도살검(EQ_WEAPON_607), 네이아의 빛구슬(EQ_WEAPON_610), 고블린의 단검(EQ_WEAPON_615), 베르단의 불씨 가지(EQ_WEAPON_620), 습격자의 단검(EQ_WEAPON_625), 셰스의 코어 지팡이(EQ_WEAPON_630), 다크나이트의 흑검(EQ_WEAPON_631), 황금 장검(EQ_WEAPON_641), 자수정의 속삭임(EQ_WEAPON_650), 베일의 저격 석궁(EQ_WEAPON_CROSSBOW_601), 그레고르의 염주 너클(EQ_WEAPON_KNUCKLE_601)</p>
+<p>다시 만들기: <code>python tools/gen_globe_item_page.py</code> → 이 파일. 데이터는 전부 읽기만 하며 게임 값을 바꾸지 않는다.</p>
+</footer>
+</body>
+</html>
