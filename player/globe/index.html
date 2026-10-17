@@ -477,11 +477,17 @@
   //  1009 마스터 "이클립스 trial 현재단계 이클립스 아니잖아" — 표시는 지금 실제 단계와 그 단계가 끝날 때까지 남은 시간이다.
   //  ECL_OPEN = 모두에게 보일지(false 인 동안은 주소에 ?eclipse 를 붙였을 때만: ?eclipse=auto 실제 일정 / ?eclipse=crescent|eclipse|half 그 단계 모습만 미리 보기).
   var ECL_OPEN = true;   // 1009 마스터 "통과" — 모든 방문자에게 보인다
+  // 1017 마스터("이클립스 시간 4시간 추가(광폭 새벽 4시까지 출현)" / "웹페이지 표기도 4시까지로 수정"): 게임 서버 ECLIPSE_EXTEND_UNTIL 과 같은 값(epoch 초).
+  //  이 시각 전까지는 일요일 새벽이어도 이클립스(그 뒤 반월). 24시간 넘게 남은 값·지난 값은 무시(서버 eclipse_extended 와 같은 규칙). 다음 연장 때 이 값만 바꾼다.
+  var ECL_EXTEND_UNTIL = 1792263600;   // 2026-10-18(일) 04:00 KST
+  function eclExtended(now) { return ECL_EXTEND_UNTIL > now && ECL_EXTEND_UNTIL <= now + 86400; }
   function eclSchedule() {
     var DAY = 86400, inWeek = ((Date.now() / 1000 + 9 * 3600 + 4 * DAY) % (7 * DAY) + 7 * DAY) % (7 * DAY), dow = Math.floor(inWeek / DAY);   // 0 = 일 … 6 = 토
     var phase = dow === 6 ? 'eclipse' : dow === 0 ? 'half' : dow === 5 ? 'crescent' : '';
     var end = phase === 'eclipse' ? 7 * DAY : phase === 'half' ? DAY : phase === 'crescent' ? 6 * DAY : 5 * DAY;
-    return { phase: phase, endsAt: Date.now() / 1000 + (end - inWeek) };
+    var endsAt = Date.now() / 1000 + (end - inWeek);
+    if ((phase === 'eclipse' || phase === 'half') && eclExtended(Date.now() / 1000)) { phase = 'eclipse'; endsAt = ECL_EXTEND_UNTIL; }   // 연장 중 = 이클립스, 끝 = 연장 시각
+    return { phase: phase, endsAt: endsAt };
   }
   var eclAsk = params.get('eclipse'), eclNow = eclSchedule();
   var eclForced = ({ crescent: 1, eclipse: 1, half: 1 })[eclAsk] ? eclAsk : '';
@@ -742,6 +748,10 @@
       $('eclb-title').textContent = T.eclTitle;
       $('eclb-rows').innerHTML = days.map(function (d) {
         var st = d[1], en = st + DAY, name = T[{ crescent: 'eclCrescent', eclipse: 'eclEclipse', half: 'eclHalf' }[d[0]]];
+        // 1017 연장: 이클립스 칸 끝 = 연장 시각, 반월 칸 시작 = 연장 시각(이번 주 일요일 새벽 연장에만)
+        var extOn = ECL_EXTEND_UNTIL > base + 7 * DAY && ECL_EXTEND_UNTIL <= base + 8 * DAY;
+        if (extOn && d[0] === 'eclipse') en = ECL_EXTEND_UNTIL;
+        if (extOn && d[0] === 'half') st = ECL_EXTEND_UNTIL;
         var when = fmt ? fmt.format(new Date((st - 9 * 3600 + 9 * 3600) * 1000)) : '';
         var state, cls = '';
         if (now >= en) state = T.eclDone;
