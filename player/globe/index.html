@@ -227,21 +227,16 @@
     @keyframes beam { 0%, 100% { opacity: .6; } 50% { opacity: 1; } }
     @keyframes wave { from { transform: scale(.4); opacity: .95; } to { transform: scale(1.9); opacity: 0; } }
     @media (prefers-reduced-motion: reduce) { .fg .beam, .fg .wave { animation: none; } }
-    /* 1025 월드게이트(원정) 표식 = 범람 게이트보다 몇 배 큰 파란 소용돌이 + 도시 레이드 이름 */
+    /* 1025 월드게이트(원정) 표식 = 범람 게이트보다 몇 배 큰 인게임 게이트 그림(스톰아이) + 도시 레이드 이름 */
     .wg { width: 132px; height: 132px; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 4; }
     body.hunter .wg { display: none; }
-    .wg .ring { position: absolute; inset: 0; border-radius: 50%;
-      background: conic-gradient(from 0deg, rgba(40, 110, 255, 0), rgba(90, 170, 255, .95), rgba(170, 225, 255, .3), rgba(40, 110, 255, 0) 70%, rgba(110, 190, 255, .9));
-      -webkit-mask: radial-gradient(circle, transparent 30%, #000 33%, #000 64%, transparent 70%); mask: radial-gradient(circle, transparent 30%, #000 33%, #000 64%, transparent 70%);
-      filter: drop-shadow(0 0 12px rgba(80, 160, 255, .95)); animation: wgspin 6s linear infinite; }
-    .wg .ring.b { inset: 18px; animation-duration: 3.8s; animation-direction: reverse; opacity: .85; }
-    .wg .core { width: 30px; height: 30px; border-radius: 50%; background: radial-gradient(circle, #e8f6ff, #5ab0ff 55%, rgba(30, 90, 255, 0) 72%);
-      box-shadow: 0 0 22px rgba(120, 190, 255, .95); }
+    .wg .img { position: absolute; inset: 0; background: url(worldgate.png) center / contain no-repeat;
+      filter: drop-shadow(0 0 10px rgba(80, 160, 255, .9)); animation: wgspin 14s linear infinite; }   /* 인게임 월드게이트와 같은 그림(스톰아이), 같은 방향으로 빙글 */
     .wg .wgl { position: absolute; top: 100%; left: 50%; transform: translateX(-50%); margin-top: 2px; white-space: nowrap; text-align: center;
       font-weight: 800; font-size: 13px; line-height: 1.25; color: #dff1ff; text-shadow: 0 0 8px rgba(40, 120, 255, .95), 0 1px 2px #000; }
     .wg .wgl small { display: block; font-size: 11px; color: #9fd0ff; }
-    @keyframes wgspin { to { transform: rotate(360deg); } }
-    @media (prefers-reduced-motion: reduce) { .wg .ring { animation: none; } }
+    @keyframes wgspin { to { transform: rotate(-360deg); } }
+    @media (prefers-reduced-motion: reduce) { .wg .img { animation: none; } }
     .mapboxgl-popup-content { background: rgba(18, 12, 42, .96); color: var(--text); border: 1px solid var(--line-strong); border-radius: 12px;
       padding: 12px 34px 12px 14px; box-shadow: 0 10px 34px rgba(0, 0, 0, .5); font: inherit; }
     .mapboxgl-popup-tip { border-top-color: rgba(18, 12, 42, .96) !important; border-bottom-color: rgba(18, 12, 42, .96) !important; }
@@ -1366,7 +1361,7 @@
     wgMarkers.forEach(function (m) { m.remove(); }); wgMarkers = [];
     worldGates.forEach(function (g) {
       var d = el('div', 'wg'); d.style.setProperty('z-index', '40', 'important');   // 유적지·게이트 표식보다 위
-      d.appendChild(el('i', 'ring')); d.appendChild(el('i', 'ring b')); d.appendChild(el('i', 'core'));
+      d.appendChild(el('i', 'img'));
       var l = el('div', 'wgl', T.wgRaid(wgCity(g))); l.appendChild(el('small', null, T.wgTitle)); d.appendChild(l);
       d.addEventListener('click', function (e) { e.stopPropagation(); openWorldGate(g); });
       wgMarkers.push(new mapboxgl.Marker({ element: d, anchor: 'center' }).setLngLat([g.lng, g.lat]).addTo(map));
