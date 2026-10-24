@@ -426,6 +426,7 @@
     <button type="button" id="m-gates"><i></i><span data-t="gTitle"></span></button>
     <button type="button" id="m-guide"><i class="sys"></i><span data-t="guideTitle"></span></button>
     <button type="button" id="m-items"><i class="sys"></i><span id="m-items-lbl"></span></button>
+    <button type="button" id="m-skills"><i class="sys"></i><span id="m-skills-lbl"></span></button>
     <button type="button" id="m-community"><i class="sys"></i><span data-t="community"></span></button>
     <button type="button" id="m-lang"><i class="lang"></i><span data-t="langTitle"></span><em id="m-lang-cur"></em></button>
   </div>
@@ -1499,6 +1500,10 @@
   var GEAR_LBL = {"ko": "장비 도감", "en": "Gear Codex", "ja": "装備図鑑", "zh-Hans": "装备图鉴", "zh-Hant": "裝備圖鑑", "de": "Ausrüstungs-Kodex", "fr": "Codex d'équipement", "es": "Códice de equipo", "it": "Codice equipaggiamento", "pt": "Códice de equipamentos", "pl": "Kodeks ekwipunku", "ru": "Кодекс снаряжения", "tr": "Ekipman Kodeksi", "vi": "Sổ tay trang bị", "id": "Kodeks Perlengkapan", "th": "สารานุกรมอุปกรณ์", "ar": "موسوعة المعدات"};
   $('m-items-lbl').textContent = GEAR_LBL[LANG] || GEAR_LBL.en;
   $('m-items').addEventListener('click', function () { closeBurger(); location.href = 'item/?hl=' + LANG; });
+  // 1025 마스터('인게임 도감에는 제공할 수 없다. 대신 마나무한 스튜디오 페이지에 스킬 도감을 제공' → '공개하셈'): 지구본 메뉴 → /player/globe/skill/ (17개 언어)
+  var SKILL_LBL = {"ko": "스킬 도감", "en": "Skill Codex", "ja": "スキル図鑑", "zh-Hans": "技能图鉴", "zh-Hant": "技能圖鑑", "de": "Fähigkeiten-Kodex", "fr": "Codex des compétences", "es": "Códice de habilidades", "it": "Codice delle abilità", "pt": "Códice de habilidades", "pl": "Kodeks umiejętności", "ru": "Кодекс навыков", "tr": "Yetenek Kodeksi", "vi": "Bách khoa kỹ năng", "id": "Kodeks Skill", "th": "สารานุกรมสกิล", "ar": "موسوعة المهارات"};
+  $('m-skills-lbl').textContent = SKILL_LBL[LANG] || SKILL_LBL.en;
+  $('m-skills').addEventListener('click', function () { closeBurger(); location.href = 'skill/?hl=' + LANG; });
   // 1013 마스터('웹 햄버거에 커뮤니티 추가'): 공식 디스코드(만료 없는 초대 링크)
   $('m-community').addEventListener('click', function () { closeBurger(); window.open('https://utobit.net/player/discord/', '_blank', 'noopener'); });
   // 언어 설정: 메뉴의 '언어' → 게임 제공 언어 목록. 고르면 기기에 저장하고 다시 불러온다(문구가 처음 한 번에 채워지는 구조)
