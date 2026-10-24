@@ -228,7 +228,7 @@
     @keyframes wave { from { transform: scale(.4); opacity: .95; } to { transform: scale(1.9); opacity: 0; } }
     @media (prefers-reduced-motion: reduce) { .fg .beam, .fg .wave { animation: none; } }
     /* 1025 월드게이트(원정) 표식 = 범람 게이트보다 몇 배 큰 인게임 게이트 그림(스톰아이) + 도시 레이드 이름 */
-    .wg { width: 132px; height: 132px; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 4; }
+    .wg { width: var(--wgs, 132px); height: var(--wgs, 132px); cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 4; }
     body.hunter .wg { display: none; }
     .wg .img { position: absolute; inset: 0; background: url(worldgate.png) center / contain no-repeat;
       filter: drop-shadow(0 0 10px rgba(80, 160, 255, .9)); animation: wgspin 14s linear infinite; }   /* 인게임 월드게이트와 같은 그림(스톰아이), 같은 방향으로 빙글 */
@@ -1366,6 +1366,14 @@
       d.addEventListener('click', function (e) { e.stopPropagation(); openWorldGate(g); });
       wgMarkers.push(new mapboxgl.Marker({ element: d, anchor: 'center' }).setLngLat([g.lng, g.lat]).addTo(map));
     });
+    if (!wgZoomHooked) { wgZoomHooked = true; map.on('zoom', wgSize); }
+    wgSize();
+  }
+  // 1025 마스터(스샷 011443 "줌 당겼을때는 이정도로 커서는 안됨"): 지구 전체가 보이는 거리에서는 작게(40px), 도시까지 다가가면 132px — 줌에 따라 크기.
+  var wgZoomHooked = false;
+  function wgSize() {
+    var px = Math.max(40, Math.min(132, 132 * Math.pow(2, (map.getZoom() - 5) * 0.6)));
+    document.documentElement.style.setProperty('--wgs', px.toFixed(0) + 'px');
   }
 
   function loadFloods() {
