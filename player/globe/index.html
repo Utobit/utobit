@@ -237,6 +237,14 @@
     .wg .wgl small { display: block; font-size: 11px; color: #9fd0ff; }
     @keyframes wgspin { to { transform: rotate(-360deg); } }
     @media (prefers-reduced-motion: reduce) { .wg .img { animation: none; } }
+    /* 1028 보스 레이드 고정 보스(서리늑대 · 오슬로) — 얼굴 동그라미 + 이름 */
+    .bossm { width: var(--bms, 64px); height: var(--bms, 64px); cursor: pointer; z-index: 4; }
+    body.hunter .bossm { display: none; }
+    .bossm .img { position: absolute; inset: 0; border-radius: 50%; background: #0b1726 url(frostwolf.png) center / cover no-repeat;
+      border: 2px solid #8fd0ff; box-shadow: 0 0 12px rgba(120, 200, 255, .75); }
+    .bossm .bml { position: absolute; top: 100%; left: 50%; transform: translateX(-50%); margin-top: 3px; white-space: nowrap; text-align: center;
+      font-size: 12px; font-weight: 700; color: #e6f4ff; text-shadow: 0 1px 3px #000, 0 0 6px #000; }
+    .bossm .bml small { display: block; font-size: 11px; font-weight: 400; color: #9fd0ff; }
     .mapboxgl-popup-content { background: rgba(18, 12, 42, .96); color: var(--text); border: 1px solid var(--line-strong); border-radius: 12px;
       padding: 12px 34px 12px 14px; box-shadow: 0 10px 34px rgba(0, 0, 0, .5); font: inherit; }
     .mapboxgl-popup-tip { border-top-color: rgba(18, 12, 42, .96) !important; border-bottom-color: rgba(18, 12, 42, .96) !important; }
@@ -538,7 +546,8 @@
     threat: '위협지', nullIsland: '널 아일랜드', latent: '개방한 잠재능력',
     solo: '개인', members: '인원', memberN: function (n) { return '인원 ' + n + '명'; }, master: '마스터',
     wgTitle: '월드급 게이트 발생', wgRaid: function (c) { return c + ' 레이드'; }, wgWait: function (n, m) { return '참여 대기 ' + n + ' / ' + m + '명 (선착순)'; },
-    wgNote: '참여 신청은 게임 안 협회 › 원정에서 할 수 있습니다.'
+    wgNote: '참여 신청은 게임 안 협회 › 원정에서 할 수 있습니다.',
+    brTitle: '보스 레이드', brName: '서리늑대', brLoc: '오슬로 · 실시간 4인 파티 레이드', brSoon: '준비중'
   } : {
     ph: 'Nickname or #hunter number', go: 'Search', level: 'LEVEL', stat: 'TOTAL STATS', power: 'COMBAT POWER',
     hint: 'DRAG TO ROTATE · SCROLL TO ZOOM', searching: 'Searching…', none: 'No hunter found.',
@@ -562,7 +571,8 @@
     threat: 'Threat site', nullIsland: 'Null Island', latent: 'LATENT ABILITIES UNLOCKED',
     solo: 'Individual', members: 'MEMBERS', memberN: function (n) { return n + (n === 1 ? ' member' : ' members'); }, master: 'Master',
     wgTitle: 'World-class gate detected', wgRaid: function (c) { return c + ' Raid'; }, wgWait: function (n, m) { return 'Waiting to join: ' + n + ' / ' + m + ' (first come, first served)'; },
-    wgNote: 'Apply in the game under Association › Raid.'
+    wgNote: 'Apply in the game under Association › Raid.',
+    brTitle: 'Boss Raid', brName: 'Frost Wolf', brLoc: 'Oslo · Live 4-player party raid', brSoon: 'Coming soon'
   };
 
   var $ = function (id) { return document.getElementById(id); };
@@ -1368,6 +1378,37 @@
     });
     if (!wgZoomHooked) { wgZoomHooked = true; map.on('zoom', wgSize); }
     wgSize();
+    placeBosses();
+  }
+  // 1028 마스터("웹페이지에도 서리늑대 얼굴 아이콘 배치"): 보스 레이드 고정 보스 — 게임 GeoLandmarks.FROSTWOLF_OSLO 와 같은 좌표. 서버 조회 없이 페이지가 그린다.
+  var BOSSES = [{ id: 'MON_FROST_WOLF', lat: 59.92630, lng: 10.70060, level: 40 }], bossMarkers = [], bossPopup = null, bossZoomHooked = false;
+  function openBoss(b) {
+    userTouched = true;
+    if (bossPopup) { bossPopup.remove(); bossPopup = null; }
+    var box = el('div', 'gpop');
+    box.appendChild(el('b', null, T.brTitle + ' · ' + T.brName + ' Lv.' + b.level));
+    box.appendChild(el('span', null, T.brLoc));
+    box.appendChild(el('em', null, T.brSoon));
+    if (map) {
+      map.flyTo({ center: [b.lng, b.lat], zoom: 9, duration: still ? 0 : 3000, essential: true });
+      bossPopup = new mapboxgl.Popup({ offset: 40, maxWidth: '280px' }).setLngLat([b.lng, b.lat]).setDOMContent(box).addTo(map);
+    }
+  }
+  function placeBosses() {
+    if (!map || !mapReady || bossMarkers.length) return;
+    BOSSES.forEach(function (b) {
+      var d = el('div', 'bossm'); d.style.setProperty('z-index', '39', 'important');
+      d.appendChild(el('i', 'img'));
+      var l = el('div', 'bml', T.brName + ' Lv.' + b.level); l.appendChild(el('small', null, T.brTitle + ' · ' + T.brSoon)); d.appendChild(l);
+      d.addEventListener('click', function (e) { e.stopPropagation(); openBoss(b); });
+      bossMarkers.push(new mapboxgl.Marker({ element: d, anchor: 'center' }).setLngLat([b.lng, b.lat]).addTo(map));
+    });
+    if (!bossZoomHooked) { bossZoomHooked = true; map.on('zoom', bossSize); }
+    bossSize();
+  }
+  function bossSize() {
+    var px = Math.max(34, Math.min(84, 84 * Math.pow(2, (map.getZoom() - 5) * 0.6)));
+    document.documentElement.style.setProperty('--bms', px.toFixed(0) + 'px');
   }
   // 1025 마스터(스샷 011443 "줌 당겼을때는 이정도로 커서는 안됨"): 지구 전체가 보이는 거리에서는 작게(40px), 도시까지 다가가면 132px — 줌에 따라 크기.
   var wgZoomHooked = false;
