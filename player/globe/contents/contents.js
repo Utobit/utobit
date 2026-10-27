@@ -65,11 +65,17 @@
     if (it.icon === 'img') it = { icon: 'img', src: '../' + it.src, name: it.name };
     document.title = name + ' — Player : Final Raid';
     $('back').href = '../' + hl; $('back').textContent = '‹ ' + t(T.title);
-    $('title').innerHTML = '<span class="ic sm">' + icon(it) + '</span>' + name;
+    $('title').innerHTML = '<span class="ic lg">' + icon(it) + '</span><span>' + name + '</span>';
+    $('title').className = 'hero';
     var body = $('body');
     var doc = (window.CONTENTS_TEXT || {})[page];
     var ps = doc && (doc[LANG] || doc.en);
-    body.innerHTML = ps ? ps.map(function (x) { return '<p>' + x + '</p>'; }).join('')
-                        : '<p class="wip">' + t(T.wip) + '</p>';
+    var flow = (window.CONTENTS_FLOW || {})[page];
+    var fl = flow && (flow[LANG] || flow.en);
+    var html = '';
+    if (fl) html += '<ol class="flow">' + fl.map(function (x, i) { return '<li class="f' + i + '">' + x + '</li>'; }).join('') + '</ol>';
+    html += ps ? '<div class="story">' + ps.map(function (x) { return '<p>' + x + '</p>'; }).join('') + '</div>'
+               : '<p class="wip">' + t(T.wip) + '</p>';
+    body.innerHTML = html;
   }
 })();

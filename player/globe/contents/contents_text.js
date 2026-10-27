@@ -255,3 +255,26 @@ window.CONTENTS_TEXT = {
   ar: ['ملعب المنطاد ساحة قتال تراقبها الكوكبات. خض نزالات تدريبية بين الصيادين، وإذا قدّمت قتالًا يرضيها فستمنحك الكوكبات التي تراقبك رعايتها (تذاكر إعادة تعيين الإمكانات، كتب المهارات، أحجار تحسين العتاد وغيرها).']
  }
 };
+
+/* 진행 흐름 칩(본문 위 한 줄) — 월드게이트만. 단계 = 본문(마스터 구술)에 적힌 그대로 */
+window.CONTENTS_FLOW = {
+ 'world-gate': {
+  ko: ['게이트', '범람 게이트 1~10단계', '월드게이트 11~13단계', '적 차원 지배지'],
+  en: ['Gate', 'Overflow Gate Stage 1–10', 'World Gate Stage 11–13', 'Enemy Dominion'],
+  ja: ['ゲート', '氾濫ゲート 1〜10段階', 'ワールドゲート 11〜13段階', '敵次元の支配地'],
+  'zh-Hans': ['传送门', '泛滥传送门 第1~10阶段', '世界传送门 第11~13阶段', '敌方次元统治地'],
+  'zh-Hant': ['傳送門', '氾濫傳送門 第1~10階段', '世界傳送門 第11~13階段', '敵方次元統治地'],
+  de: ['Tor', 'Überflutungs-Tor Stufe 1–10', 'Welt-Tor Stufe 11–13', 'Feindliches Herrschaftsgebiet'],
+  fr: ['Portail', 'Portail en débordement niv. 1–10', 'Portail mondial niv. 11–13', 'Domaine ennemi'],
+  es: ['Puerta', 'Puerta desbordada nivel 1–10', 'Puerta del Mundo nivel 11–13', 'Dominio enemigo'],
+  it: ['Portale', 'Portale di Marea liv. 1–10', 'Portale del Mondo liv. 11–13', 'Dominio nemico'],
+  pt: ['Portal', 'Portal transbordado estágio 1–10', 'Portal Mundial estágio 11–13', 'Domínio inimigo'],
+  pl: ['Brama', 'Wrota przełomu poz. 1–10', 'Brama Świata poz. 11–13', 'Domena wroga'],
+  ru: ['Врата', 'Врата Наводнения 1–10 ступень', 'Мировые Врата 11–13 ступень', 'Владения врага'],
+  tr: ['Geçit', 'Taşkın Geçidi 1–10. aşama', 'Dünya Geçidi 11–13. aşama', 'Düşman egemenliği'],
+  vi: ['Cổng', 'Cổng Tràn cấp 1–10', 'Cổng Thế giới cấp 11–13', 'Vùng thống trị của kẻ thù'],
+  id: ['Gerbang', 'Gerbang Banjir tahap 1–10', 'Gerbang Dunia tahap 11–13', 'Wilayah kekuasaan musuh'],
+  th: ['เกต', 'เกตน้ำหลาก ขั้น 1–10', 'เวิลด์เกต ขั้น 11–13', 'ดินแดนใต้การปกครองของศัตรู'],
+  ar: ['البوابة', 'بوابة الفيضان المرحلة 1–10', 'البوابة العالمية المرحلة 11–13', 'منطقة سيطرة العدو']
+ }
+};

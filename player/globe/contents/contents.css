@@ -1,29 +1,53 @@
 /* 플레이어 지구본 › 컨텐츠 안내 — 스킬·장비 도감과 같은 색 */
-:root{--space:#05030f;--panel:rgba(14,10,34,.72);--panel2:rgba(20,15,48,.9);--line:rgba(150,130,255,.22);--line-strong:rgba(150,130,255,.5);--text:#f2efff;--muted:#a39cc9;--violet:#9d7bff;--cyan:#5ee6ff;--gold:#ffd27a}
+:root{--space:#05030f;--panel:rgba(14,10,34,.72);--panel2:rgba(20,15,48,.9);--line:rgba(150,130,255,.22);--line-strong:rgba(150,130,255,.5);--text:#f2efff;--body:#d9d3f5;--muted:#a39cc9;--violet:#9d7bff;--cyan:#5ee6ff;--gold:#ffd27a;--red:#ff6b6b}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html,body{background:var(--space);color:var(--text);font-family:'Inter','Noto Sans KR','Noto Sans JP','Noto Sans TC','Noto Sans SC','Noto Sans Thai','Noto Sans Arabic',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
-body{padding:16px 16px 60px;max-width:720px;margin:0 auto;font-size:15px;line-height:1.7;word-break:keep-all}
+html{min-height:100%;background:radial-gradient(ellipse 70% 420px at 50% 0%,rgba(157,123,255,.22),transparent 70%) no-repeat,var(--space)}
+body{color:var(--text);font-family:'Inter','Noto Sans KR','Noto Sans JP','Noto Sans TC','Noto Sans SC','Noto Sans Thai','Noto Sans Arabic',system-ui,sans-serif;-webkit-font-smoothing:antialiased;
+  min-height:100vh;padding:20px 16px 60px;max-width:760px;margin:0 auto;font-size:15px;line-height:1.7;word-break:keep-all}
 a{color:var(--cyan);text-decoration:none}
-#back{display:inline-block;font-size:13px;color:var(--muted);margin-bottom:6px}
-h1{font-size:22px;font-weight:700;display:flex;align-items:center;gap:10px}
+#back{display:inline-flex;align-items:center;gap:4px;font-size:13px;color:var(--muted);padding:6px 12px;border:1px solid var(--line);border-radius:999px;background:var(--panel)}
+#back:hover{color:var(--text);border-color:var(--line-strong)}
+h1{font-size:24px;font-weight:700;margin-top:16px}
 
 /* 6칸 */
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
-.tile{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;aspect-ratio:1;padding:12px;
-  border:1px solid var(--line);border-radius:14px;background:var(--panel);color:var(--text);text-align:center;transition:border-color .15s,background .15s}
-.tile:hover,.tile:active{border-color:var(--line-strong);background:var(--panel2)}
-.tile b{font-size:14px;font-weight:700;line-height:1.35}
-.ic{display:grid;place-items:center;width:56px;height:56px}
-.ic img{width:56px;height:56px;object-fit:contain}
-.ic svg{width:40px;height:40px;fill:none;stroke:var(--gold);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
-.ic.sm{width:32px;height:32px}
-.ic.sm img{width:32px;height:32px}
-.ic.sm svg{width:26px;height:26px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}
+.tile{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;aspect-ratio:1;padding:12px;
+  border:1px solid var(--line);border-radius:16px;color:var(--text);text-align:center;overflow:hidden;
+  background:linear-gradient(160deg,rgba(40,30,90,.65),rgba(14,10,34,.85));box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 8px 24px rgba(0,0,0,.35);transition:border-color .15s,background .15s}
+.tile::before{content:'';position:absolute;inset:auto 15% 58% 15%;height:60%;background:radial-gradient(circle,rgba(157,123,255,.28),transparent 70%);pointer-events:none}
+.tile:hover,.tile:active{border-color:var(--gold);background:linear-gradient(160deg,rgba(60,45,120,.75),rgba(20,15,48,.9))}
+.tile b{position:relative;font-size:15px;font-weight:700;line-height:1.35}
+.ic{position:relative;display:grid;place-items:center;width:64px;height:64px}
+.ic img{width:64px;height:64px;object-fit:contain;filter:drop-shadow(0 0 10px rgba(157,123,255,.6))}
+.ic svg{width:44px;height:44px;fill:none;stroke:var(--gold);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 6px rgba(255,210,122,.45))}
 
-/* 상세 */
-#body{margin-top:18px}
-#body h2{font-size:17px;font-weight:700;color:var(--gold);margin-top:22px}
-#body p{margin-top:8px}
-.wip{padding:28px 16px;border:1px dashed var(--line-strong);border-radius:14px;background:var(--panel);color:var(--muted);text-align:center}
+/* 상세 — 머리 */
+h1.hero{display:flex;align-items:center;gap:16px;margin-top:16px;padding:18px 20px;border:1px solid var(--line);border-radius:18px;
+  background:linear-gradient(120deg,rgba(60,45,120,.55),rgba(14,10,34,.6));box-shadow:0 10px 30px rgba(0,0,0,.35);font-size:26px}
+.ic.lg{width:72px;height:72px;flex:none;border-radius:50%;background:radial-gradient(circle,rgba(157,123,255,.35),transparent 70%)}
+.ic.lg img{width:72px;height:72px}
+.ic.lg svg{width:46px;height:46px}
 
-@media (max-width:480px){.grid{grid-template-columns:repeat(2,1fr)}}
+/* 상세 — 진행 흐름(월드게이트) */
+.flow{list-style:none;display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:16px}
+.flow li{padding:8px 12px;border-radius:10px;font-size:13px;font-weight:700;border:1px solid var(--line-strong);background:var(--panel2)}
+.flow li+li::before{content:'›';margin:0 8px 0 -2px;color:var(--muted)}
+.flow li{display:flex;align-items:center}
+.flow .f1{border-color:rgba(255,159,107,.6);color:#ffc29f}
+.flow .f2{border-color:rgba(94,230,255,.6);color:var(--cyan)}
+.flow .f3{border-color:rgba(255,107,107,.6);color:var(--red)}
+
+/* 상세 — 본문(세로 줄 + 점) */
+.story{position:relative;margin-top:22px;padding:20px 20px 20px 40px;border:1px solid var(--line);border-radius:18px;background:var(--panel)}
+.story::before{content:'';position:absolute;left:22px;top:30px;bottom:30px;width:2px;background:linear-gradient(var(--violet),rgba(157,123,255,.1))}
+.story p{position:relative;color:var(--body);font-size:15.5px;line-height:1.85}
+.story p+p{margin-top:14px}
+.story p::before{content:'';position:absolute;left:-23px;top:.62em;width:8px;height:8px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px rgba(255,210,122,.7)}
+html[dir=rtl] .story{padding:20px 40px 20px 20px}
+html[dir=rtl] .story::before{left:auto;right:22px}
+html[dir=rtl] .story p::before{left:auto;right:-23px}
+html[dir=rtl] .flow li+li::before{content:'‹';margin:0 -2px 0 8px}
+
+.wip{margin-top:22px;padding:36px 16px;border:1px dashed var(--line-strong);border-radius:18px;background:var(--panel);color:var(--muted);text-align:center}
+
+@media (max-width:480px){.grid{grid-template-columns:repeat(2,1fr)} h1.hero{font-size:21px;padding:14px 16px} .ic.lg,.ic.lg img{width:56px;height:56px}}
