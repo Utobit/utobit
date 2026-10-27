@@ -230,7 +230,8 @@
     /* 1025 월드게이트(원정) 표식 = 범람 게이트보다 몇 배 큰 인게임 게이트 그림(스톰아이) + 도시 레이드 이름 */
     .wg { width: var(--wgs, 132px); height: var(--wgs, 132px); cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 4; }
     body.hunter .wg { display: none; }
-    .wg .img { position: absolute; inset: 0; background: url(worldgate.png?v=1028) center / contain no-repeat;
+    .wg.red .img { background-image: url(worldgate_red.png); }   /* 1028 마스터 '12단계만 바꿔야지. 11단계는 스톰게이트 유지' — 공략 실패로 다시 열린 12단계 이상 */
+    .wg .img { position: absolute; inset: 0; background: url(worldgate.png) center / contain no-repeat;
       filter: drop-shadow(0 0 10px rgba(80, 160, 255, .9)); animation: wgspin 14s linear infinite; }   /* 인게임 월드게이트와 같은 그림(스톰아이), 같은 방향으로 빙글 */
     .wg .wgl { position: absolute; top: 100%; left: 50%; transform: translateX(-50%); margin-top: 2px; white-space: nowrap; text-align: center;
       font-weight: 800; font-size: 13px; line-height: 1.25; color: #dff1ff; text-shadow: 0 0 8px rgba(40, 120, 255, .95), 0 1px 2px #000; }
@@ -1370,7 +1371,7 @@
     if (!map || !mapReady) return;
     wgMarkers.forEach(function (m) { m.remove(); }); wgMarkers = [];
     worldGates.forEach(function (g) {
-      var d = el('div', 'wg'); d.style.setProperty('z-index', '40', 'important');   // 유적지·게이트 표식보다 위
+      var d = el('div', (g.stage || 11) >= 12 ? 'wg red' : 'wg'); d.style.setProperty('z-index', '40', 'important');   // 유적지·게이트 표식보다 위
       d.appendChild(el('i', 'img'));
       var l = el('div', 'wgl', T.wgRaid(wgCity(g))); l.appendChild(el('small', null, T.wgTitle)); d.appendChild(l);
       d.addEventListener('click', function (e) { e.stopPropagation(); openWorldGate(g); });
