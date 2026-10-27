@@ -1379,7 +1379,7 @@
   function loadFloods() {
     fetch(apiBase + '/globe?floods=1&lang=' + encodeURIComponent(LANG) + (gateKey ? '&k=' + encodeURIComponent(gateKey) : ''))
       .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
-      .then(function (j) { floods = ((j && j.rows) || []).filter(function (g) { return (g.level || 1) > 10; });   // 1027 마스터 "1~10레벨까지 범람게이트 바로 안보이게" — 목록·지도 표식 둘 다 floodMe = (j && j.me) || ''; nextAt = (j && j.nextAt) || 0; worldGates = (j && j.worldGates) || []; drawGates(); placeGateMarkers(); placeWorldGates(); })
+      .then(function (j) { floods = ((j && j.rows) || []).filter(function (g) { return (g.level || 1) > 10; }); /* 1027 마스터 "1~10레벨까지 범람게이트 바로 안보이게" — 목록·지도 표식 둘 다 */ floodMe = (j && j.me) || ''; nextAt = (j && j.nextAt) || 0; worldGates = (j && j.worldGates) || []; drawGates(); placeGateMarkers(); placeWorldGates(); })
       .catch(function () { floods = []; drawGates(); });
   }
 
