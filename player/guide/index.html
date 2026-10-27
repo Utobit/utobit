@@ -21,64 +21,109 @@
 </head>
 <body>
   <header class="top">
-    <a class="brand" href="/player/">PLAYER : FINAL RAID</a>
-    <a class="top-cta" href="https://play.google.com/store/apps/details?id=com.utobit.playerfinalraid" target="_blank" rel="noopener">Google Play</a>
+    <div class="top-row">
+      <a class="brand" href="/player/"><img src="/player/assets/icon.jpg" alt="">PLAYER : FINAL RAID</a>
+      <a class="top-cta" href="https://play.google.com/store/apps/details?id=com.utobit.playerfinalraid" target="_blank" rel="noopener">Google Play</a>
+    </div>
+    <nav class="gnav" id="gnav" aria-label="컨텐츠 안내"></nav>
   </header>
-  <nav class="gnav" id="gnav" aria-label="컨텐츠 안내"></nav>
 
   <main>
-    <div class="head">
-      <p class="label">GUIDE</p>
-      <h1>컨텐츠 안내</h1>
-      <p class="tagline">Player : Final Raid 의 세계와 컨텐츠를 하나씩 소개합니다.</p>
-    </div>
-    <div class="wip"><b>UNDER CONSTRUCTION</b> 이 페이지는 준비 중입니다. 내용이 차례로 채워집니다.</div>
-    <div class="cards">
-      <a class="card" href="/player/guide/vision/">
-        <span class="k">VISION</span>
-        <h2>우리의 비전</h2>
-        <p>Player : Final Raid 가 만들고 싶은 세계</p>
-        <span class="st">준비 중</span>
-      </a>
-      <a class="card" href="/player/guide/gate/">
-        <span class="k">GATE</span>
-        <h2>게이트</h2>
-        <p>내 주변에 열리는 던전, 헌터의 시작</p>
-        <span class="st">준비 중</span>
-      </a>
-      <a class="card" href="/player/guide/world-gate/">
-        <span class="k">WORLD GATE</span>
-        <h2>월드게이트</h2>
-        <p>세계의 헌터가 함께 맞서는 월드급 게이트</p>
-        <span class="st">준비 중</span>
-      </a>
-      <a class="card" href="/player/guide/sky-stadium/">
-        <span class="k">SKY STADIUM</span>
-        <h2>하늘의 스타디움</h2>
-        <p>하늘에 떠다니는 거대한 경기장</p>
-        <span class="st">준비 중</span>
-      </a>
-      <a class="card" href="/player/guide/stadium-event/">
-        <span class="k">STADIUM EVENT</span>
-        <h2>스타디움 이벤트</h2>
-        <p>스타디움에서 열리는 특별한 시간</p>
-        <span class="st">준비 중</span>
-      </a>
-      <a class="card" href="/player/guide/guild/">
-        <span class="k">GUILD</span>
-        <h2>길드</h2>
-        <p>함께 싸우고, 함께 성장하는 헌터들의 집</p>
-        <span class="st">준비 중</span>
-      </a>
-      <a class="card" href="/player/devnotes/">
-        <span class="k">DEV NOTES</span>
-        <h2>개발자 노트</h2>
-        <p>개발팀이 전하는 이야기</p>
-        <span class="st">준비 중</span>
-      </a>
+    <div class="hero">
+      <div class="hero-bg"></div>
+      <div class="hero-in">
+        <div>
+          <p class="label">GUIDE</p>
+          <h1>컨텐츠 안내</h1>
+          <!-- 작성: 한 줄 정의(이 컨텐츠가 무엇인지) -->
+          <p class="def">실제 지도 위에서 펼쳐지는 헌터의 세계</p>
+          <!-- 작성: 두세 줄 소개 -->
+          <p class="def-sub">게이트부터 길드까지, 플레이어의 컨텐츠를 하나씩 소개합니다.</p>
+          <span class="wip">공사중 · 내용을 채우고 있습니다</span>
+        </div>
+        <div class="hero-visual"><img class="phone" src="/player/assets/shot1.jpg" alt="" loading="lazy"></div>
+      </div>
     </div>
 
-    <div class="pager" id="pager"></div>
+    <section class="block">
+      <p class="sec-label">ABOUT</p>
+      <h2 class="sec-title">PLAYER는 이런 게임입니다</h2>
+      <!-- 작성: 게임 소개 세 줄(지금 문구 = 스토어 스크린샷 문구) -->
+      <div class="intro">
+        <div><b>실제 지도에서 펼쳐지는 RPG</b><span>세계 각지를 자유롭게 돌아다니자</span></div>
+        <div><b>헌터가 되어 게이트를 클리어</b><span>내 주변에 생겨난 게이트에 도전하자</span></div>
+        <div><b>나만의 고유 스킬</b><span>세계에 하나뿐인 스킬을 손에 넣자</span></div>
+      </div>
+    </section>
+
+    <section class="block">
+      <p class="sec-label">CONTENTS</p>
+      <h2 class="sec-title">컨텐츠 둘러보기</h2>
+      <div class="cards">
+        <a class="card" href="/player/guide/vision/">
+          <div class="thumb" style="background-image:url('/player/assets/hero.jpg')"></div>
+          <div class="txt">
+            <span class="k">OUR VISION</span>
+            <h2>우리의 비전</h2>
+            <p>우리가 만들고 싶은 세계</p>
+          </div>
+        </a>
+        <a class="card" href="/player/guide/gate/">
+          <div class="thumb" style="background-image:url('/player/assets/shot3.jpg')"></div>
+          <div class="txt">
+            <span class="k">GATE</span>
+            <h2>게이트</h2>
+            <p>내 주변에 열리는 던전</p>
+          </div>
+        </a>
+        <a class="card" href="/player/guide/world-gate/">
+          <div class="thumb contain" style="background-image:url('/player/globe/worldgate.png')"></div>
+          <div class="txt">
+            <span class="k">WORLD GATE</span>
+            <h2>월드게이트</h2>
+            <p>세계의 헌터가 함께 맞서는 게이트</p>
+          </div>
+        </a>
+        <a class="card" href="/player/guide/sky-stadium/">
+          <div class="thumb" style="background-image:url('/player/assets/shot5.jpg')"></div>
+          <div class="txt">
+            <span class="k">SKY STADIUM</span>
+            <h2>하늘의 스타디움</h2>
+            <p>하늘에 떠다니는 경기장</p>
+          </div>
+        </a>
+        <a class="card" href="/player/guide/stadium-event/">
+          <div class="thumb" style="background-image:url('/player/assets/shot5.jpg')"></div>
+          <div class="txt">
+            <span class="k">STADIUM EVENT</span>
+            <h2>스타디움 이벤트</h2>
+            <p>스타디움에서 열리는 특별한 시간</p>
+          </div>
+        </a>
+        <a class="card" href="/player/guide/guild/">
+          <div class="thumb" style="background-image:url('/player/assets/shot1.jpg')"></div>
+          <div class="txt">
+            <span class="k">GUILD</span>
+            <h2>길드</h2>
+            <p>함께 성장하는 헌터들의 집</p>
+          </div>
+        </a>
+        <a class="card" href="/player/devnotes/">
+          <div class="thumb contain" style="background-image:url('/player/assets/icon.jpg')"></div>
+          <div class="txt">
+            <span class="k">DEV NOTES</span>
+            <h2>개발자 노트</h2>
+            <p>개발팀이 직접 전하는 이야기</p>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <section class="block cta">
+      <h2>지금 게이트가 열렸습니다</h2>
+      <a class="btn" href="https://play.google.com/store/apps/details?id=com.utobit.playerfinalraid" target="_blank" rel="noopener">Google Play에서 받기</a>
+      <div class="pager" id="pager"></div>
+    </section>
   </main>
 
   <footer>

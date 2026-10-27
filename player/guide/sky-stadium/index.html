@@ -21,47 +21,115 @@
 </head>
 <body>
   <header class="top">
-    <a class="brand" href="/player/">PLAYER : FINAL RAID</a>
-    <a class="top-cta" href="https://play.google.com/store/apps/details?id=com.utobit.playerfinalraid" target="_blank" rel="noopener">Google Play</a>
+    <div class="top-row">
+      <a class="brand" href="/player/"><img src="/player/assets/icon.jpg" alt="">PLAYER : FINAL RAID</a>
+      <a class="top-cta" href="https://play.google.com/store/apps/details?id=com.utobit.playerfinalraid" target="_blank" rel="noopener">Google Play</a>
+    </div>
+    <nav class="gnav" id="gnav" aria-label="컨텐츠 안내"></nav>
   </header>
-  <nav class="gnav" id="gnav" aria-label="컨텐츠 안내"></nav>
 
   <main>
-    <div class="head">
-      <p class="label">SKY STADIUM</p>
-      <h1>하늘의 스타디움</h1>
-      <p class="tagline">하늘에 떠다니는 거대한 경기장</p>
-    </div>
-    <div class="wip"><b>UNDER CONSTRUCTION</b> 이 페이지는 준비 중입니다. 내용이 차례로 채워집니다.</div>
-    <div class="body">
-      <section>
-        <h2>하늘의 스타디움이란?</h2>
-        <!-- 작성: 정체·세계관 -->
-        <div class="todo">준비 중인 내용입니다.</div>
-      </section>
-      <section>
-        <h2>어디서 볼 수 있나</h2>
-        <!-- 작성: 지도에서 만나는 법 -->
-        <div class="todo">준비 중인 내용입니다.</div>
-      </section>
-      <section>
-        <h2>스타디움의 힘</h2>
-        <!-- 작성: 버프·해금 조건 등 -->
-        <div class="todo">준비 중인 내용입니다.</div>
-      </section>
-      <section>
-        <h2>이야기</h2>
-        <!-- 작성: 스타디움에 얽힌 설정 -->
-        <div class="todo">준비 중인 내용입니다.</div>
-      </section>
-      <section>
-        <h2>스크린샷</h2>
-        <!-- 작성: 게임 화면 그림 — /player/guide/sky-stadium/ 폴더에 넣고 <img> 로 교체 -->
-        <div class="figure">이미지 준비 중</div>
-      </section>
+    <div class="hero">
+      <div class="hero-bg"></div>
+      <div class="hero-in">
+        <div>
+          <p class="label">SKY STADIUM</p>
+          <h1>하늘의 스타디움</h1>
+          <!-- 작성: 한 줄 정의(이 컨텐츠가 무엇인지) -->
+          <p class="def">하늘에 떠다니는 거대한 경기장</p>
+          <!-- 작성: 두세 줄 소개 -->
+          <p class="def-sub"><span class="tbd">준비 중</span></p>
+          <span class="wip">공사중 · 내용을 채우고 있습니다</span>
+        </div>
+        <div class="hero-visual"><img class="phone" src="/player/assets/shot5.jpg" alt="" loading="lazy"></div>
+      </div>
     </div>
 
-    <div class="pager" id="pager"></div>
+    <section class="block">
+      <p class="sec-label">AT A GLANCE</p>
+      <h2 class="sec-title">한눈에 보기</h2>
+      <!-- 작성: 칸마다 짧은 답(예: 어디서 = 내 주변 지도) -->
+      <dl class="facts">
+        <div class="fact"><dt>위치</dt><dd><span class="tbd">준비 중</span></dd></div>
+        <div class="fact"><dt>열리는 조건</dt><dd><span class="tbd">준비 중</span></dd></div>
+        <div class="fact"><dt>효과</dt><dd><span class="tbd">준비 중</span></dd></div>
+        <div class="fact"><dt>이야기</dt><dd><span class="tbd">준비 중</span></dd></div>
+      </dl>
+    </section>
+
+    <section class="block">
+      <p class="sec-label">DETAILS</p>
+      <h2 class="sec-title">자세히 알아보기</h2>
+      <div class="feature">
+        <div class="media"><img class="phone" src="/player/assets/shot5.jpg" alt="" loading="lazy"></div>
+        <div>
+          <h3>하늘의 스타디움이란?</h3>
+          <!-- 작성: 정체·세계관 -->
+          <p class="tbd">준비 중인 내용입니다.</p>
+        </div>
+      </div>
+      <div class="feature">
+        <div class="media"><div class="ph">그림 준비 중</div></div>
+        <div>
+          <h3>어디서 볼 수 있나</h3>
+          <!-- 작성: 지도에서 만나는 법 -->
+          <p class="tbd">준비 중인 내용입니다.</p>
+        </div>
+      </div>
+      <div class="feature">
+        <div class="media"><div class="ph">그림 준비 중</div></div>
+        <div>
+          <h3>스타디움의 힘</h3>
+          <!-- 작성: 버프·해금 조건 등 -->
+          <p class="tbd">준비 중인 내용입니다.</p>
+        </div>
+      </div>
+      <div class="feature">
+        <div class="media"><div class="ph">그림 준비 중</div></div>
+        <div>
+          <h3>스타디움 이야기</h3>
+          <!-- 작성: 스타디움에 얽힌 설정 -->
+          <p class="tbd">준비 중인 내용입니다.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="block">
+      <p class="sec-label">MORE</p>
+      <h2 class="sec-title">다른 컨텐츠</h2>
+      <div class="cards">
+        <a class="card" href="/player/guide/vision/">
+          <div class="thumb" style="background-image:url('/player/assets/hero.jpg')"></div>
+          <div class="txt">
+            <span class="k">OUR VISION</span>
+            <h3>우리의 비전</h3>
+            <p>우리가 만들고 싶은 세계</p>
+          </div>
+        </a>
+        <a class="card" href="/player/guide/gate/">
+          <div class="thumb" style="background-image:url('/player/assets/shot3.jpg')"></div>
+          <div class="txt">
+            <span class="k">GATE</span>
+            <h3>게이트</h3>
+            <p>내 주변에 열리는 던전</p>
+          </div>
+        </a>
+        <a class="card" href="/player/devnotes/">
+          <div class="thumb contain" style="background-image:url('/player/assets/icon.jpg')"></div>
+          <div class="txt">
+            <span class="k">DEV NOTES</span>
+            <h3>개발자 노트</h3>
+            <p>개발팀이 직접 전하는 이야기</p>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <section class="block cta">
+      <h2>지금 게이트가 열렸습니다</h2>
+      <a class="btn" href="https://play.google.com/store/apps/details?id=com.utobit.playerfinalraid" target="_blank" rel="noopener">Google Play에서 받기</a>
+      <div class="pager" id="pager"></div>
+    </section>
   </main>
 
   <footer>
