@@ -431,6 +431,7 @@
     <button type="button" id="m-guide"><i class="sys"></i><span data-t="guideTitle"></span></button>
     <button type="button" id="m-items"><i class="sys"></i><span id="m-items-lbl"></span></button>
     <button type="button" id="m-skills"><i class="sys"></i><span id="m-skills-lbl"></span></button>
+    <button type="button" id="m-contents"><i class="sys"></i><span id="m-contents-lbl"></span></button>
     <button type="button" id="m-community"><i class="sys"></i><span data-t="community"></span></button>
     <button type="button" id="m-lang"><i class="lang"></i><span data-t="langTitle"></span><em id="m-lang-cur"></em></button>
   </div>
@@ -1549,6 +1550,10 @@
   var SKILL_LBL = {"ko": "스킬 도감", "en": "Skill Codex", "ja": "スキル図鑑", "zh-Hans": "技能图鉴", "zh-Hant": "技能圖鑑", "de": "Fähigkeiten-Kodex", "fr": "Codex des compétences", "es": "Códice de habilidades", "it": "Codice delle abilità", "pt": "Códice de habilidades", "pl": "Kodeks umiejętności", "ru": "Кодекс навыков", "tr": "Yetenek Kodeksi", "vi": "Bách khoa kỹ năng", "id": "Kodeks Skill", "th": "สารานุกรมสกิล", "ar": "موسوعة المهارات"};
   $('m-skills-lbl').textContent = SKILL_LBL[LANG] || SKILL_LBL.en;
   $('m-skills').addEventListener('click', function () { closeBurger(); location.href = 'skill/?hl=' + LANG; });
+  // 1028 마스터('햄버거에 컨텐츠 안내 추가'): 월드게이트·보스레이드·길드·지상/비공정 스타디움·개발자 노트 6칸 → /player/globe/contents/
+  var CONTENTS_LBL = {"ko": "컨텐츠 안내", "en": "Content Guide", "ja": "コンテンツ案内", "zh-Hans": "内容指南", "zh-Hant": "內容指南", "de": "Inhaltsübersicht", "fr": "Guide du contenu", "es": "Guía de contenido", "it": "Guida ai contenuti", "pt": "Guia de conteúdo", "pl": "Przewodnik po zawartości", "ru": "Обзор контента", "tr": "İçerik Rehberi", "vi": "Hướng dẫn nội dung", "id": "Panduan Konten", "th": "แนะนำคอนเทนต์", "ar": "دليل المحتوى"};
+  $('m-contents-lbl').textContent = CONTENTS_LBL[LANG] || CONTENTS_LBL.en;
+  $('m-contents').addEventListener('click', function () { closeBurger(); location.href = 'contents/?hl=' + LANG; });
   // 1013 마스터('웹 햄버거에 커뮤니티 추가'): 공식 디스코드(만료 없는 초대 링크)
   $('m-community').addEventListener('click', function () { closeBurger(); window.open('https://utobit.net/player/discord/', '_blank', 'noopener'); });
   // 언어 설정: 메뉴의 '언어' → 게임 제공 언어 목록. 고르면 기기에 저장하고 다시 불러온다(문구가 처음 한 번에 채워지는 구조)

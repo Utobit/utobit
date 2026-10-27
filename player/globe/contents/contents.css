@@ -1,0 +1,29 @@
+/* 플레이어 지구본 › 컨텐츠 안내 — 스킬·장비 도감과 같은 색 */
+:root{--space:#05030f;--panel:rgba(14,10,34,.72);--panel2:rgba(20,15,48,.9);--line:rgba(150,130,255,.22);--line-strong:rgba(150,130,255,.5);--text:#f2efff;--muted:#a39cc9;--violet:#9d7bff;--cyan:#5ee6ff;--gold:#ffd27a}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--space);color:var(--text);font-family:'Inter','Noto Sans KR','Noto Sans JP','Noto Sans TC','Noto Sans SC','Noto Sans Thai','Noto Sans Arabic',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+body{padding:16px 16px 60px;max-width:720px;margin:0 auto;font-size:15px;line-height:1.7;word-break:keep-all}
+a{color:var(--cyan);text-decoration:none}
+#back{display:inline-block;font-size:13px;color:var(--muted);margin-bottom:6px}
+h1{font-size:22px;font-weight:700;display:flex;align-items:center;gap:10px}
+
+/* 6칸 */
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
+.tile{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;aspect-ratio:1;padding:12px;
+  border:1px solid var(--line);border-radius:14px;background:var(--panel);color:var(--text);text-align:center;transition:border-color .15s,background .15s}
+.tile:hover,.tile:active{border-color:var(--line-strong);background:var(--panel2)}
+.tile b{font-size:14px;font-weight:700;line-height:1.35}
+.ic{display:grid;place-items:center;width:56px;height:56px}
+.ic img{width:56px;height:56px;object-fit:contain}
+.ic svg{width:40px;height:40px;fill:none;stroke:var(--gold);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.ic.sm{width:32px;height:32px}
+.ic.sm img{width:32px;height:32px}
+.ic.sm svg{width:26px;height:26px}
+
+/* 상세 */
+#body{margin-top:18px}
+#body h2{font-size:17px;font-weight:700;color:var(--gold);margin-top:22px}
+#body p{margin-top:8px}
+.wip{padding:28px 16px;border:1px dashed var(--line-strong);border-radius:14px;background:var(--panel);color:var(--muted);text-align:center}
+
+@media (max-width:480px){.grid{grid-template-columns:repeat(2,1fr)}}
