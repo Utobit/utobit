@@ -1,7 +1,7 @@
 /* 플레이어 지구본 › 컨텐츠 안내 — 6칸 목록 + 상세 쪽(지금은 전부 공사중). 17개 언어.
    1028 마스터: "햄버거에 컨텐츠 안내 추가" / "ui sprite 수준으로 6칸 구성. 눌러서 상세 페이지 들어가면 전부 일단 공사중"
    칸 = 월드게이트 · 보스레이드 · 길드 · 지상 스타디움 · 비공정 스타디움 · 개발자 노트
-   상세 쪽 = <body data-page="칸 id">. 내용을 채울 때는 그 쪽 index.html 의 #body 안에 쓴다(비어 있으면 공사중 표시). */
+   상세 쪽 = <body data-page="칸 id">. 글 = contents_text.js(17개 언어). 글이 없는 칸은 공사중 표시. */
 (function () {
   var LANGS = ['ko', 'en', 'ja', 'zh-Hans', 'zh-Hant', 'de', 'fr', 'es', 'it', 'pt', 'pl', 'ru', 'tr', 'vi', 'id', 'th', 'ar'];
   var T = {
@@ -67,6 +67,9 @@
     $('back').href = '../' + hl; $('back').textContent = '‹ ' + t(T.title);
     $('title').innerHTML = '<span class="ic sm">' + icon(it) + '</span>' + name;
     var body = $('body');
-    if (!body.innerHTML.trim()) body.innerHTML = '<p class="wip">' + t(T.wip) + '</p>';
+    var doc = (window.CONTENTS_TEXT || {})[page];
+    var ps = doc && (doc[LANG] || doc.en);
+    body.innerHTML = ps ? ps.map(function (x) { return '<p>' + x + '</p>'; }).join('')
+                        : '<p class="wip">' + t(T.wip) + '</p>';
   }
 })();
