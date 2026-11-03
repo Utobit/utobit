@@ -6,31 +6,77 @@
 <meta name="robots" content="noindex">
 <title>Player : Final Raid</title>
 <meta name="theme-color" content="#05030f">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+KR:wght@400;700&family=Noto+Sans+JP:wght@400;700&family=Noto+Sans+TC:wght@400;700&family=Noto+Sans+SC:wght@400;700&family=Noto+Sans+Thai:wght@400;700&family=Noto+Sans+Arabic:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Noto+Sans+KR:wght@400;700;900&family=Noto+Sans+JP:wght@400;700&family=Noto+Sans+TC:wght@400;700&family=Noto+Sans+SC:wght@400;700&family=Noto+Sans+Thai:wght@400;700&family=Noto+Sans+Arabic:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../contents/contents.css">
 <style>
-  .board{list-style:none;margin-top:18px;display:flex;flex-direction:column;gap:10px}
-  .post{border:1px solid var(--line);border-radius:14px;background:var(--panel);overflow:hidden}
-  .post.on{border-color:var(--line-strong)}
-  .post button{display:flex;align-items:center;gap:10px;width:100%;padding:14px 16px;border:0;background:transparent;color:var(--text);font:inherit;text-align:start;cursor:pointer}
-  .post button:hover{background:rgba(150,130,255,.12)}
-  .post .ver{font-size:16px;font-weight:700}
-  .post .new{padding:2px 8px;border-radius:999px;font-size:11.5px;font-weight:700;color:#1a1030;background:var(--gold)}
-  .post .date{margin-inline-start:auto;font-size:13px;color:var(--muted);white-space:nowrap}
-  .post .arr{flex:none;width:9px;height:9px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(45deg);margin-top:-4px;transition:transform .15s}
-  .post.on .arr{transform:rotate(225deg);margin-top:4px}
-  .post .txt{display:none;padding:2px 18px 18px;color:var(--body);font-size:15px;line-height:1.85;white-space:pre-line;overflow-wrap:anywhere}
-  .post.on .txt{display:block}
+  /* 게시판 목록 */
+  .list{list-style:none;margin-top:18px;border-top:2px solid var(--line-strong)}
+  .list a{display:flex;align-items:center;gap:10px;padding:15px 6px;border-bottom:1px solid var(--line);color:var(--text)}
+  .list a:hover{background:rgba(150,130,255,.08)}
+  .list .cat{flex:none;padding:2px 8px;border-radius:6px;font-size:12px;font-weight:700;color:var(--muted);border:1px solid var(--line)}
+  .list .cat.pre{color:#1a1030;border-color:transparent;background:linear-gradient(90deg,#ffe3a3,var(--gold))}
+  .list .tt{flex:1;min-width:0;font-size:15px;font-weight:600}
+  .list .dt{flex:none;font-size:13px;color:var(--muted)}
+  .list .new{flex:none;width:6px;height:6px;border-radius:50%;background:var(--red);box-shadow:0 0 6px var(--red)}
   .more{display:block;margin:16px auto 0;padding:10px 22px;border:1px solid var(--line-strong);border-radius:999px;background:var(--panel2);color:var(--text);font:inherit;font-size:14px;cursor:pointer}
   .more:hover{border-color:var(--gold)}
+
+  /* 글 */
+  .art{margin-top:18px}
+  .art-hd{padding-bottom:16px;border-bottom:1px solid var(--line-strong)}
+  .art-hd .cat{font-size:13px;font-weight:700;color:var(--gold)}
+  .art-hd h2{margin-top:6px;font-size:23px;line-height:1.4;font-weight:800}
+  .art-hd .dt{margin-top:8px;font-size:13px;color:var(--muted)}
+  .art-bd{padding:8px 2px 0}
+  .art-bd h3{margin-top:30px;font-size:16.5px;font-weight:800;line-height:1.5}
+  .art-bd h3::before{content:'❖ ';color:var(--gold)}
+  .art-bd ul{list-style:none;margin-top:8px}
+  .art-bd li{position:relative;padding-inline-start:16px;color:var(--body);font-size:15px;line-height:1.85}
+  .art-bd li::before{content:'·';position:absolute;inset-inline-start:4px;color:var(--muted);font-weight:700}
+  .art-bd .plain{margin-top:12px;color:var(--body);font-size:15px;line-height:1.9;white-space:pre-line;overflow-wrap:anywhere}
+  .art-ft{margin-top:36px;padding-top:16px;border-top:1px solid var(--line);text-align:center}
+  .art-ft a{display:inline-block;padding:9px 26px;border:1px solid var(--line-strong);border-radius:999px;background:var(--panel2);color:var(--text);font-size:14px}
+  .art-ft a:hover{border-color:var(--gold)}
+
+  /* 일러스트 액자 카드 */
+  .card{position:relative;width:min(340px,100%);margin:22px 0 6px;padding:7px;border-radius:6px;
+    background:linear-gradient(160deg,#f6e2a8,#a7823e 45%,#f3d98f);box-shadow:0 14px 40px rgba(0,0,0,.55),0 0 40px rgba(255,210,122,.12)}
+  .card-in{position:relative;overflow:hidden;border-radius:3px;outline:1px solid rgba(255,240,200,.7);outline-offset:-6px;aspect-ratio:2/3;background:#0b0820}
+  .card-in img{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 0}
+  .card-in::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 52%,rgba(18,12,40,.55) 70%,rgba(8,5,20,.95));pointer-events:none}
+  .card .cn{position:absolute;inset-inline:0;bottom:44px;z-index:1;text-align:center}
+  .card .cn small{display:block;font-size:13px;font-weight:700;letter-spacing:.2em;color:var(--gold)}
+  .card .cn b{display:block;margin-top:2px;font-size:30px;font-weight:900;line-height:1.2;color:#fff8e6;text-shadow:0 0 18px rgba(255,210,122,.7),0 2px 4px rgba(0,0,0,.8)}
+  .card .band{position:absolute;inset-inline:7px;bottom:7px;z-index:1;height:30px;display:flex;align-items:center;justify-content:center;gap:10px;
+    background:rgba(8,5,20,.85);border-top:1px solid rgba(255,220,150,.45);color:rgba(255,226,160,.85);font-size:11.5px;font-weight:700;letter-spacing:.25em}
+  .card .band::before,.card .band::after{content:'✦';font-size:9px;letter-spacing:0}
+  .card i{position:absolute;z-index:2;width:16px;height:16px;border:2px solid #fff1c7;transform:rotate(45deg);background:#a7823e}
+  .card i:nth-of-type(1){top:-3px;left:-3px}.card i:nth-of-type(2){top:-3px;right:-3px}.card i:nth-of-type(3){bottom:-3px;left:-3px}.card i:nth-of-type(4){bottom:-3px;right:-3px}
+
+  /* 스킬 줄 */
+  .sk{display:grid;grid-template-columns:40px 1fr;gap:12px;margin-top:10px;padding:13px;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+  .sk.ex{border-color:rgba(255,210,122,.55);background:linear-gradient(120deg,rgba(80,58,18,.4),rgba(10,7,26,.7) 60%)}
+  .gr{display:grid;place-items:center;width:40px;height:40px;border-radius:10px;font-size:15px;font-weight:900;font-family:'Inter',sans-serif;border:1px solid}
+  .gr.EX{color:#1a1030;border-color:#ffe3a3;background:linear-gradient(135deg,#fff1c7,#ffb84d);box-shadow:0 0 14px rgba(255,190,90,.5);font-size:13px}
+  .gr.S{color:#e9b8ff;border-color:rgba(214,140,255,.6);background:rgba(150,70,220,.2)}
+  .gr.A{color:#ff9fb0;border-color:rgba(255,120,150,.55);background:rgba(220,60,100,.16)}
+  .gr.B{color:var(--cyan);border-color:rgba(94,230,255,.5);background:rgba(40,160,200,.14)}
+  .gr.C{color:#9fe6a8;border-color:rgba(120,220,140,.5);background:rgba(60,170,90,.14)}
+  .sk-hd{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;min-height:40px}
+  .sk-hd b{font-size:15.5px;font-weight:800;margin-inline-end:4px}
+  .tg{padding:2px 8px;border-radius:6px;font-size:11.5px;font-weight:700;color:var(--muted);border:1px solid var(--line);background:rgba(150,130,255,.08);white-space:nowrap}
+  .tg.basic{color:var(--gold);border-color:rgba(255,210,122,.45);background:rgba(255,210,122,.1)}
+  .tg.wp{color:#c9bfff}
+  .sk p{margin-top:4px;color:var(--body);font-size:14px;line-height:1.75}
+  @media (max-width:480px){.art-hd h2{font-size:20px} .card .cn b{font-size:26px}}
 </style>
 </head>
 <body>
 <a id="back"></a>
 <h1 id="title"></h1>
-<!-- 글 = notes.js (게임 CDN 패치노트에서 _gen_updates.py 로 만든 것). 그 언어 글이 있는 버전만 보인다 -->
-<ol class="board" id="board"></ol>
-<button class="more" id="more" type="button" hidden></button>
+<!-- 목록(#) ↔ 글(#p=아이디). 예고 = preview.js(손으로 쓴 글), 업데이트 = notes.js(게임 CDN 패치노트 생성본). 그 언어 글이 있는 것만 보인다 -->
+<main id="view"></main>
+<script src="preview.js"></script>
 <script src="notes.js"></script>
 <script src="updates.js"></script>
 </body>
