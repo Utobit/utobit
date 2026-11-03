@@ -80,7 +80,7 @@
 <main>
   <h1>Gizlilik Politikası</h1>
   <p class="notice">Bu belge, kolaylık sağlamak amacıyla sunulan bir çeviridir. Çeviri ile Korece asıl metin arasında farklılık bulunması hâlinde Korece asıl metin esas alınır. (<a href="/player/privacy/?lang=ko">Korece asıl metin</a>)</p>
-  <span class="date">Son güncelleme: 2026-10-05 · Yürürlük tarihi: 2026-10-01</span>
+  <span class="date">Son güncelleme: 2026-11-04 · Yürürlük tarihi: 2026-10-01</span>
   <a class="histbtn" href="/player/history/#privacy">Değişiklik geçmişini görüntüle (Korece)</a>
   <p>Utobit (bundan böyle "Şirket"), "Player : Final Raid" (com.utobit.playerfinalraid, bundan böyle "Hizmet") mobil oyununun kullanıcılarına ait kişisel bilgileri "Kişisel Bilgilerin Korunması Kanunu" ve ilgili diğer mevzuat uyarınca işler ve Gizlilik Politikası'nı aşağıdaki şekilde kamuya açıklar.</p>
 
@@ -91,12 +91,13 @@
   <table>
     <tr><th>Kategori</th><th>Toplanan bilgiler</th><th>Toplama yöntemi</th></tr>
     <tr><td>Hesap (giriş)</td><td>E-posta, görünen ad, benzersiz kullanıcı kimliği (UID)</td><td>Google hesabı aracılığıyla Firebase Authentication</td></tr>
+    <tr><td>Hesap (Apple ile Giriş Yap, iOS)</td><td>Apple kullanıcı kimliği; e-posta adresi veya Apple özel aktarma e-posta adresi (kullanıcı paylaşmayı seçerse); ad (yalnızca kullanıcı paylaşırsa)</td><td>Apple ile Giriş Yap aracılığıyla Firebase Authentication</td></tr>
     <tr><td>Misafir girişi</td><td>Benzersiz kullanıcı kimliği (UID), cihaz tanımlayıcısı (uygulamanın cihazda oluşturduğu ve sorguladığı tanımlayıcı değer)</td><td>Firebase Authentication misafir (anonim) girişi sırasında otomatik olarak oluşturulur ve toplanır. Sonradan Google hesabına bağlandığında aynı UID ile devam eder.</td></tr>
     <tr><td>Oyun ilerleme verileri</td><td>Takma ad, seviye, deneyim puanı, nitelikler, sahip olunan eşya ve yetenekler, oyun paraları (altın/büyü taşı/kristal), savaş kayıtları, tamamlanan Geçit listesi, ülke (cihazın yerel ayarına göre)</td><td>Uygulama içinde oyun sırasında sunucuya (AWS) otomatik olarak kaydedilir</td></tr>
-    <tr><td>Ödeme bilgileri</td><td>Uygulama içi satın alma (kristal) geçmişi, satın alma belirteci (token)</td><td>Google Play uygulama içi satın alma sistemi üzerinden işlenir; kart numarası gibi ödeme aracına ait asıl bilgiler toplanmaz (doğrudan Google Play tarafından işlenir)</td></tr>
-    <tr><td>Cihaz ve sensör bilgileri</td><td>Fiziksel aktivite (adım sayısı) izni</td><td>Adımsayar tabanlı oyun içeriğinin sunulması amacıyla, yalnızca kullanıcının onayı hâlinde toplanır</td></tr>
+    <tr><td>Ödeme bilgileri</td><td>Uygulama içi satın alma (kristal) geçmişi, satın alma belirteci (token)</td><td>Google Play veya Apple App Store uygulama içi satın alma sistemi üzerinden işlenir; kart numarası gibi ödeme aracına ait asıl bilgiler toplanmaz (doğrudan Google veya Apple tarafından işlenir)</td></tr>
+    <tr><td>Cihaz ve sensör bilgileri</td><td>Fiziksel aktivite (adım sayısı) izni (Android); Hareket ve Fitness (adım sayısı, isteğe bağlı) izni (iOS)</td><td>Adımsayar tabanlı oyun içeriğinin sunulması amacıyla, yalnızca kullanıcının onayı hâlinde toplanır</td></tr>
     <tr><td>Cihaz donanım bilgileri</td><td>Cihaz model adı, işletim sistemi sürümü, bellek (RAM) kapasitesi, grafik işlem birimi (GPU) ve işlemci (CPU) türü, uygulama sürümü</td><td>Giriş sırasında otomatik olarak toplanır. Desteklenen cihaz kapsamının belirlenmesi, performans iyileştirmesi ve hata teşhisi amacıyla</td></tr>
-    <tr><td>Wear OS saat uygulaması bağlantısı (isteğe bağlı)</td><td>Saat bağlantı belirteci, saatin ölçtüğü adım sayısı ve kat edilen mesafenin kümülatif değerleri, saat uygulamasındaki oyun kullanım kayıtları (savaş, satın alma vb.)</td><td>Yalnızca kullanıcının uygulama içinde saat bağlantı kodu alıp girmesi hâlinde ve saat uygulaması işlevlerinin sunulması kapsamıyla sınırlı olarak toplanır</td></tr>
+    <tr><td>Wear OS saat uygulaması bağlantısı (isteğe bağlı; yalnızca Android sürümü)</td><td>Saat bağlantı belirteci, saatin ölçtüğü adım sayısı ve kat edilen mesafenin kümülatif değerleri, saat uygulamasındaki oyun kullanım kayıtları (savaş, satın alma vb.)</td><td>Yalnızca kullanıcının uygulama içinde saat bağlantı kodu alıp girmesi hâlinde ve saat uygulaması işlevlerinin sunulması kapsamıyla sınırlı olarak toplanır</td></tr>
     <tr><td>Konum bilgisi</td><td>Cihazın GPS konumu (kesin konum) — yalnızca uygulama kullanılırken (ön planda) toplanır, arka planda toplanmaz. Ayrıntılar için aşağıdaki "5. Konum Bilgilerinin İşlenmesi" bölümüne bakınız.</td><td>Cihazın GPS sensörü (konum izni verildiğinde)</td></tr>
     <tr><td>Faaliyet bölgesi kaydı</td><td>Geçit'in fethedildiği bölgeler, içinden geçilen bölgeler gibi oyunda faaliyet gösterilen bölgelerin alan numaraları (yaklaşık 5 km ve üzeri birimler). Kesin koordinatlar ve zaman bilgisi kaydedilmez.</td><td>Oyun sırasında otomatik olarak kaydedilir (Geçit'in fethedildiği bölgeler tüm kullanıcılar için, içinden geçilen bölgeler uygulama içinde "İzimin kaydedilmesine izin ver" seçeneğini açan kullanıcılar için). Dışarıya gösterim yalnızca izni açan kullanıcılarla sınırlıdır. Ayrıntılar için aşağıdaki "5. Konum Bilgilerinin İşlenmesi" bölümüne bakınız.</td></tr>
     <tr><td>Reklam tanımlayıcısı</td><td>Reklam SDK'sı entegre edildiğinde reklam tanımlayıcısı (Advertising ID) toplanabilir.</td><td>Cihaz işletim sisteminin sağladığı reklam tanımlayıcısı</td></tr>
@@ -134,6 +135,7 @@
   <p>Hizmet'in sunulması amacıyla bilgiler aşağıdaki harici hizmetlere iletilebilir ve bu hizmetlerce işlenebilir.</p>
   <ul>
     <li>Google (Firebase Authentication, Google Play ödeme ve giriş) — <a href="https://policies.google.com/privacy" target="_blank">Gizlilik Politikası</a></li>
+    <li>Apple (Apple ile Giriş Yap, App Store uygulama içi satın alma) — <a href="https://www.apple.com/legal/privacy/" target="_blank">Gizlilik Politikası</a></li>
     <li>Amazon Web Services (oyun verilerinin sunucuda saklanması, Seul bölgesi) — <a href="https://aws.amazon.com/privacy/" target="_blank">Gizlilik Politikası</a></li>
     <li>Mapbox (harita görüntüleme — harita karosu isteklerine o anda görüntülenen harita alanının koordinatları dâhildir) — <a href="https://www.mapbox.com/legal/privacy" target="_blank">Gizlilik Politikası</a></li>
   </ul>

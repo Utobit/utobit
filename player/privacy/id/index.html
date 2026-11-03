@@ -80,7 +80,7 @@
 <main>
   <h1>Kebijakan Privasi</h1>
   <p class="notice">Dokumen ini merupakan terjemahan yang disediakan untuk kemudahan. Apabila terdapat perbedaan antara terjemahan ini dan naskah asli berbahasa Korea, naskah asli berbahasa Korea yang berlaku. (<a href="/player/privacy/?lang=ko">Naskah asli berbahasa Korea</a>)</p>
-  <span class="date">Terakhir diubah: 2026-10-05 · Tanggal berlaku: 2026-10-01</span>
+  <span class="date">Terakhir diubah: 2026-11-04 · Tanggal berlaku: 2026-10-01</span>
   <a class="histbtn" href="/player/history/#privacy">Lihat riwayat perubahan (bahasa Korea)</a>
   <p>Utobit (selanjutnya disebut "Perusahaan") memproses informasi pribadi pengguna game seluler "Player : Final Raid" (com.utobit.playerfinalraid, selanjutnya disebut "Layanan") sesuai dengan Undang-Undang Pelindungan Informasi Pribadi dan peraturan perundang-undangan terkait lainnya, serta mengumumkan Kebijakan Privasi sebagai berikut.</p>
 
@@ -91,12 +91,13 @@
   <table>
     <tr><th>Kategori</th><th>Informasi yang dikumpulkan</th><th>Cara pengumpulan</th></tr>
     <tr><td>Akun (login)</td><td>Email, nama tampilan, pengenal unik pengguna (UID)</td><td>Firebase Authentication melalui akun Google</td></tr>
+    <tr><td>Akun (Masuk dengan Apple, iOS)</td><td>Pengenal pengguna Apple; email atau email relai pribadi Apple (jika pengguna memilih untuk membagikannya); nama (hanya jika pengguna membagikannya)</td><td>Firebase Authentication melalui Masuk dengan Apple</td></tr>
     <tr><td>Login tamu</td><td>Pengenal unik pengguna (UID), pengenal perangkat (nilai pengenal yang dibuat dan dibaca oleh aplikasi pada perangkat)</td><td>Dibuat dan dikumpulkan secara otomatis saat login tamu (anonim) Firebase Authentication. Apabila kemudian ditautkan ke akun Google, UID yang sama tetap digunakan.</td></tr>
     <tr><td>Data progres game</td><td>Nama panggilan, level, poin pengalaman, atribut, item dan skill yang dimiliki, mata uang game (emas/batu ajaib/kristal), catatan pertempuran, daftar Gerbang yang telah diselesaikan, negara (berdasarkan pengaturan regional perangkat)</td><td>Disimpan secara otomatis di server (AWS) selama bermain di dalam aplikasi</td></tr>
-    <tr><td>Informasi pembayaran</td><td>Riwayat pembelian dalam aplikasi (kristal), token pembelian</td><td>Diproses melalui pembelian dalam aplikasi Google Play; informasi asli alat pembayaran seperti nomor kartu tidak dikumpulkan (diproses langsung oleh Google Play)</td></tr>
-    <tr><td>Informasi perangkat dan sensor</td><td>Izin aktivitas fisik (jumlah langkah)</td><td>Untuk tujuan penyediaan konten game berbasis penghitung langkah; hanya dikumpulkan apabila pengguna menyetujuinya</td></tr>
+    <tr><td>Informasi pembayaran</td><td>Riwayat pembelian dalam aplikasi (kristal), token pembelian</td><td>Diproses melalui pembelian dalam aplikasi Google Play atau Apple App Store; informasi asli alat pembayaran seperti nomor kartu tidak dikumpulkan (diproses langsung oleh Google atau Apple)</td></tr>
+    <tr><td>Informasi perangkat dan sensor</td><td>Izin aktivitas fisik (jumlah langkah) (Android); izin Gerakan &amp; Kebugaran (jumlah langkah, opsional) (iOS)</td><td>Untuk tujuan penyediaan konten game berbasis penghitung langkah; hanya dikumpulkan apabila pengguna menyetujuinya</td></tr>
     <tr><td>Informasi spesifikasi perangkat</td><td>Nama model perangkat, versi sistem operasi, kapasitas memori (RAM), jenis unit pemrosesan grafis (GPU) dan prosesor (CPU), versi aplikasi</td><td>Dikumpulkan secara otomatis saat login. Untuk tujuan penetapan cakupan perangkat yang didukung, optimalisasi kinerja, dan diagnosis kesalahan</td></tr>
-    <tr><td>Penautan aplikasi jam tangan Wear OS (opsional)</td><td>Token penautan jam tangan, nilai kumulatif jumlah langkah dan jarak tempuh yang diukur oleh jam tangan, catatan penggunaan game di aplikasi jam tangan (pertempuran, pembelian, dan sebagainya)</td><td>Hanya dikumpulkan apabila pengguna menerbitkan dan memasukkan kode penautan jam tangan di dalam aplikasi, dan hanya dalam lingkup penyediaan fitur aplikasi jam tangan</td></tr>
+    <tr><td>Penautan aplikasi jam tangan Wear OS (opsional, hanya versi Android)</td><td>Token penautan jam tangan, nilai kumulatif jumlah langkah dan jarak tempuh yang diukur oleh jam tangan, catatan penggunaan game di aplikasi jam tangan (pertempuran, pembelian, dan sebagainya)</td><td>Hanya dikumpulkan apabila pengguna menerbitkan dan memasukkan kode penautan jam tangan di dalam aplikasi, dan hanya dalam lingkup penyediaan fitur aplikasi jam tangan</td></tr>
     <tr><td>Informasi lokasi</td><td>Lokasi GPS perangkat (lokasi akurat) — hanya dikumpulkan saat aplikasi sedang digunakan (latar depan) dan tidak dikumpulkan di latar belakang. Untuk perinciannya, lihat "5. Pemrosesan Informasi Lokasi" di bawah.</td><td>Sensor GPS perangkat (apabila izin lokasi disetujui)</td></tr>
     <tr><td>Catatan wilayah aktivitas</td><td>Nomor zona (satuan sekitar 5 km atau lebih) dari wilayah tempat pengguna beraktivitas di dalam game, seperti wilayah tempat Gerbang ditaklukkan dan wilayah yang dilalui. Koordinat akurat dan waktu tidak disimpan.</td><td>Dicatat secara otomatis selama bermain (wilayah tempat Gerbang ditaklukkan untuk semua pengguna; wilayah yang dilalui untuk pengguna yang mengaktifkan "Izinkan pencatatan jejak saya" di dalam aplikasi). Penayangan kepada pihak luar terbatas pada pengguna yang mengaktifkan izin tersebut. Untuk perinciannya, lihat "5. Pemrosesan Informasi Lokasi" di bawah.</td></tr>
     <tr><td>Pengenal iklan</td><td>Apabila SDK iklan diintegrasikan, pengenal iklan (Advertising ID) dapat dikumpulkan.</td><td>Pengenal iklan yang disediakan oleh sistem operasi perangkat</td></tr>
@@ -134,6 +135,7 @@
   <p>Untuk penyediaan Layanan, informasi dapat dikirimkan kepada dan diproses oleh layanan eksternal berikut.</p>
   <ul>
     <li>Google (Firebase Authentication, pembayaran dan login Google Play) — <a href="https://policies.google.com/privacy" target="_blank">Kebijakan Privasi</a></li>
+    <li>Apple (Masuk dengan Apple, pembelian dalam aplikasi App Store) — <a href="https://www.apple.com/legal/privacy/" target="_blank">Kebijakan Privasi</a></li>
     <li>Amazon Web Services (penyimpanan data game di server, region Seoul) — <a href="https://aws.amazon.com/privacy/" target="_blank">Kebijakan Privasi</a></li>
     <li>Mapbox (perenderan peta — permintaan ubin peta memuat koordinat area peta yang sedang ditampilkan) — <a href="https://www.mapbox.com/legal/privacy" target="_blank">Kebijakan Privasi</a></li>
   </ul>

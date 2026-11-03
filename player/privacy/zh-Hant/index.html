@@ -80,7 +80,7 @@
 <main>
   <h1>隱私權政策</h1>
   <p class="notice">本文件是為方便閱讀而提供的譯本。如與韓文原文有所出入，以韓文原文為準。（<a href="/player/privacy/?lang=ko">韓文原文</a>）</p>
-  <span class="date">最後修訂日：2026-10-05 · 施行日：2026-10-01</span>
+  <span class="date">最後修訂日：2026-11-04 · 施行日：2026-10-01</span>
   <a class="histbtn" href="/player/history/#privacy">查看修訂紀錄（韓文）</a>
   <p>Utobit（以下稱「公司」）依《個人資料保護法》等相關法令處理手機遊戲「Player : Final Raid」（com.utobit.playerfinalraid，以下稱「服務」）使用者的個人資料，並公開隱私權政策如下。</p>
 
@@ -91,12 +91,13 @@
   <table>
     <tr><th>類別</th><th>蒐集項目</th><th>蒐集方式</th></tr>
     <tr><td>帳號（登入）</td><td>電子郵件、顯示名稱、唯一使用者識別碼（UID）</td><td>透過 Google 帳號進行的 Firebase Authentication</td></tr>
+    <tr><td>帳號（使用 Apple 登入，iOS）</td><td>Apple 使用者識別碼、電子郵件或 Apple 私密轉寄電子郵件（使用者選擇分享時）、姓名（僅限使用者分享時）</td><td>透過「使用 Apple 登入」進行的 Firebase Authentication</td></tr>
     <tr><td>訪客登入</td><td>唯一使用者識別碼（UID）、裝置識別碼（應用程式於裝置上產生並讀取的識別值）</td><td>透過 Firebase Authentication 訪客（匿名）登入時自動產生並蒐集。之後綁定 Google 帳號時，將沿用同一 UID。</td></tr>
     <tr><td>遊戲進度資料</td><td>暱稱、等級、經驗值、能力值、持有的道具及技能、貨幣（金幣／魔石／水晶）、戰鬥紀錄、已通關的傳送門清單、國家（依裝置地區設定）</td><td>於應用程式內遊玩過程中自動儲存至伺服器（AWS）</td></tr>
-    <tr><td>付款資訊</td><td>應用程式內購買（水晶）紀錄、購買權杖</td><td>透過 Google Play 應用程式內購買處理，不蒐集卡號等付款方式的原始資訊（由 Google Play 直接處理）</td></tr>
-    <tr><td>裝置及感應器資訊</td><td>體能活動（步數）權限</td><td>用於提供以計步器為基礎的遊戲內容，僅於使用者同意時蒐集</td></tr>
+    <tr><td>付款資訊</td><td>應用程式內購買（水晶）紀錄、購買權杖</td><td>透過 Google Play 應用程式內購買或 Apple App Store 應用程式內購買處理，不蒐集卡號等付款方式的原始資訊（由 Google 或 Apple 直接處理）</td></tr>
+    <tr><td>裝置及感應器資訊</td><td>體能活動（步數）權限（Android）、動作與健身（步數，選用）權限（iOS）</td><td>用於提供以計步器為基礎的遊戲內容，僅於使用者同意時蒐集</td></tr>
     <tr><td>裝置規格資訊</td><td>裝置型號、作業系統版本、記憶體（RAM）容量、圖形處理器（GPU）及處理器（CPU）種類、應用程式版本</td><td>登入時自動蒐集。用於設定支援的裝置範圍、最佳化效能及診斷錯誤</td></tr>
-    <tr><td>Wear OS 手錶應用程式連動（選用）</td><td>手錶連動權杖、手錶所測得的步數及移動距離累計值、於手錶應用程式中的遊戲使用紀錄（戰鬥、購買等）</td><td>僅限使用者於應用程式內產生並輸入手錶連動碼之情形，且僅於提供手錶應用程式功能的範圍內蒐集</td></tr>
+    <tr><td>Wear OS 手錶應用程式連動（選用，僅限 Android 版）</td><td>手錶連動權杖、手錶所測得的步數及移動距離累計值、於手錶應用程式中的遊戲使用紀錄（戰鬥、購買等）</td><td>僅限使用者於應用程式內產生並輸入手錶連動碼之情形，且僅於提供手錶應用程式功能的範圍內蒐集</td></tr>
     <tr><td>位置資訊</td><td>裝置 GPS 位置（精確位置）——僅於使用應用程式期間（前景）蒐集，於背景不蒐集。詳情請參閱下文「5. 位置資訊的處理」。</td><td>裝置 GPS 感應器（同意位置權限時）</td></tr>
     <tr><td>活動地區紀錄</td><td>攻略傳送門的地區、經過的地區等於遊戲中活動過之地區的區域編號（約5km以上的單位）。不儲存精確的座標與時間。</td><td>遊玩過程中自動記錄（攻略傳送門的地區適用於所有使用者，經過的地區適用於在應用程式內開啟「允許記錄我的足跡」的使用者）。對外顯示僅限已開啟許可的使用者。詳情請參閱下文「5. 位置資訊的處理」。</td></tr>
     <tr><td>廣告識別碼</td><td>串接廣告 SDK 時，可能會蒐集廣告識別碼（Advertising ID）。</td><td>裝置作業系統所提供的廣告識別碼</td></tr>
@@ -134,6 +135,7 @@
   <p>為提供服務，資訊可能被傳送至下列外部服務並由其處理。</p>
   <ul>
     <li>Google（Firebase Authentication、Google Play 付款及登入）——<a href="https://policies.google.com/privacy" target="_blank">隱私權政策</a></li>
+    <li>Apple（使用 Apple 登入、App Store 應用程式內購買）——<a href="https://www.apple.com/legal/privacy/" target="_blank">隱私權政策</a></li>
     <li>Amazon Web Services（遊戲資料的伺服器儲存，首爾區域）——<a href="https://aws.amazon.com/privacy/" target="_blank">隱私權政策</a></li>
     <li>Mapbox（地圖算繪——地圖圖磚請求中包含目前顯示的地圖區域座標）——<a href="https://www.mapbox.com/legal/privacy" target="_blank">隱私權政策</a></li>
   </ul>

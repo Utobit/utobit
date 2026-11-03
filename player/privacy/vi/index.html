@@ -80,7 +80,7 @@
 <main>
   <h1>Chính sách quyền riêng tư</h1>
   <p class="notice">Tài liệu này là bản dịch được cung cấp nhằm tạo thuận tiện cho người đọc. Trường hợp có sự khác biệt so với bản gốc tiếng Hàn thì bản gốc tiếng Hàn được ưu tiên áp dụng. (<a href="/player/privacy/?lang=ko">Bản gốc tiếng Hàn</a>)</p>
-  <span class="date">Ngày sửa đổi gần nhất: 2026-10-05 · Ngày có hiệu lực: 2026-10-01</span>
+  <span class="date">Ngày sửa đổi gần nhất: 2026-11-04 · Ngày có hiệu lực: 2026-10-01</span>
   <a class="histbtn" href="/player/history/#privacy">Xem lịch sử sửa đổi (tiếng Hàn)</a>
   <p>Utobit (sau đây gọi là "Công ty") xử lý thông tin cá nhân của người dùng trò chơi di động "Player : Final Raid" (com.utobit.playerfinalraid, sau đây gọi là "Dịch vụ") theo pháp luật có liên quan của Đại Hàn Dân Quốc như 「Luật Bảo vệ Thông tin Cá nhân」, và công bố chính sách quyền riêng tư như sau.</p>
 
@@ -91,12 +91,13 @@
   <table>
     <tr><th>Phân loại</th><th>Mục thu thập</th><th>Phương thức thu thập</th></tr>
     <tr><td>Tài khoản (đăng nhập)</td><td>Email, tên hiển thị, mã định danh người dùng duy nhất (UID)</td><td>Firebase Authentication thông qua tài khoản Google</td></tr>
+    <tr><td>Tài khoản (Đăng nhập bằng Apple, iOS)</td><td>Mã định danh người dùng Apple; email hoặc email chuyển tiếp riêng tư của Apple (nếu người dùng chọn chia sẻ); tên (chỉ khi người dùng chia sẻ)</td><td>Firebase Authentication thông qua Đăng nhập bằng Apple</td></tr>
     <tr><td>Đăng nhập với tư cách khách</td><td>Mã định danh người dùng duy nhất (UID), mã định danh thiết bị (giá trị định danh do ứng dụng tạo ra hoặc truy vấn trên thiết bị)</td><td>Tự động tạo và thu thập khi đăng nhập khách (ẩn danh) qua Firebase Authentication. Sau đó, khi liên kết với tài khoản Google, cùng một UID sẽ tiếp tục được sử dụng.</td></tr>
     <tr><td>Dữ liệu tiến trình trò chơi</td><td>Biệt danh, cấp độ, điểm kinh nghiệm, chỉ số, vật phẩm và kỹ năng đang sở hữu, tiền tệ (Vàng/Đá Phép/Pha lê), nhật ký chiến đấu, danh sách Cổng đã vượt qua, quốc gia (dựa trên ngôn ngữ vùng của thiết bị)</td><td>Tự động lưu lên máy chủ (AWS) trong quá trình chơi trong ứng dụng</td></tr>
-    <tr><td>Thông tin thanh toán</td><td>Lịch sử mua hàng trong ứng dụng (Pha lê), mã thông báo mua hàng</td><td>Được xử lý thông qua thanh toán trong ứng dụng của Google Play; không thu thập thông tin gốc của phương tiện thanh toán như số thẻ (Google Play trực tiếp xử lý)</td></tr>
-    <tr><td>Thông tin thiết bị và cảm biến</td><td>Quyền truy cập hoạt động thể chất (số bước chân)</td><td>Nhằm cung cấp nội dung trò chơi dựa trên máy đếm bước chân; chỉ thu thập khi người dùng đồng ý</td></tr>
+    <tr><td>Thông tin thanh toán</td><td>Lịch sử mua hàng trong ứng dụng (Pha lê), mã thông báo mua hàng</td><td>Được xử lý thông qua thanh toán trong ứng dụng của Google Play hoặc mua hàng trong ứng dụng của Apple App Store; không thu thập thông tin gốc của phương tiện thanh toán như số thẻ (Google hoặc Apple trực tiếp xử lý)</td></tr>
+    <tr><td>Thông tin thiết bị và cảm biến</td><td>Quyền truy cập hoạt động thể chất (số bước chân) (Android); quyền Chuyển động &amp; thể chất (số bước chân, tùy chọn) (iOS)</td><td>Nhằm cung cấp nội dung trò chơi dựa trên máy đếm bước chân; chỉ thu thập khi người dùng đồng ý</td></tr>
     <tr><td>Thông tin cấu hình thiết bị</td><td>Tên mẫu thiết bị, phiên bản hệ điều hành, dung lượng bộ nhớ (RAM), loại bộ xử lý đồ họa (GPU) và bộ xử lý (CPU), phiên bản ứng dụng</td><td>Tự động thu thập khi đăng nhập. Nhằm xác định phạm vi thiết bị được hỗ trợ, tối ưu hóa hiệu năng và chẩn đoán lỗi</td></tr>
-    <tr><td>Liên kết ứng dụng đồng hồ Wear OS (tùy chọn)</td><td>Mã thông báo liên kết đồng hồ, số bước chân và quãng đường di chuyển tích lũy đo được từ đồng hồ, nhật ký sử dụng trò chơi trên ứng dụng đồng hồ (chiến đấu, mua hàng, v.v.)</td><td>Chỉ thu thập trong trường hợp người dùng cấp và nhập mã liên kết đồng hồ trong ứng dụng, và chỉ trong phạm vi cung cấp chức năng của ứng dụng đồng hồ</td></tr>
+    <tr><td>Liên kết ứng dụng đồng hồ Wear OS (tùy chọn, chỉ áp dụng cho phiên bản Android)</td><td>Mã thông báo liên kết đồng hồ, số bước chân và quãng đường di chuyển tích lũy đo được từ đồng hồ, nhật ký sử dụng trò chơi trên ứng dụng đồng hồ (chiến đấu, mua hàng, v.v.)</td><td>Chỉ thu thập trong trường hợp người dùng cấp và nhập mã liên kết đồng hồ trong ứng dụng, và chỉ trong phạm vi cung cấp chức năng của ứng dụng đồng hồ</td></tr>
     <tr><td>Thông tin vị trí</td><td>Vị trí GPS của thiết bị (vị trí chính xác) — chỉ thu thập khi đang sử dụng ứng dụng (tiền cảnh) và không thu thập khi chạy nền. Chi tiết xem mục "5. Xử lý thông tin vị trí" bên dưới.</td><td>Cảm biến GPS của thiết bị (khi đồng ý cấp quyền vị trí)</td></tr>
     <tr><td>Ghi nhận khu vực hoạt động</td><td>Mã số ô khu vực (đơn vị khoảng 5 km trở lên) của các khu vực đã hoạt động trong trò chơi như khu vực đã chinh phục Cổng, khu vực đã đi qua. Không lưu tọa độ chính xác và thời điểm.</td><td>Tự động ghi nhận trong khi chơi (khu vực đã chinh phục Cổng: mọi người dùng; khu vực đã đi qua: người dùng đã bật 'Cho phép ghi lại dấu chân của tôi' trong ứng dụng). Việc hiển thị ra bên ngoài chỉ giới hạn ở người dùng đã bật cho phép. Chi tiết xem mục "5. Xử lý thông tin vị trí" bên dưới.</td></tr>
     <tr><td>Mã định danh quảng cáo</td><td>Khi liên kết với SDK quảng cáo, mã định danh quảng cáo (Advertising ID) có thể được thu thập.</td><td>Mã định danh quảng cáo do hệ điều hành của thiết bị cung cấp</td></tr>
@@ -134,6 +135,7 @@
   <p>Để cung cấp Dịch vụ, thông tin có thể được truyền đến và xử lý bởi các dịch vụ bên ngoài sau đây.</p>
   <ul>
     <li>Google (Firebase Authentication, thanh toán và đăng nhập Google Play) — <a href="https://policies.google.com/privacy" target="_blank">Chính sách quyền riêng tư</a></li>
+    <li>Apple (Đăng nhập bằng Apple, mua hàng trong ứng dụng của App Store) — <a href="https://www.apple.com/legal/privacy/" target="_blank">Chính sách quyền riêng tư</a></li>
     <li>Amazon Web Services (lưu trữ dữ liệu trò chơi trên máy chủ, khu vực Seoul) — <a href="https://aws.amazon.com/privacy/" target="_blank">Chính sách quyền riêng tư</a></li>
     <li>Mapbox (kết xuất bản đồ — yêu cầu ô bản đồ có chứa tọa độ của vùng bản đồ đang hiển thị) — <a href="https://www.mapbox.com/legal/privacy" target="_blank">Chính sách quyền riêng tư</a></li>
   </ul>

@@ -80,7 +80,7 @@
 <main>
   <h1>Datenschutzerklärung</h1>
   <p class="notice">Dieses Dokument ist eine Übersetzung, die lediglich zur Erleichterung bereitgestellt wird. Bei Abweichungen zwischen dieser Übersetzung und dem koreanischen Original ist das koreanische Original maßgeblich. (<a href="/player/privacy/?lang=ko">Koreanisches Original</a>)</p>
-  <span class="date">Zuletzt geändert: 2026-10-05 · Inkrafttreten: 2026-10-01</span>
+  <span class="date">Zuletzt geändert: 2026-11-04 · Inkrafttreten: 2026-10-01</span>
   <a class="histbtn" href="/player/history/#privacy">Änderungshistorie anzeigen (Koreanisch)</a>
   <p>Utobit (nachfolgend „Unternehmen“) verarbeitet die personenbezogenen Daten der Nutzer des Mobile Games „Player : Final Raid“ (com.utobit.playerfinalraid, nachfolgend „Dienst“) gemäß den einschlägigen Gesetzen wie dem „Gesetz zum Schutz personenbezogener Daten“ der Republik Korea und veröffentlicht hiermit die folgende Datenschutzerklärung.</p>
 
@@ -91,12 +91,13 @@
   <table>
     <tr><th>Kategorie</th><th>Erhobene Daten</th><th>Art der Erhebung</th></tr>
     <tr><td>Konto (Anmeldung)</td><td>E-Mail-Adresse, Anzeigename, eindeutige Nutzerkennung (UID)</td><td>Firebase Authentication über ein Google-Konto</td></tr>
+    <tr><td>Konto (Mit Apple anmelden, iOS)</td><td>Apple-Nutzerkennung; E-Mail-Adresse oder private Apple-Relay-E-Mail-Adresse (sofern der Nutzer die Weitergabe wählt); Name (nur wenn der Nutzer ihn teilt)</td><td>Firebase Authentication über „Mit Apple anmelden“</td></tr>
     <tr><td>Gast-Anmeldung</td><td>Eindeutige Nutzerkennung (UID), Gerätekennung (ein von der App auf dem Gerät erzeugter bzw. abgefragter Kennwert)</td><td>Automatische Erzeugung und Erhebung bei der Gast-Anmeldung (anonym) über Firebase Authentication. Bei späterer Verknüpfung mit einem Google-Konto wird dieselbe UID fortgeführt.</td></tr>
     <tr><td>Spielfortschrittsdaten</td><td>Spitzname, Stufe, Erfahrungspunkte, Attribute, Gegenstände und Fertigkeiten im Besitz, Spielwährung (Gold/Magiesteine/Kristalle), Kampfaufzeichnungen, Liste der abgeschlossenen Gates, Land (auf Grundlage der Geräte-Ländereinstellung)</td><td>Automatische Speicherung auf dem Server (AWS) während des Spielens in der App</td></tr>
-    <tr><td>Zahlungsinformationen</td><td>Verlauf der In-App-Käufe (Kristalle), Kauf-Token</td><td>Abwicklung über die In-App-Abrechnung von Google Play; Originaldaten des Zahlungsmittels wie Kartennummern werden nicht erhoben (die Verarbeitung erfolgt unmittelbar durch Google Play)</td></tr>
-    <tr><td>Geräte- und Sensordaten</td><td>Berechtigung für körperliche Aktivität (Schrittzahl)</td><td>Zur Bereitstellung von Spielinhalten auf Basis des Schrittzählers; Erhebung nur mit Einwilligung des Nutzers</td></tr>
+    <tr><td>Zahlungsinformationen</td><td>Verlauf der In-App-Käufe (Kristalle), Kauf-Token</td><td>Abwicklung über die In-App-Abrechnung von Google Play oder über In-App-Käufe im Apple App Store; Originaldaten des Zahlungsmittels wie Kartennummern werden nicht erhoben (die Verarbeitung erfolgt unmittelbar durch Google bzw. Apple)</td></tr>
+    <tr><td>Geräte- und Sensordaten</td><td>Berechtigung für körperliche Aktivität (Schrittzahl) (Android); Berechtigung „Bewegung & Fitness“ (Schrittzahl, optional) (iOS)</td><td>Zur Bereitstellung von Spielinhalten auf Basis des Schrittzählers; Erhebung nur mit Einwilligung des Nutzers</td></tr>
     <tr><td>Gerätespezifikationen</td><td>Gerätemodell, Betriebssystemversion, Arbeitsspeicher (RAM), Typ des Grafikprozessors (GPU) und des Prozessors (CPU), App-Version</td><td>Automatische Erhebung bei der Anmeldung. Zweck: Festlegung des Umfangs unterstützter Geräte, Leistungsoptimierung und Fehlerdiagnose</td></tr>
-    <tr><td>Verknüpfung mit der Wear-OS-Uhren-App (optional)</td><td>Verknüpfungs-Token der Uhr, kumulierte Werte der von der Uhr gemessenen Schrittzahl und zurückgelegten Strecke, Spielnutzungsdaten aus der Uhren-App (Kämpfe, Käufe usw.)</td><td>Erhebung nur, wenn der Nutzer in der App einen Verknüpfungscode für die Uhr erzeugt und eingegeben hat, und nur im Umfang der Bereitstellung der Funktionen der Uhren-App</td></tr>
+    <tr><td>Verknüpfung mit der Wear-OS-Uhren-App (optional, nur Android-Version)</td><td>Verknüpfungs-Token der Uhr, kumulierte Werte der von der Uhr gemessenen Schrittzahl und zurückgelegten Strecke, Spielnutzungsdaten aus der Uhren-App (Kämpfe, Käufe usw.)</td><td>Erhebung nur, wenn der Nutzer in der App einen Verknüpfungscode für die Uhr erzeugt und eingegeben hat, und nur im Umfang der Bereitstellung der Funktionen der Uhren-App</td></tr>
     <tr><td>Standortdaten</td><td>GPS-Standort des Geräts (genauer Standort) – Erhebung nur während der Nutzung der App (im Vordergrund), keine Erhebung im Hintergrund. Einzelheiten siehe unten „5. Verarbeitung von Standortdaten“.</td><td>GPS-Sensor des Geräts (bei Einwilligung in die Standortberechtigung)</td></tr>
     <tr><td>Aufzeichnung der Aktivitätsgebiete</td><td>Gebietsnummern (Einheiten von ca. 5 km oder mehr) der Gebiete, in denen der Nutzer im Spiel aktiv war, z. B. Gebiete, in denen Gates bezwungen wurden, und durchquerte Gebiete. Genaue Koordinaten und Zeitpunkte werden nicht gespeichert.</td><td>Automatische Aufzeichnung während des Spielens (Gebiete, in denen Gates bezwungen wurden: alle Nutzer; durchquerte Gebiete: Nutzer, die in der App „Aufzeichnung meiner Spur erlauben“ aktiviert haben). Eine Anzeige nach außen erfolgt nur für Nutzer, die die Erlaubnis aktiviert haben. Einzelheiten siehe unten „5. Verarbeitung von Standortdaten“.</td></tr>
     <tr><td>Werbekennung</td><td>Bei Einbindung eines Werbe-SDK kann die Werbekennung (Advertising ID) erhoben werden.</td><td>Vom Betriebssystem des Geräts bereitgestellte Werbekennung</td></tr>
@@ -134,6 +135,7 @@
   <p>Zur Bereitstellung des Dienstes können Daten an die folgenden externen Dienste übermittelt und von diesen verarbeitet werden.</p>
   <ul>
     <li>Google (Firebase Authentication, Zahlung und Anmeldung über Google Play) — <a href="https://policies.google.com/privacy" target="_blank">Datenschutzerklärung</a></li>
+    <li>Apple („Mit Apple anmelden“, In-App-Käufe im App Store) — <a href="https://www.apple.com/legal/privacy/" target="_blank">Datenschutzerklärung</a></li>
     <li>Amazon Web Services (Speicherung der Spieldaten auf Servern, Region Seoul) — <a href="https://aws.amazon.com/privacy/" target="_blank">Datenschutzerklärung</a></li>
     <li>Mapbox (Kartendarstellung – Anfragen nach Kartenkacheln enthalten die Koordinaten des aktuell angezeigten Kartenausschnitts) — <a href="https://www.mapbox.com/legal/privacy" target="_blank">Datenschutzerklärung</a></li>
   </ul>

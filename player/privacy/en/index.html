@@ -80,7 +80,7 @@
 <main>
   <h1>Privacy Policy</h1>
   <p class="notice">This document is a translation provided for your convenience. In the event of any discrepancy between this translation and the Korean original, the Korean original shall prevail. (<a href="/player/privacy/?lang=ko">Korean original</a>)</p>
-  <span class="date">Last updated: 2026-10-05 · Effective date: 2026-10-01</span>
+  <span class="date">Last updated: 2026-11-04 · Effective date: 2026-10-01</span>
   <a class="histbtn" href="/player/history/#privacy">View Revision History (Korean)</a>
   <p>Utobit (hereinafter the "Company") processes the personal information of users of the mobile game "Player : Final Raid" (com.utobit.playerfinalraid, hereinafter the "Service") in accordance with the Personal Information Protection Act and other applicable laws and regulations, and discloses its Privacy Policy as follows.</p>
 
@@ -91,12 +91,13 @@
   <table>
     <tr><th>Category</th><th>Items collected</th><th>Method of collection</th></tr>
     <tr><td>Account (sign-in)</td><td>Email, display name, unique user identifier (UID)</td><td>Firebase Authentication via a Google account</td></tr>
+    <tr><td>Account (Sign in with Apple, iOS)</td><td>Apple user identifier; email address or Apple private relay email address (if the user chooses to share it); name (only if the user shares it)</td><td>Firebase Authentication via Sign in with Apple</td></tr>
     <tr><td>Guest sign-in</td><td>Unique user identifier (UID), device identifier (an identifying value generated or retrieved by the app on the device)</td><td>Automatically generated and collected upon guest (anonymous) sign-in through Firebase Authentication. If a Google account is linked afterwards, the same UID is carried over.</td></tr>
     <tr><td>Game progress data</td><td>Nickname, level, experience points, stats, items and skills held, currency (Gold / Magic Stones / Crystals), battle records, list of cleared Gates, country (based on the device locale)</td><td>Automatically saved to the server (AWS) during in-app play</td></tr>
-    <tr><td>Payment information</td><td>In-app purchase (Crystal) history, purchase tokens</td><td>Processed through Google Play In-app Billing; original payment method information such as card numbers is not collected (it is processed directly by Google Play)</td></tr>
-    <tr><td>Device and sensor information</td><td>Physical activity (step count) permission</td><td>For the purpose of providing pedometer-based game content; collected only with the user's consent</td></tr>
+    <tr><td>Payment information</td><td>In-app purchase (Crystal) history, purchase tokens</td><td>Processed through Google Play In-app Billing or Apple App Store In-App Purchase; original payment method information such as card numbers is not collected (it is processed directly by Google or Apple)</td></tr>
+    <tr><td>Device and sensor information</td><td>Physical activity (step count) permission (Android); Motion &amp; Fitness (step count, optional) permission (iOS)</td><td>For the purpose of providing pedometer-based game content; collected only with the user's consent</td></tr>
     <tr><td>Device specification information</td><td>Device model name, operating system version, memory (RAM) capacity, type of graphics processing unit (GPU) and processor (CPU), app version</td><td>Automatically collected at sign-in. For the purposes of determining the range of supported devices, optimizing performance and diagnosing errors</td></tr>
-    <tr><td>Wear OS watch app linking (optional)</td><td>Watch link token, cumulative step count and distance traveled as measured by the watch, records of game use in the watch app (battles, purchases, etc.)</td><td>Collected only where the user has issued and entered a watch link code in the app, and only to the extent necessary to provide the watch app functions</td></tr>
+    <tr><td>Wear OS watch app linking (optional; Android version only)</td><td>Watch link token, cumulative step count and distance traveled as measured by the watch, records of game use in the watch app (battles, purchases, etc.)</td><td>Collected only where the user has issued and entered a watch link code in the app, and only to the extent necessary to provide the watch app functions</td></tr>
     <tr><td>Location information</td><td>Device GPS location (precise location) — collected only while the app is in use (in the foreground) and not collected in the background. For details, see "5. Processing of Location Information" below.</td><td>Device GPS sensor (upon consent to the location permission)</td></tr>
     <tr><td>Activity area records</td><td>Area numbers (in units of approximately 5 km or larger) of the areas in which the user has been active in the game, such as areas where Gates were raided and areas passed through. Precise coordinates and times are not stored.</td><td>Automatically recorded during play (areas where Gates were raided: all users; areas passed through: users who have turned on "Allow recording my trail" in the app). External display is limited to users who have turned on the permission. For details, see "5. Processing of Location Information" below.</td></tr>
     <tr><td>Advertising identifier</td><td>Where an advertising SDK is integrated, the advertising identifier (Advertising ID) may be collected.</td><td>Advertising identifier provided by the device OS</td></tr>
@@ -134,6 +135,7 @@
   <p>In order to provide the Service, information may be transmitted to and processed by the external services listed below.</p>
   <ul>
     <li>Google (Firebase Authentication, Google Play billing and sign-in) — <a href="https://policies.google.com/privacy" target="_blank">Privacy Policy</a></li>
+    <li>Apple (Sign in with Apple, App Store In-App Purchase) — <a href="https://www.apple.com/legal/privacy/" target="_blank">Privacy Policy</a></li>
     <li>Amazon Web Services (server storage of game data, Seoul Region) — <a href="https://aws.amazon.com/privacy/" target="_blank">Privacy Policy</a></li>
     <li>Mapbox (map rendering — map tile requests include the coordinates of the map area currently being displayed) — <a href="https://www.mapbox.com/legal/privacy" target="_blank">Privacy Policy</a></li>
   </ul>
