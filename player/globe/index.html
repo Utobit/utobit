@@ -431,8 +431,10 @@
     <button type="button" id="m-guide"><i class="sys"></i><span data-t="guideTitle"></span></button>
     <button type="button" id="m-items"><i class="sys"></i><span id="m-items-lbl"></span></button>
     <button type="button" id="m-skills"><i class="sys"></i><span id="m-skills-lbl"></span></button>
+    <button type="button" id="m-monsters"><i class="sys"></i><span id="m-monsters-lbl"></span></button>
     <button type="button" id="m-contents"><i class="sys"></i><span id="m-contents-lbl"></span></button>
     <button type="button" id="m-community"><i class="sys"></i><span data-t="community"></span></button>
+    <button type="button" id="m-updates"><i class="sys"></i><span id="m-updates-lbl"></span></button>
     <button type="button" id="m-lang"><i class="lang"></i><span data-t="langTitle"></span><em id="m-lang-cur"></em></button>
   </div>
   <div class="hud glass bmenu lmenu" id="lmenu" hidden></div>
@@ -1556,6 +1558,13 @@
   $('m-contents').addEventListener('click', function () { closeBurger(); location.href = 'contents/?hl=' + LANG; });
   // 1013 마스터('웹 햄버거에 커뮤니티 추가'): 공식 디스코드(만료 없는 초대 링크)
   $('m-community').addEventListener('click', function () { closeBurger(); window.open('https://utobit.net/player/discord/', '_blank', 'noopener'); });
+  // 1104 마스터('웹 페이지에 업데이트 게시판' — 메뉴 = 범람게이트/시스템안내서/장비도감/스킬도감/몬스터도감/컨텐츠안내/커뮤니티/업데이트/언어)
+  var MONSTER_LBL = {"ko": "몬스터 도감", "en": "Monster Codex", "ja": "モンスター図鑑", "zh-Hans": "怪物图鉴", "zh-Hant": "怪物圖鑑", "de": "Monster-Kodex", "fr": "Codex des monstres", "es": "Códice de monstruos", "it": "Codice dei mostri", "pt": "Códice de monstros", "pl": "Kodeks potworów", "ru": "Кодекс монстров", "tr": "Canavar Kodeksi", "vi": "Bách khoa quái vật", "id": "Kodeks Monster", "th": "สารานุกรมมอนสเตอร์", "ar": "موسوعة الوحوش"};
+  $('m-monsters-lbl').textContent = MONSTER_LBL[LANG] || MONSTER_LBL.en;
+  $('m-monsters').addEventListener('click', function () { closeBurger(); location.href = 'monster/?hl=' + LANG; });
+  var UPDATES_LBL = {"ko": "업데이트", "en": "Updates", "ja": "アップデート", "zh-Hans": "更新公告", "zh-Hant": "更新公告", "de": "Aktualisierungen", "fr": "Mises à jour", "es": "Actualizaciones", "it": "Aggiornamenti", "pt": "Atualizações", "pl": "Aktualizacje", "ru": "Обновления", "tr": "Güncellemeler", "vi": "Cập nhật", "id": "Pembaruan", "th": "อัปเดต", "ar": "التحديثات"};
+  $('m-updates-lbl').textContent = UPDATES_LBL[LANG] || UPDATES_LBL.en;
+  $('m-updates').addEventListener('click', function () { closeBurger(); location.href = 'updates/?hl=' + LANG; });
   // 언어 설정: 메뉴의 '언어' → 게임 제공 언어 목록. 고르면 기기에 저장하고 다시 불러온다(문구가 처음 한 번에 채워지는 구조)
   I18N.NAMES.forEach(function (p) {
     if (p[0] === LANG) $('m-lang-cur').textContent = p[1];

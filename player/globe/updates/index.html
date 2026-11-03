@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Player : Final Raid</title>
+<meta name="theme-color" content="#05030f">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+KR:wght@400;700&family=Noto+Sans+JP:wght@400;700&family=Noto+Sans+TC:wght@400;700&family=Noto+Sans+SC:wght@400;700&family=Noto+Sans+Thai:wght@400;700&family=Noto+Sans+Arabic:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../contents/contents.css">
+<style>
+  .board{list-style:none;margin-top:18px;display:flex;flex-direction:column;gap:10px}
+  .post{border:1px solid var(--line);border-radius:14px;background:var(--panel);overflow:hidden}
+  .post.on{border-color:var(--line-strong)}
+  .post button{display:flex;align-items:center;gap:10px;width:100%;padding:14px 16px;border:0;background:transparent;color:var(--text);font:inherit;text-align:start;cursor:pointer}
+  .post button:hover{background:rgba(150,130,255,.12)}
+  .post .ver{font-size:16px;font-weight:700}
+  .post .new{padding:2px 8px;border-radius:999px;font-size:11.5px;font-weight:700;color:#1a1030;background:var(--gold)}
+  .post .date{margin-inline-start:auto;font-size:13px;color:var(--muted);white-space:nowrap}
+  .post .arr{flex:none;width:9px;height:9px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(45deg);margin-top:-4px;transition:transform .15s}
+  .post.on .arr{transform:rotate(225deg);margin-top:4px}
+  .post .txt{display:none;padding:2px 18px 18px;color:var(--body);font-size:15px;line-height:1.85;white-space:pre-line;overflow-wrap:anywhere}
+  .post.on .txt{display:block}
+  .more{display:block;margin:16px auto 0;padding:10px 22px;border:1px solid var(--line-strong);border-radius:999px;background:var(--panel2);color:var(--text);font:inherit;font-size:14px;cursor:pointer}
+  .more:hover{border-color:var(--gold)}
+</style>
+</head>
+<body>
+<a id="back"></a>
+<h1 id="title"></h1>
+<!-- 글 = notes.js (게임 CDN 패치노트에서 _gen_updates.py 로 만든 것). 그 언어 글이 있는 버전만 보인다 -->
+<ol class="board" id="board"></ol>
+<button class="more" id="more" type="button" hidden></button>
+<script src="notes.js"></script>
+<script src="updates.js"></script>
+</body>
+</html>

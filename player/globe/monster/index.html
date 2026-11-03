@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Player : Final Raid</title>
+<meta name="theme-color" content="#05030f">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+KR:wght@400;700&family=Noto+Sans+JP:wght@400;700&family=Noto+Sans+TC:wght@400;700&family=Noto+Sans+SC:wght@400;700&family=Noto+Sans+Thai:wght@400;700&family=Noto+Sans+Arabic:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../contents/contents.css">
+</head>
+<body>
+<a id="back"></a>
+<h1 id="title"></h1>
+<!-- 1104 몬스터 도감 — 메뉴 칸만 먼저(내용 = 준비 중). 17개 언어 -->
+<p class="wip" id="wip"></p>
+<script>
+(function () {
+  var LANGS = ['ko', 'en', 'ja', 'zh-Hans', 'zh-Hant', 'de', 'fr', 'es', 'it', 'pt', 'pl', 'ru', 'tr', 'vi', 'id', 'th', 'ar'];
+  var T = {
+    title:   {ko:'몬스터 도감',en:'Monster Codex',ja:'モンスター図鑑','zh-Hans':'怪物图鉴','zh-Hant':'怪物圖鑑',de:'Monster-Kodex',fr:'Codex des monstres',es:'Códice de monstruos',it:'Codice dei mostri',pt:'Códice de monstros',pl:'Kodeks potworów',ru:'Кодекс монстров',tr:'Canavar Kodeksi',vi:'Bách khoa quái vật',id:'Kodeks Monster',th:'สารานุกรมมอนสเตอร์',ar:'موسوعة الوحوش'},
+    toGlobe: {ko:'플레이어 지구본',en:'Player Globe',ja:'プレイヤー地球儀','zh-Hans':'玩家地球仪','zh-Hant':'玩家地球儀',de:'Spieler-Globus',fr:'Globe des joueurs',es:'Globo de jugadores',it:'Globo dei giocatori',pt:'Globo dos jogadores',pl:'Globus graczy',ru:'Глобус игроков',tr:'Oyuncu Küresi',vi:'Địa cầu người chơi',id:'Globe Pemain',th:'ลูกโลกผู้เล่น',ar:'كرة اللاعبين'},
+    wip:     {ko:'준비 중입니다.',en:'Under construction.',ja:'準備中です。','zh-Hans':'准备中。','zh-Hant':'準備中。',de:'In Vorbereitung.',fr:'En préparation.',es:'En preparación.',it:'In preparazione.',pt:'Em preparação.',pl:'W przygotowaniu.',ru:'В разработке.',tr:'Hazırlanıyor.',vi:'Đang chuẩn bị.',id:'Sedang disiapkan.',th:'กำลังเตรียมข้อมูล',ar:'قيد الإعداد.'}
+  };
+  var LANG = (function () {
+    var s = null; try { s = localStorage.getItem('globeLang'); } catch (e) {}
+    var q = new URLSearchParams(location.search); q = q.get('hl') || q.get('lang');
+    if (q && LANGS.indexOf(q) >= 0) return q;
+    if (LANGS.indexOf(s) >= 0) return s;
+    var nav = (navigator.language || 'en').toLowerCase();
+    if (nav.indexOf('zh') === 0) return /tw|hk|mo|hant/.test(nav) ? 'zh-Hant' : 'zh-Hans';
+    return LANGS.indexOf(nav.slice(0, 2)) >= 0 ? nav.slice(0, 2) : 'en';
+  })();
+  function t(o) { return o[LANG] || o.en; }
+  document.documentElement.lang = LANG;
+  if (LANG === 'ar') document.documentElement.dir = 'rtl';
+  document.title = t(T.title) + ' — Player : Final Raid';
+  var back = document.getElementById('back');
+  back.href = '../?hl=' + LANG; back.textContent = '‹ ' + t(T.toGlobe);
+  document.getElementById('title').textContent = t(T.title);
+  document.getElementById('wip').textContent = t(T.wip);
+})();
+</script>
+</body>
+</html>
