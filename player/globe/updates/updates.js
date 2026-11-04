@@ -34,7 +34,8 @@
   // 글 목록 = [{id, cat, pre, title, date, render(body)}]
   var POSTS = [];
   var P = window.GLOBE_PREVIEW, pv = P && P.t && P.t[LANG];
-  if (pv) POSTS.push({ id: 'pre', pre: true, cat: t(T.preview), title: pv.head + ' — ' + pv.title, date: P.date || '', render: renderPreview });
+  // 예고 제목 = '다음 업데이트 예고(2026.11.04)' (1104 마스터)
+  if (pv) POSTS.push({ id: 'pre', pre: true, cat: t(T.preview), title: pv.head + '(' + dot(P.date) + ')', date: P.date || '', render: renderPreview });
   ((window.GLOBE_UPDATES || {}).notes || []).forEach(function (n) {
     if (!n.t || !n.t[LANG]) return;
     POSTS.push({ id: 'v' + n.v, cat: t(T.title), title: 'v' + n.v, date: n.d, note: n, render: renderNote });
@@ -44,17 +45,13 @@
     var p = pv;
     bd.appendChild(el('h3', null, p.title));
     var ul = el('ul');
-    p.story.split(/(?<=[.。!?！？])\s*/).filter(Boolean).forEach(function (s) { ul.appendChild(el('li', null, s)); });
+    [].concat(p.story).forEach(function (s) { ul.appendChild(el('li', null, s)); });
     bd.appendChild(ul);
-    // 일러스트 액자 카드
+    // 일러스트 액자 카드 — 그림 위 글자는 띠 '다음 업데이트 예고' 하나만 (1104 마스터)
     var card = el('div', 'card');
     for (var i = 0; i < 4; i++) card.appendChild(el('i'));
     var inn = el('div', 'card-in'), img = el('img');
     img.src = P.img; img.alt = p.name; inn.appendChild(img); card.appendChild(inn);
-    var cn = el('div', 'cn');
-    cn.appendChild(el('small', null, '[' + p.skills[0][0] + ']'));
-    cn.appendChild(el('b', null, p.name));
-    card.appendChild(cn);
     card.appendChild(el('div', 'band', p.head));
     bd.appendChild(card);
     // 스킬
@@ -120,7 +117,7 @@
     var v = $('view'); v.innerHTML = '';
     var art = el('article', 'art'), hd = el('header', 'art-hd');
     hd.appendChild(el('div', 'cat', '[' + post.cat + ']'));
-    hd.appendChild(el('h2', null, post.pre ? pv.head : post.title));
+    hd.appendChild(el('h2', null, post.title));
     if (post.date) hd.appendChild(el('div', 'dt', dot(post.date)));
     art.appendChild(hd);
     var bd = el('div', 'art-bd');

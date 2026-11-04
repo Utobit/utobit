@@ -1,5 +1,5 @@
 /* 업데이트 게시판 맨 위 '다음 업데이트 예고' (손으로 쓴 글 — notes.js 와 달리 생성기가 덮지 않는다).
-   1104 마스터 구술: 헌터 사관학교 1회 졸업생 도준혁 출전 + 스킬 9종. 한국어 = 마스터 원문 그대로.
+   1104 마스터 구술: 도준혁 출전 + 스킬 9종. 한국어 = 마스터 원문 그대로(이야기 = 1104 2차 구술, 문단 배열).
    용어 = 게임 언어팩(범람 게이트 raid.012·행운 ui.stat_luk·기본공격 등록형 skill_format.004·너클 weapon_type.010·마도구 weapon_type.004 …).
    '더 빠르게'는 설명 원문이 비어 있어 이름·종류만. 예고를 내리려면 window.GLOBE_PREVIEW = null. */
 window.GLOBE_PREVIEW = {
@@ -10,9 +10,9 @@ window.GLOBE_PREVIEW = {
   t: {
     ko: {
       name: '도준혁',
-      head: '11월 4일 다음 업데이트 예고',
-      title: '헌터 사관학교 1회 졸업생 도준혁 출전',
-      story: '도준혁이 인형탈 알바를 하고 있던 거리에 범람게이트가 나타났고, 도준혁은 몬스터의 기습으로 생사의 기로에 서게 되었습니다. 숨이 넘어가기 직전의 순간, 도준혁은 플레이어로 각성하였고 즉시 성좌의 선택을 받을 수 있었습니다. 스스로 나아갈 길을 밝히는 플레이어. [성자] 도준혁을 만나보세요.',
+      head: "다음 업데이트 예고",
+      title: "도준혁 출전",
+      story: ["도준혁은 헌터사관학교 졸업생입니다.", "몬스터의 기습으로 생사의 기로에 서게된 순간, 도준혁은 플레이어로 각성하였고, 스스로 살아갈 방법을 개척하였습니다.", "이를 지켜보던 성좌의 선택을 받아 도준혁은 누구보다 빠르게 성장할 수 있었습니다.", "스스로 나아갈 길을 밝히는 플레이어. [성자] 도준혁을 만나보세요."],
       tag: {basic:'기본공격 등록형', passive:'패시브', active:'액티브', counter:'카운터'}, weapons: '너클 · 마도구', skillsTitle: '스킬',
       skills: [
         ['성자', '기본공격시 HP가 가장 낮은 아군의 HP를 자신의 행운 *3만큼 회복시킵니다. 같은 대상에 대해 3초에 1회만 적용됩니다. 회복시킬 아군이 없는 경우, 기본공격이 모든 적에게 행운 *10의 데미지를 가하는 공격으로 바뀝니다. 마법데미지.'],
@@ -28,9 +28,9 @@ window.GLOBE_PREVIEW = {
     },
     en: {
       name: 'Do Junhyeok',
-      head: 'Next Update Preview — November 4',
-      title: 'Hunter Academy First Graduate Do Junhyeok Joins the Fight',
-      story: 'An Overflow Gate appeared on the street where Do Junhyeok was working part-time in a mascot costume, and a sudden monster ambush left him between life and death. In the moment just before his last breath, Do Junhyeok awakened as a Player and was immediately chosen by a Constellation. A Player who lights his own path forward. Meet [Saint] Do Junhyeok.',
+      head: "Next Update Preview",
+      title: "Do Junhyeok Joins the Fight",
+      story: ["Do Junhyeok is a graduate of the Hunter Academy.", "At the moment a monster ambush left him between life and death, Do Junhyeok awakened as a Player and forged his own way to survive.", "Chosen by the Constellation that had been watching over him, Do Junhyeok was able to grow faster than anyone.", "A Player who lights his own path forward. Meet [Saint] Do Junhyeok."],
       tag: {basic:'Basic Attack Slot', passive:'Passive', active:'Active', counter:'Counter'}, weapons: 'Knuckles · Magic Tool', skillsTitle: 'Skills',
       skills: [
         ['Saint', 'On Basic Attack, restores HP equal to your LUK ×3 to the ally with the lowest HP. Applies only once every 3 seconds to the same target. If there is no ally to heal, your Basic Attack becomes an attack that deals LUK ×10 damage to all enemies. Magic damage.'],
@@ -46,9 +46,9 @@ window.GLOBE_PREVIEW = {
     },
     ja: {
       name: 'ド・ジュンヒョク',
-      head: '11月4日 次回アップデート予告',
-      title: 'ハンター士官学校 第1期卒業生 ド・ジュンヒョク出陣',
-      story: 'ド・ジュンヒョクが着ぐるみのアルバイトをしていた通りに氾濫ゲートが現れ、ド・ジュンヒョクはモンスターの奇襲で生死の境に立たされました。息絶える寸前の瞬間、ド・ジュンヒョクはプレイヤーとして覚醒し、すぐさま星座に選ばれました。自ら進む道を照らすプレイヤー。[聖者] ド・ジュンヒョクに会いに来てください。',
+      head: "次回アップデート予告",
+      title: "ド・ジュンヒョク出陣",
+      story: ["ド・ジュンヒョクはハンター士官学校の卒業生です。", "モンスターの奇襲で生死の境に立たされた瞬間、ド・ジュンヒョクはプレイヤーとして覚醒し、自ら生き抜く道を切り開きました。", "その姿を見守っていた星座に選ばれ、ド・ジュンヒョクは誰よりも速く成長することができました。", "自ら進む道を照らすプレイヤー。[聖者] ド・ジュンヒョクに会いに来てください。"],
       tag: {basic:'通常攻撃登録型', passive:'パッシブ', active:'アクティブ', counter:'カウンター'}, weapons: 'ナックル · 魔導具', skillsTitle: 'スキル',
       skills: [
         ['聖者', '通常攻撃時、HPが最も低い味方のHPを自身の幸運×3回復します。同じ対象には3秒に1回のみ適用されます。回復する味方がいない場合、通常攻撃がすべての敵に幸運×10のダメージを与える攻撃に変わります。魔法ダメージ。'],
@@ -64,9 +64,9 @@ window.GLOBE_PREVIEW = {
     },
     'zh-Hans': {
       name: '都俊赫',
-      head: '11月4日 下次更新预告',
-      title: '猎人士官学校首届毕业生 都俊赫 出战',
-      story: '都俊赫正在街头穿着玩偶服打工时，那条街上出现了泛滥传送门，都俊赫因怪物的突袭而徘徊在生死边缘。就在即将断气的瞬间，都俊赫觉醒为玩家，并立刻获得了星座的选择。亲自照亮前行之路的玩家。快来认识 [圣者] 都俊赫吧。',
+      head: "下次更新预告",
+      title: "都俊赫 出战",
+      story: ["都俊赫是猎人士官学校的毕业生。", "在因怪物突袭而徘徊于生死边缘的瞬间，都俊赫觉醒为玩家，亲自开辟了活下去的道路。", "一直注视着这一切的星座选择了他，都俊赫得以比任何人都更快地成长。", "亲自照亮前行之路的玩家。快来认识 [圣者] 都俊赫吧。"],
       tag: {basic:'普通攻击登录型', passive:'被动', active:'主动', counter:'反击'}, weapons: '拳套 · 魔导具', skillsTitle: '技能',
       skills: [
         ['圣者', '普通攻击时，为HP最低的友方恢复相当于自身幸运×3的HP。对同一目标每3秒仅生效1次。若没有可恢复的友方，普通攻击将变为对所有敌人造成幸运×10伤害的攻击。魔法伤害。'],
@@ -82,9 +82,9 @@ window.GLOBE_PREVIEW = {
     },
     'zh-Hant': {
       name: '都俊赫',
-      head: '11月4日 下次更新預告',
-      title: '獵人士官學校首屆畢業生 都俊赫 出戰',
-      story: '都俊赫正在街頭穿著玩偶裝打工時，那條街上出現了氾濫傳送門，都俊赫因怪物的突襲而徘徊在生死邊緣。就在即將斷氣的瞬間，都俊赫覺醒為玩家，並立刻獲得了星座的選擇。親自照亮前行之路的玩家。快來認識 [聖者] 都俊赫吧。',
+      head: "下次更新預告",
+      title: "都俊赫 出戰",
+      story: ["都俊赫是獵人士官學校的畢業生。", "在因怪物突襲而徘徊於生死邊緣的瞬間，都俊赫覺醒為玩家，親自開闢了活下去的道路。", "一直注視著這一切的星座選擇了他，都俊赫得以比任何人都更快地成長。", "親自照亮前行之路的玩家。快來認識 [聖者] 都俊赫吧。"],
       tag: {basic:'普通攻擊登錄型', passive:'被動', active:'主動', counter:'反擊'}, weapons: '拳套 · 魔導具', skillsTitle: '技能',
       skills: [
         ['聖者', '普通攻擊時，為HP最低的友方恢復相當於自身幸運×3的HP。對同一目標每3秒僅生效1次。若沒有可恢復的友方，普通攻擊將變為對所有敵人造成幸運×10傷害的攻擊。魔法傷害。'],
@@ -100,9 +100,9 @@ window.GLOBE_PREVIEW = {
     },
     de: {
       name: 'Do Junhyeok',
-      head: 'Vorschau auf das nächste Update — 4. November',
-      title: 'Do Junhyeok, Absolvent des ersten Jahrgangs der Jäger-Akademie, zieht in den Kampf',
-      story: 'In der Straße, in der Do Junhyeok in einem Maskottchenkostüm jobbte, erschien ein Überflutungs-Tor, und durch einen plötzlichen Monsterangriff schwebte er zwischen Leben und Tod. Im Augenblick kurz vor seinem letzten Atemzug erwachte Do Junhyeok als Spieler und wurde sofort von einem Sternbild auserwählt. Ein Spieler, der sich seinen Weg selbst erhellt. Lerne [Heiliger] Do Junhyeok kennen.',
+      head: "Vorschau auf das nächste Update",
+      title: "Do Junhyeok zieht in den Kampf",
+      story: ["Do Junhyeok ist ein Absolvent der Jäger-Akademie.", "In dem Moment, als ihn ein Monsterangriff zwischen Leben und Tod schweben ließ, erwachte Do Junhyeok als Spieler und bahnte sich selbst einen Weg zum Überleben.", "Von dem Sternbild auserwählt, das ihn dabei beobachtet hatte, konnte Do Junhyeok schneller wachsen als jeder andere.", "Ein Spieler, der sich seinen Weg selbst erhellt. Lerne [Heiliger] Do Junhyeok kennen."],
       tag: {basic:'Standardangriff-Slot', passive:'Passiv', active:'Aktiv', counter:'Konter'}, weapons: 'Schlagring · Magiegerät', skillsTitle: 'Fähigkeiten',
       skills: [
         ['Heiliger', 'Bei einem Standardangriff stellt der Verbündete mit den niedrigsten HP HP in Höhe deines Glücks ×3 wieder her. Wirkt beim selben Ziel nur einmal alle 3 Sekunden. Gibt es keinen Verbündeten zu heilen, wird dein Standardangriff zu einem Angriff, der allen Gegnern Schaden in Höhe von Glück ×10 zufügt. Magischer Schaden.'],
@@ -118,9 +118,9 @@ window.GLOBE_PREVIEW = {
     },
     fr: {
       name: 'Do Junhyeok',
-      head: 'Aperçu de la prochaine mise à jour — 4 novembre',
-      title: "Do Junhyeok, diplômé de la première promotion de l'Académie des Chasseurs, entre en scène",
-      story: "Un Portail en débordement est apparu dans la rue où Do Junhyeok travaillait à mi-temps dans un costume de mascotte, et une attaque surprise de monstres l'a placé entre la vie et la mort. À l'instant même où il allait rendre son dernier souffle, Do Junhyeok s'est éveillé en tant que Joueur et a aussitôt été choisi par une Constellation. Un Joueur qui éclaire lui-même son chemin. Venez rencontrer [Saint] Do Junhyeok.",
+      head: "Aperçu de la prochaine mise à jour",
+      title: "Do Junhyeok entre en scène",
+      story: ["Do Junhyeok est diplômé de l'Académie des Chasseurs.", "Au moment où une attaque surprise de monstres l'a placé entre la vie et la mort, Do Junhyeok s'est éveillé en tant que Joueur et s'est frayé lui-même un chemin pour survivre.", "Choisi par la Constellation qui l'observait, Do Junhyeok a pu progresser plus vite que quiconque.", "Un Joueur qui éclaire lui-même son chemin. Venez rencontrer [Saint] Do Junhyeok."],
       tag: {basic:'Attaque de base', passive:'Passif', active:'Actif', counter:'Contre'}, weapons: "Poings d'acier · Focus magique", skillsTitle: 'Compétences',
       skills: [
         ['Saint', "Lors d'une attaque de base, rend à l'allié ayant le moins de PV des PV égaux à votre CHA ×3. Ne s'applique qu'une fois toutes les 3 secondes sur une même cible. S'il n'y a aucun allié à soigner, l'attaque de base devient une attaque infligeant CHA ×10 dégâts à tous les ennemis. Dégâts magiques."],
@@ -136,9 +136,9 @@ window.GLOBE_PREVIEW = {
     },
     es: {
       name: 'Do Junhyeok',
-      head: 'Avance de la próxima actualización — 4 de noviembre',
-      title: 'Do Junhyeok, de la primera promoción de la Academia de Cazadores, entra en combate',
-      story: 'Una Puerta desbordada apareció en la calle donde Do Junhyeok trabajaba a tiempo parcial con un disfraz de mascota, y un ataque sorpresa de monstruos lo dejó entre la vida y la muerte. En el instante previo a su último aliento, Do Junhyeok despertó como Jugador y fue elegido de inmediato por una Constelación. Un Jugador que ilumina su propio camino. Conoce a [Santo] Do Junhyeok.',
+      head: "Avance de la próxima actualización",
+      title: "Do Junhyeok entra en combate",
+      story: ["Do Junhyeok es egresado de la Academia de Cazadores.", "En el momento en que un ataque sorpresa de monstruos lo dejó entre la vida y la muerte, Do Junhyeok despertó como Jugador y se abrió por sí mismo un camino para sobrevivir.", "Elegido por la Constelación que lo observaba, Do Junhyeok pudo crecer más rápido que nadie.", "Un Jugador que ilumina su propio camino. Conoce a [Santo] Do Junhyeok."],
       tag: {basic:'Ataque básico registrado', passive:'Pasiva', active:'Activa', counter:'Contraataque'}, weapons: 'Manoplas · Foco mágico', skillsTitle: 'Habilidades',
       skills: [
         ['Santo', 'Al realizar un ataque básico, restaura al aliado con menos PV una cantidad de PV igual a tu SUE ×3. Solo se aplica una vez cada 3 segundos al mismo objetivo. Si no hay aliados que curar, el ataque básico se convierte en un ataque que inflige SUE ×10 de daño a todos los enemigos. Daño mágico.'],
@@ -154,9 +154,9 @@ window.GLOBE_PREVIEW = {
     },
     it: {
       name: 'Do Junhyeok',
-      head: 'Anteprima del prossimo aggiornamento — 4 novembre',
-      title: "Do Junhyeok, diplomato del primo corso dell'Accademia dei Cacciatori, scende in campo",
-      story: "Un Portale di Marea è apparso nella strada in cui Do Junhyeok lavorava part-time in un costume da mascotte, e un attacco improvviso dei mostri lo ha portato tra la vita e la morte. Nell'istante prima del suo ultimo respiro, Do Junhyeok si è risvegliato come Giocatore ed è stato subito scelto da una Costellazione. Un Giocatore che illumina da sé la propria strada. Incontra [Santo] Do Junhyeok.",
+      head: "Anteprima del prossimo aggiornamento",
+      title: "Do Junhyeok scende in campo",
+      story: ["Do Junhyeok è un diplomato dell'Accademia dei Cacciatori.", "Nel momento in cui un attacco improvviso dei mostri lo ha portato tra la vita e la morte, Do Junhyeok si è risvegliato come Giocatore e si è aperto da solo la strada per sopravvivere.", "Scelto dalla Costellazione che lo osservava, Do Junhyeok è riuscito a crescere più in fretta di chiunque altro.", "Un Giocatore che illumina da sé la propria strada. Incontra [Santo] Do Junhyeok."],
       tag: {basic:'Attacco base registrato', passive:'Passiva', active:'Attiva', counter:'Contrattacco'}, weapons: 'Tirapugni · Focus magico', skillsTitle: 'Abilità',
       skills: [
         ['Santo', "Con l'attacco base, ripristina all'alleato con meno PS una quantità di PS pari alla tua FRT ×3. Si applica solo una volta ogni 3 secondi sullo stesso bersaglio. Se non ci sono alleati da curare, l'attacco base diventa un attacco che infligge danni pari a FRT ×10 a tutti i nemici. Danno magico."],
@@ -172,9 +172,9 @@ window.GLOBE_PREVIEW = {
     },
     pt: {
       name: 'Do Junhyeok',
-      head: 'Prévia da próxima atualização — 4 de novembro',
-      title: 'Do Junhyeok, formado na primeira turma da Academia de Caçadores, entra em combate',
-      story: 'Um Portal transbordado surgiu na rua onde Do Junhyeok trabalhava meio período vestindo uma fantasia de mascote, e um ataque surpresa de monstros o deixou entre a vida e a morte. No instante antes de seu último suspiro, Do Junhyeok despertou como Jogador e foi imediatamente escolhido por uma Constelação. Um Jogador que ilumina o próprio caminho. Conheça [Santo] Do Junhyeok.',
+      head: "Prévia da próxima atualização",
+      title: "Do Junhyeok entra em combate",
+      story: ["Do Junhyeok é formado pela Academia de Caçadores.", "No momento em que um ataque surpresa de monstros o deixou entre a vida e a morte, Do Junhyeok despertou como Jogador e abriu sozinho o próprio caminho para sobreviver.", "Escolhido pela Constelação que o observava, Do Junhyeok conseguiu crescer mais rápido do que qualquer um.", "Um Jogador que ilumina o próprio caminho. Conheça [Santo] Do Junhyeok."],
       tag: {basic:'Ataque básico registrado', passive:'Passiva', active:'Ativa', counter:'Contra-ataque'}, weapons: 'Manoplas · Foco mágico', skillsTitle: 'Habilidades',
       skills: [
         ['Santo', 'Ao usar o ataque básico, restaura ao aliado com menos HP uma quantidade de HP igual à sua Sorte ×3. Aplica-se apenas uma vez a cada 3 segundos no mesmo alvo. Se não houver aliado para curar, o ataque básico se torna um ataque que causa Sorte ×10 de dano a todos os inimigos. Dano mágico.'],
@@ -190,9 +190,9 @@ window.GLOBE_PREVIEW = {
     },
     pl: {
       name: 'Do Junhyeok',
-      head: 'Zapowiedź następnej aktualizacji — 4 listopada',
-      title: 'Do Junhyeok, absolwent pierwszego rocznika Akademii Łowców, rusza do walki',
-      story: 'Na ulicy, na której Do Junhyeok dorabiał w kostiumie maskotki, pojawiły się Wrota przełomu, a nagły atak potworów postawił go między życiem a śmiercią. W chwili tuż przed ostatnim oddechem Do Junhyeok przebudził się jako Gracz i natychmiast został wybrany przez konstelację. Gracz, który sam oświetla swoją drogę. Poznaj [Święty] Do Junhyeok.',
+      head: "Zapowiedź następnej aktualizacji",
+      title: "Do Junhyeok rusza do walki",
+      story: ["Do Junhyeok jest absolwentem Akademii Łowców.", "W chwili, gdy nagły atak potworów postawił go między życiem a śmiercią, Do Junhyeok przebudził się jako Gracz i sam wywalczył sobie drogę do przetrwania.", "Wybrany przez konstelację, która go obserwowała, Do Junhyeok mógł rozwijać się szybciej niż ktokolwiek inny.", "Gracz, który sam oświetla swoją drogę. Poznaj [Święty] Do Junhyeok."],
       tag: {basic:'Atak podstawowy (slot)', passive:'Pasywna', active:'Aktywna', counter:'Kontra'}, weapons: 'Kastet · Przybór magiczny', skillsTitle: 'Umiejętności',
       skills: [
         ['Święty', 'Przy ataku podstawowym przywraca sojusznikowi z najniższym HP ilość HP równą twojemu LUK ×3. Działa na ten sam cel tylko raz na 3 sekundy. Jeśli nie ma sojusznika do uleczenia, atak podstawowy zmienia się w atak zadający wszystkim wrogom obrażenia równe LUK ×10. Obrażenia magiczne.'],
@@ -208,9 +208,9 @@ window.GLOBE_PREVIEW = {
     },
     ru: {
       name: 'До Джунхёк',
-      head: 'Анонс следующего обновления — 4 ноября',
-      title: 'В бой вступает До Джунхёк, выпускник первого набора Академии охотников',
-      story: 'На улице, где До Джунхёк подрабатывал в костюме ростовой куклы, появились Врата Наводнения, и внезапное нападение монстров поставило его на грань жизни и смерти. В миг перед последним вздохом До Джунхёк пробудился как Игрок и сразу же был избран созвездием. Игрок, который сам освещает свой путь. Встречайте: [Святой] До Джунхёк.',
+      head: "Анонс следующего обновления",
+      title: "В бой вступает До Джунхёк",
+      story: ["До Джунхёк — выпускник Академии охотников.", "В тот миг, когда внезапное нападение монстров поставило его на грань жизни и смерти, До Джунхёк пробудился как Игрок и сам проложил себе путь к выживанию.", "Избранный созвездием, которое наблюдало за ним, До Джунхёк смог расти быстрее всех.", "Игрок, который сам освещает свой путь. Встречайте: [Святой] До Джунхёк."],
       tag: {basic:'Слот обычной атаки', passive:'Пассивный', active:'Активный', counter:'Контратака'}, weapons: 'Кастет · Магический жезл', skillsTitle: 'Навыки',
       skills: [
         ['Святой', 'При обычной атаке восстанавливает союзнику с наименьшим HP количество HP, равное вашей Удаче ×3. Действует на одну и ту же цель не чаще раза в 3 секунды. Если лечить некого, обычная атака превращается в атаку, наносящую всем врагам урон, равный Удаче ×10. Магический урон.'],
@@ -226,9 +226,9 @@ window.GLOBE_PREVIEW = {
     },
     tr: {
       name: 'Do Junhyeok',
-      head: 'Sonraki güncelleme ön izlemesi — 4 Kasım',
-      title: "Avcı Akademisi'nin ilk dönem mezunu Do Junhyeok sahada",
-      story: "Do Junhyeok'un maskot kostümüyle yarı zamanlı çalıştığı caddede bir Taşkın Geçidi belirdi ve ani bir canavar baskını onu ölümle yaşam arasında bıraktı. Son nefesini vermek üzereyken Do Junhyeok bir Oyuncu olarak uyandı ve hemen bir takımyıldız tarafından seçildi. Kendi yolunu kendisi aydınlatan bir Oyuncu. [Aziz] Do Junhyeok ile tanışın.",
+      head: "Sonraki güncelleme ön izlemesi",
+      title: "Do Junhyeok sahada",
+      story: ["Do Junhyeok, Avcı Akademisi mezunudur.", "Bir canavar baskını onu ölümle yaşam arasında bıraktığı anda Do Junhyeok bir Oyuncu olarak uyandı ve hayatta kalmanın yolunu kendisi açtı.", "Onu izleyen takımyıldız tarafından seçilen Do Junhyeok, herkesten daha hızlı gelişebildi.", "Kendi yolunu kendisi aydınlatan bir Oyuncu. [Aziz] Do Junhyeok ile tanışın."],
       tag: {basic:'Temel Saldırı Yuvası', passive:'Pasif', active:'Aktif', counter:'Kontra'}, weapons: 'Muşta · Büyü Aleti', skillsTitle: 'Yetenekler',
       skills: [
         ['Aziz', "Temel saldırıda, HP'si en düşük müttefikin HP'sini Şans ×3 kadar yeniler. Aynı hedefe 3 saniyede yalnızca 1 kez uygulanır. İyileştirilecek müttefik yoksa temel saldırı, tüm düşmanlara Şans ×10 hasar veren bir saldırıya dönüşür. Büyü hasarı."],
@@ -244,9 +244,9 @@ window.GLOBE_PREVIEW = {
     },
     vi: {
       name: 'Do Junhyeok',
-      head: 'Báo trước bản cập nhật tiếp theo — 4 tháng 11',
-      title: 'Do Junhyeok, học viên tốt nghiệp khóa 1 Học viện Thợ săn, xuất trận',
-      story: 'Một Cổng Tràn xuất hiện trên con phố nơi Do Junhyeok đang làm thêm trong bộ đồ thú bông, và một cuộc tập kích bất ngờ của quái vật đã đẩy cậu vào ranh giới sống chết. Ngay khoảnh khắc trước khi trút hơi thở cuối cùng, Do Junhyeok thức tỉnh thành Người chơi và lập tức được Tinh tọa lựa chọn. Một Người chơi tự soi sáng con đường phía trước. Hãy gặp gỡ [Thánh giả] Do Junhyeok.',
+      head: "Báo trước bản cập nhật tiếp theo",
+      title: "Do Junhyeok xuất trận",
+      story: ["Do Junhyeok là học viên tốt nghiệp Học viện Thợ săn.", "Vào khoảnh khắc cuộc tập kích của quái vật đẩy cậu vào ranh giới sống chết, Do Junhyeok đã thức tỉnh thành Người chơi và tự mình khai phá con đường sống sót.", "Được Tinh tọa vẫn luôn dõi theo lựa chọn, Do Junhyeok đã có thể trưởng thành nhanh hơn bất kỳ ai.", "Một Người chơi tự soi sáng con đường phía trước. Hãy gặp gỡ [Thánh giả] Do Junhyeok."],
       tag: {basic:'Đăng ký đòn đánh thường', passive:'Bị động', active:'Chủ động', counter:'Phản đòn'}, weapons: 'Găng Đấm · Pháp Khí', skillsTitle: 'Kỹ năng',
       skills: [
         ['Thánh giả', 'Khi đánh thường, hồi cho đồng minh có HP thấp nhất lượng HP bằng May mắn ×3 của bản thân. Với cùng một mục tiêu chỉ áp dụng 1 lần mỗi 3 giây. Nếu không có đồng minh cần hồi, đòn đánh thường sẽ biến thành đòn gây sát thương bằng May mắn ×10 lên tất cả kẻ địch. Sát thương phép.'],
@@ -262,9 +262,9 @@ window.GLOBE_PREVIEW = {
     },
     id: {
       name: 'Do Junhyeok',
-      head: 'Pratinjau pembaruan berikutnya — 4 November',
-      title: 'Do Junhyeok, lulusan angkatan pertama Akademi Pemburu, terjun ke medan tempur',
-      story: 'Sebuah Gerbang Banjir muncul di jalan tempat Do Junhyeok bekerja paruh waktu dengan kostum maskot, dan serangan mendadak monster membuatnya berada di antara hidup dan mati. Tepat sebelum napas terakhirnya, Do Junhyeok bangkit sebagai Pemain dan langsung dipilih oleh sebuah konstelasi. Pemain yang menerangi jalannya sendiri. Temui [Santo] Do Junhyeok.',
+      head: "Pratinjau pembaruan berikutnya",
+      title: "Do Junhyeok terjun ke medan tempur",
+      story: ["Do Junhyeok adalah lulusan Akademi Pemburu.", "Pada saat serangan mendadak monster membuatnya berada di antara hidup dan mati, Do Junhyeok bangkit sebagai Pemain dan membuka sendiri jalan untuk bertahan hidup.", "Dipilih oleh konstelasi yang selama ini mengawasinya, Do Junhyeok mampu berkembang lebih cepat daripada siapa pun.", "Pemain yang menerangi jalannya sendiri. Temui [Santo] Do Junhyeok."],
       tag: {basic:'Slot Serangan Dasar', passive:'Pasif', active:'Aktif', counter:'Counter'}, weapons: 'Knuckle · Alat Sihir', skillsTitle: 'Skill',
       skills: [
         ['Santo', 'Saat Serangan Dasar, memulihkan HP sekutu dengan HP terendah sebesar Keberuntungan ×3 milikmu. Pada target yang sama hanya berlaku 1 kali setiap 3 detik. Jika tidak ada sekutu yang perlu dipulihkan, Serangan Dasar berubah menjadi serangan yang memberikan damage sebesar Keberuntungan ×10 ke semua musuh. Damage sihir.'],
@@ -280,9 +280,9 @@ window.GLOBE_PREVIEW = {
     },
     th: {
       name: 'โด จุนฮยอก',
-      head: 'ตัวอย่างอัปเดตถัดไป — 4 พฤศจิกายน',
-      title: 'โด จุนฮยอก ศิษย์จบรุ่นแรกของสถาบันฮันเตอร์ ออกศึก',
-      story: 'เกตน้ำหลากปรากฏขึ้นบนถนนที่โด จุนฮยอกกำลังทำงานพิเศษใส่ชุดตุ๊กตามาสคอต และการจู่โจมของมอนสเตอร์ทำให้เขาต้องยืนอยู่ระหว่างความเป็นและความตาย ในวินาทีก่อนลมหายใจสุดท้าย โด จุนฮยอกได้ตื่นขึ้นเป็นผู้เล่น และได้รับการเลือกจากกลุ่มดาวในทันที ผู้เล่นที่ส่องทางเดินของตนเอง มาพบกับ [นักบุญ] โด จุนฮยอก',
+      head: "ตัวอย่างอัปเดตถัดไป",
+      title: "โด จุนฮยอก ออกศึก",
+      story: ["โด จุนฮยอกเป็นศิษย์จบจากสถาบันฮันเตอร์", "ในวินาทีที่การจู่โจมของมอนสเตอร์ทำให้เขาต้องยืนอยู่ระหว่างความเป็นและความตาย โด จุนฮยอกได้ตื่นขึ้นเป็นผู้เล่น และบุกเบิกหนทางเอาชีวิตรอดด้วยตนเอง", "กลุ่มดาวที่เฝ้ามองอยู่ได้เลือกเขา โด จุนฮยอกจึงเติบโตได้เร็วกว่าใคร", "ผู้เล่นที่ส่องทางเดินของตนเอง มาพบกับ [นักบุญ] โด จุนฮยอก"],
       tag: {basic:'แบบลงทะเบียนโจมตีพื้นฐาน', passive:'แพสซีฟ', active:'แอ็กทีฟ', counter:'เคาน์เตอร์'}, weapons: 'นักเกิล · ศาสตราเวท', skillsTitle: 'สกิล',
       skills: [
         ['นักบุญ', 'เมื่อโจมตีพื้นฐาน ฟื้นฟู HP ให้พันธมิตรที่มี HP ต่ำที่สุดเท่ากับโชค ×3 ของตนเอง กับเป้าหมายเดียวกันมีผลเพียง 1 ครั้งต่อ 3 วินาที หากไม่มีพันธมิตรให้ฟื้นฟู การโจมตีพื้นฐานจะเปลี่ยนเป็นการโจมตีที่สร้างความเสียหายเท่ากับโชค ×10 ใส่ศัตรูทั้งหมด ความเสียหายเวทมนตร์'],
@@ -298,9 +298,9 @@ window.GLOBE_PREVIEW = {
     },
     ar: {
       name: 'دو جون هيوك',
-      head: 'لمحة عن التحديث القادم — 4 نوفمبر',
-      title: 'دو جون هيوك، خريج الدفعة الأولى من أكاديمية الصيادين، يدخل المعركة',
-      story: 'ظهرت بوابة الفيضان في الشارع الذي كان دو جون هيوك يعمل فيه بدوام جزئي مرتديًا زي دمية، فوضعه هجوم مباغت من الوحوش بين الحياة والموت. وفي اللحظة التي سبقت أنفاسه الأخيرة، استيقظ دو جون هيوك لاعبًا واختارته كوكبة على الفور. لاعب يُنير طريقه بنفسه. تعرّف على [القديس] دو جون هيوك.',
+      head: "لمحة عن التحديث القادم",
+      title: "دو جون هيوك يدخل المعركة",
+      story: ["دو جون هيوك خريج أكاديمية الصيادين.", "في اللحظة التي وضعه فيها هجوم مباغت من الوحوش بين الحياة والموت، استيقظ دو جون هيوك لاعبًا وشقّ بنفسه طريقًا للبقاء.", "اختارته الكوكبة التي كانت تراقبه، فتمكّن دو جون هيوك من النمو أسرع من أي أحد.", "لاعب يُنير طريقه بنفسه. تعرّف على [القديس] دو جون هيوك."],
       tag: {basic:'نوع مُسجَّل للهجوم الأساسي', passive:'سلبية', active:'نشطة', counter:'مضادّة'}, weapons: 'قبضة حديدية · أداة سحرية', skillsTitle: 'المهارات',
       skills: [
         ['القديس', 'عند الهجوم الأساسي، يستعيد الحليف صاحب أقل HP قدرًا من HP يساوي الحظ ×3 لديك. يُطبَّق على الهدف نفسه مرة واحدة فقط كل 3 ثوانٍ. إذا لم يوجد حليف يحتاج إلى العلاج، يتحول الهجوم الأساسي إلى هجوم يُلحق ضررًا يساوي الحظ ×10 بجميع الأعداء. ضرر سحري.'],
