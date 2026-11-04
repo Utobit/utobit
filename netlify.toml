@@ -60,3 +60,10 @@
   for = "/ys/*"
   [headers.values]
     X-Robots-Tag = "noindex, nofollow, noarchive"
+
+# /player/globe/docs = master planning/rule docs (content served only to registered devices). noindex
+[[headers]]
+  for = "/player/globe/docs/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow, noarchive"
+    Cache-Control = "no-cache"
