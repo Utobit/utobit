@@ -93,7 +93,7 @@
 const Q = new URLSearchParams(location.search);
 const TEST = Q.get("test") === "1";   // 테스트 서버(prod 스택) — 공개 링크는 live
 const API = TEST ? "https://uwpaalwrka.execute-api.ap-northeast-2.amazonaws.com/prod/player/toss"
-                 : "https://LIVE_API_NOT_DEPLOYED/player/toss";
+                 : "https://2tyrh0141d.execute-api.ap-northeast-2.amazonaws.com/prod/player/toss";
 const $ = (id) => document.getElementById(id);
 const won = (n) => "₩" + Number(n).toLocaleString("ko-KR");
 const num = (n) => Number(n).toLocaleString("ko-KR");
@@ -106,21 +106,37 @@ async function api(body) {
 }
 function banner(kind, html) { $("banner").innerHTML = html ? `<div class="msg ${kind}">${html}</div>` : ""; }
 
-// ── 1. 계정 ── (계정 확인 방식 = 마스터 결정 대기. 지금은 테스트 서버 개발용 토큰 입력만)
-function getToken() { try { return sessionStorage.getItem("pfr_tok") || ""; } catch (e) { return ""; } }
-function setToken(t) { try { sessionStorage.setItem("pfr_tok", t); } catch (e) {} }
+// ── 1. 계정 ── 닉네임으로 찾고(겹치면 후보 전부) 레벨·가입 순번을 보고 고른다. 서버가 서명한 ref 로 주문한다.
+let ACCT = null;
+const esc = (t) => String(t).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 function renderAccount() {
-  if (!TEST) { $("acctBox").innerHTML = `<p class="who">계정 연결 방식을 준비하고 있습니다.</p>`; return; }
-  const t = getToken();
-  $("acctBox").innerHTML = `<div class="acct"><input id="tokIn" placeholder="(테스트) 로그인 토큰" value="${t ? "입력됨" : ""}">
-    <button class="btn sm" id="tokBtn">확인</button></div>`;
-  $("tokBtn").onclick = () => { const v = $("tokIn").value.trim(); if (v && v !== "입력됨") setToken(v); refreshPay(); };
+  $("acctBox").innerHTML = `<div class="acct"><input id="nickIn" placeholder="게임 닉네임(대소문자까지 정확히)" maxlength="40">
+    <button class="btn sm" id="nickBtn">찾기</button></div><div id="acctList"></div>`;
+  $("nickBtn").onclick = findAccount;
+  $("nickIn").onkeydown = (e) => { if (e.key === "Enter") findAccount(); };
+}
+async function findAccount() {
+  const nick = $("nickIn").value.trim(); if (!nick) return;
+  ACCT = null; refreshPay();
+  $("acctList").innerHTML = `<p class="who">찾는 중…</p>`;
+  const r = await api({ action: "lookup", nickname: nick });
+  const list = r.accounts || [];
+  if (!list.length) { $("acctList").innerHTML = `<p class="who">이 닉네임의 계정을 찾지 못했습니다. 게임 안 닉네임과 똑같이 입력해 주세요.</p>`; return; }
+  $("acctList").innerHTML = `<p class="who">받을 계정을 눌러 고르세요.</p><div class="grid">` + list.map((a, i) =>
+    `<button class="prod acc" data-i="${i}"><div class="nm">${esc(a.nickname)}</div><div class="pr">Lv.${a.level}</div><div class="bn">가입 순번 #${a.regNo}</div></button>`).join("") + `</div>`;
+  document.querySelectorAll(".acc").forEach(b => b.onclick = () => {
+    document.querySelectorAll(".acc").forEach(x => x.classList.remove("sel"));
+    b.classList.add("sel"); ACCT = list[+b.dataset.i]; refreshPay();
+  });
 }
 
 // ── 2. 상품 ──
 async function loadProducts() {
   const r = await api({ action: "products" });
-  if (!r.ok) { $("products").textContent = "상품을 불러오지 못했습니다. 잠시 뒤 다시 시도해 주세요."; return; }
+  if (!r.ok) {
+    $("products").textContent = r.error === "toss_not_configured" ? "웹 결제를 준비하고 있습니다. 곧 열립니다." : "상품을 불러오지 못했습니다. 잠시 뒤 다시 시도해 주세요.";
+    return;
+  }
   PRODUCTS = r.products; CLIENT_KEY = r.clientKey;
   $("products").innerHTML = PRODUCTS.map((p, i) => `<button class="prod" data-i="${i}">
       <div class="nm">${p.orderName}</div><div class="pr">${won(p.amount)}</div>
@@ -133,13 +149,13 @@ async function loadProducts() {
 
 // ── 3. 결제 ── 주문(서버가 금액 결정) → 토스 결제위젯 → successUrl 로 돌아오면 confirm
 async function refreshPay() {
-  if (!picked || !getToken()) { $("stepPay").classList.add("hidden"); return; }
+  if (!picked || !ACCT) { $("stepPay").classList.add("hidden"); return; }
   $("stepPay").classList.remove("hidden"); $("payBtn").disabled = true;
-  const r = await api({ action: "order", firebase_token: getToken(), productId: picked.productId, channel: "web" });
+  const r = await api({ action: "order", ref: ACCT.ref, productId: picked.productId, channel: "web" });
   if (!r.ok) { banner("err", "주문을 만들지 못했습니다(" + (r.error || r.status) + ")."); return; }
   banner("", ""); order = r;
   const gift = picked.crystal ? `크리스탈 ${num(picked.crystal)}개 + 웹 보너스 ${num(r.webBonus)}개` : `${r.orderName} + 웹 보너스 크리스탈 ${num(r.webBonus)}개`;
-  $("summary").innerHTML = `<b>${r.orderName}</b> · ${won(r.amount)}<br>받는 것: ${gift}`;
+  $("summary").innerHTML = `받는 계정: <b>${esc(ACCT.nickname)}</b> (Lv.${ACCT.level} · #${ACCT.regNo})<br><b>${r.orderName}</b> · ${won(r.amount)}<br>받는 것: ${gift}`;
   const tp = TossPayments(CLIENT_KEY);
   widgets = tp.widgets({ customerKey: r.customerKey });
   await widgets.setAmount({ currency: "KRW", value: r.amount });
@@ -183,7 +199,6 @@ async function handleReturn() {
 }
 
 (async () => {
-  if (!TEST) banner("info", "웹 결제는 준비 중입니다.");
   if (await handleReturn()) return;
   renderAccount(); await loadProducts();
 })();
