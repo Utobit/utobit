@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>크리스탈 충전 | Player : Final Raid</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <script src="https://js.tosspayments.com/v2/standard"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: "Noto Sans KR", sans-serif; background: #f9fafb; color: #111827; }
+    nav { position: sticky; top: 0; z-index: 50; background: #fff; border-bottom: 1px solid #f3f4f6; padding: 0 16px; height: 56px; display: flex; align-items: center; gap: 12px; }
+    nav a.brand { font-size: 1rem; font-weight: 900; color: #111827; text-decoration: none; letter-spacing: -0.03em; }
+    nav .crumb { font-size: 0.85rem; color: #9ca3af; white-space: nowrap; }
+    main { max-width: 640px; margin: 0 auto; padding: 32px 16px 64px; }
+    h1 { font-size: 1.4rem; font-weight: 900; margin-bottom: 6px; }
+    .sub { font-size: 0.85rem; color: #6b7280; margin-bottom: 24px; line-height: 1.6; }
+    .step { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 18px 16px; margin-bottom: 16px; }
+    .step h2 { font-size: 0.95rem; font-weight: 700; margin-bottom: 12px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 10px; }
+    .prod { border: 1.5px solid #e5e7eb; border-radius: 10px; padding: 12px; cursor: pointer; background: #fff; text-align: left; font: inherit; color: inherit; }
+    .prod:hover { border-color: #93c5fd; }
+    .prod.sel { border-color: #2563eb; background: #eff6ff; }
+    .prod .nm { font-size: 0.9rem; font-weight: 700; word-break: keep-all; }
+    .prod .pr { font-size: 0.85rem; color: #374151; margin-top: 4px; }
+    .prod .bn { font-size: 0.78rem; color: #2563eb; margin-top: 4px; font-weight: 500; }
+    .acct { display: flex; gap: 8px; flex-wrap: wrap; }
+    .acct input { flex: 1 1 200px; border: 1px solid #d1d5db; border-radius: 8px; padding: 10px 12px; font: inherit; }
+    .btn { display: block; width: 100%; border: 0; border-radius: 10px; padding: 14px; font: inherit; font-weight: 700; font-size: 1rem; background: #2563eb; color: #fff; cursor: pointer; }
+    .btn:disabled { background: #9ca3af; cursor: default; }
+    .btn.sm { display: inline-block; width: auto; padding: 10px 16px; font-size: 0.9rem; }
+    .who { font-size: 0.9rem; margin-top: 10px; line-height: 1.6; }
+    .msg { font-size: 0.88rem; line-height: 1.7; padding: 12px 14px; border-radius: 10px; margin-bottom: 16px; }
+    .msg.ok { background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; }
+    .msg.err { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; }
+    .msg.info { background: #fffbeb; border: 1px solid #fde68a; color: #92400e; }
+    .sum { font-size: 0.9rem; line-height: 1.8; margin-bottom: 12px; }
+    .sum b { font-weight: 700; }
+    .hidden { display: none; }
+    .policy { font-size: 0.78rem; color: #6b7280; line-height: 1.8; margin-top: 24px; }
+    .policy a { color: #2563eb; }
+    footer { border-top: 1px solid #e5e7eb; padding: 20px 16px; text-align: center; font-size: 0.75rem; color: #9ca3af; line-height: 1.8; word-break: keep-all; }
+  </style>
+</head>
+<body>
+<nav>
+  <a class="brand" href="/">UTOBIT</a>
+  <span class="crumb">/ Player : Final Raid / 크리스탈 충전</span>
+</nav>
+<main>
+  <h1>크리스탈 충전</h1>
+  <p class="sub">웹에서 결제하면 결제 금액의 10%만큼 크리스탈을 더 드립니다. 상품별 첫 결제 1+1은 앱 결제와 합쳐 상품마다 한 번씩입니다. 결제가 끝나면 게임 계정에 바로 들어갑니다.</p>
+
+  <div id="banner"></div>
+
+  <section class="step" id="stepAccount">
+    <h2>1. 받을 게임 계정</h2>
+    <div id="acctBox"></div>
+  </section>
+
+  <section class="step" id="stepProduct">
+    <h2>2. 상품 선택</h2>
+    <div class="grid" id="products">불러오는 중…</div>
+  </section>
+
+  <section class="step hidden" id="stepPay">
+    <h2>3. 결제</h2>
+    <div class="sum" id="summary"></div>
+    <div id="payment-method"></div>
+    <div id="agreement"></div>
+    <button class="btn" id="payBtn" disabled>결제하기</button>
+  </section>
+
+  <section class="step hidden" id="stepResult">
+    <h2>결제 결과</h2>
+    <div id="result"></div>
+    <button class="btn sm" onclick="location.href=location.pathname + (TEST ? '?test=1' : '')">처음으로</button>
+  </section>
+
+  <div class="policy">
+    디지털 재화(크리스탈)는 결제 즉시 지급됩니다. 지급된 크리스탈을 사용하지 않았다면 결제일로부터 7일 이내에 청약철회를 요청할 수 있습니다.
+    자세한 내용은 <a href="/player/refund/">청약철회 및 환불정책</a>·<a href="/player/terms/">이용약관</a>을 확인해 주세요.
+    문의: <a href="mailto:clus0109@gmail.com">clus0109@gmail.com</a>
+  </div>
+</main>
+<footer>
+  상호: 유토비트 | 대표자: <span id="bizOwner">(확인 중)</span> | 사업자등록번호: 598-01-03840<br>
+  통신판매업 신고번호: <span id="bizMailOrder">(신고 처리 중)</span> | 주소: <span id="bizAddr">(확인 중)</span> | 이메일: clus0109@gmail.com
+</footer>
+
+<script>
+const Q = new URLSearchParams(location.search);
+const TEST = Q.get("test") === "1";   // 테스트 서버(prod 스택) — 공개 링크는 live
+const API = TEST ? "https://uwpaalwrka.execute-api.ap-northeast-2.amazonaws.com/prod/player/toss"
+                 : "https://LIVE_API_NOT_DEPLOYED/player/toss";
+const $ = (id) => document.getElementById(id);
+const won = (n) => "₩" + Number(n).toLocaleString("ko-KR");
+const num = (n) => Number(n).toLocaleString("ko-KR");
+let PRODUCTS = [], CLIENT_KEY = "", picked = null, widgets = null, order = null;
+
+async function api(body) {
+  const r = await fetch(API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+  let j = {}; try { j = await r.json(); } catch (e) {}
+  return { status: r.status, ...j };
+}
+function banner(kind, html) { $("banner").innerHTML = html ? `<div class="msg ${kind}">${html}</div>` : ""; }
+
+// ── 1. 계정 ── (계정 확인 방식 = 마스터 결정 대기. 지금은 테스트 서버 개발용 토큰 입력만)
+function getToken() { try { return sessionStorage.getItem("pfr_tok") || ""; } catch (e) { return ""; } }
+function setToken(t) { try { sessionStorage.setItem("pfr_tok", t); } catch (e) {} }
+function renderAccount() {
+  if (!TEST) { $("acctBox").innerHTML = `<p class="who">계정 연결 방식을 준비하고 있습니다.</p>`; return; }
+  const t = getToken();
+  $("acctBox").innerHTML = `<div class="acct"><input id="tokIn" placeholder="(테스트) 로그인 토큰" value="${t ? "입력됨" : ""}">
+    <button class="btn sm" id="tokBtn">확인</button></div>`;
+  $("tokBtn").onclick = () => { const v = $("tokIn").value.trim(); if (v && v !== "입력됨") setToken(v); refreshPay(); };
+}
+
+// ── 2. 상품 ──
+async function loadProducts() {
+  const r = await api({ action: "products" });
+  if (!r.ok) { $("products").textContent = "상품을 불러오지 못했습니다. 잠시 뒤 다시 시도해 주세요."; return; }
+  PRODUCTS = r.products; CLIENT_KEY = r.clientKey;
+  $("products").innerHTML = PRODUCTS.map((p, i) => `<button class="prod" data-i="${i}">
+      <div class="nm">${p.orderName}</div><div class="pr">${won(p.amount)}</div>
+      <div class="bn">웹 결제 보너스 +${num(p.webBonus)} 크리스탈</div></button>`).join("");
+  document.querySelectorAll(".prod").forEach(b => b.onclick = () => {
+    document.querySelectorAll(".prod").forEach(x => x.classList.remove("sel"));
+    b.classList.add("sel"); picked = PRODUCTS[+b.dataset.i]; refreshPay();
+  });
+}
+
+// ── 3. 결제 ── 주문(서버가 금액 결정) → 토스 결제위젯 → successUrl 로 돌아오면 confirm
+async function refreshPay() {
+  if (!picked || !getToken()) { $("stepPay").classList.add("hidden"); return; }
+  $("stepPay").classList.remove("hidden"); $("payBtn").disabled = true;
+  const r = await api({ action: "order", firebase_token: getToken(), productId: picked.productId, channel: "web" });
+  if (!r.ok) { banner("err", "주문을 만들지 못했습니다(" + (r.error || r.status) + ")."); return; }
+  banner("", ""); order = r;
+  const gift = picked.crystal ? `크리스탈 ${num(picked.crystal)}개 + 웹 보너스 ${num(r.webBonus)}개` : `${r.orderName} + 웹 보너스 크리스탈 ${num(r.webBonus)}개`;
+  $("summary").innerHTML = `<b>${r.orderName}</b> · ${won(r.amount)}<br>받는 것: ${gift}`;
+  const tp = TossPayments(CLIENT_KEY);
+  widgets = tp.widgets({ customerKey: r.customerKey });
+  await widgets.setAmount({ currency: "KRW", value: r.amount });
+  $("payment-method").innerHTML = ""; $("agreement").innerHTML = "";
+  await Promise.all([
+    widgets.renderPaymentMethods({ selector: "#payment-method", variantKey: "DEFAULT" }),
+    widgets.renderAgreement({ selector: "#agreement", variantKey: "AGREEMENT" }),
+  ]);
+  $("payBtn").disabled = false;
+}
+$("payBtn").onclick = async () => {
+  if (!widgets || !order) return;
+  const back = location.origin + location.pathname + "?" + (TEST ? "test=1&" : "");
+  try {
+    await widgets.requestPayment({ orderId: order.orderId, orderName: order.orderName, successUrl: back + "r=ok", failUrl: back + "r=fail" });
+  } catch (e) { banner("err", "결제를 시작하지 못했습니다: " + (e.message || e)); }
+};
+
+// ── 결과 ──
+function showResult(html) {
+  ["stepAccount", "stepProduct", "stepPay"].forEach(id => $(id).classList.add("hidden"));
+  $("stepResult").classList.remove("hidden"); $("result").innerHTML = html;
+}
+function vaText(v, due) { return `입금 계좌: ${v.bankCode || ""} ${v.accountNumber || ""}<br>입금 기한: ${due || v.dueDate || ""}<br>입금이 확인되면 게임 계정에 자동으로 들어갑니다.`; }
+async function handleReturn() {
+  const r = Q.get("r");
+  if (r === "fail") { showResult(`<div class="msg err">결제가 완료되지 않았습니다. ${Q.get("message") || ""}</div>`); return true; }
+  if (r !== "ok") return false;
+  showResult(`<div class="msg info">결제를 확인하고 있습니다…</div>`);
+  const c = await api({ action: "confirm", paymentKey: Q.get("paymentKey"), orderId: Q.get("orderId"), amount: Number(Q.get("amount")) });
+  history.replaceState(null, "", location.pathname + (TEST ? "?test=1" : ""));   // 새로고침해도 다시 승인 요청하지 않게
+  if (c.status === "GRANTED") {
+    const extra = [c.firstBonus ? `첫 결제 1+1 +${num(c.firstBonus)}` : "", c.webBonus ? `웹 보너스 +${num(c.webBonus)}` : ""].filter(Boolean).join(" · ");
+    showResult(`<div class="msg ok">결제가 완료되어 게임 계정에 지급했습니다.${extra ? "<br>" + extra : ""}<br>게임을 다시 열면 반영됩니다.</div>`);
+  } else if (c.status === "WAITING") {
+    showResult(`<div class="msg info">${vaText(c.virtualAccount || {})}</div>`);
+  } else {
+    showResult(`<div class="msg err">결제 확인에 실패했습니다(${c.code || c.error || c.status}). 승인되지 않은 결제는 청구되지 않습니다. 문제가 계속되면 이메일로 주문번호 ${Q.get("orderId") || ""}를 알려 주세요.</div>`);
+  }
+  return true;
+}
+
+(async () => {
+  if (!TEST) banner("info", "웹 결제는 준비 중입니다.");
+  if (await handleReturn()) return;
+  renderAccount(); await loadProducts();
+})();
+</script>
+</body>
+</html>
