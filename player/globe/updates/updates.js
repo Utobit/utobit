@@ -9,6 +9,8 @@
     preview: {ko:'예고',en:'Preview',ja:'予告','zh-Hans':'预告','zh-Hant':'預告',de:'Vorschau',fr:'Aperçu',es:'Avance',it:'Anteprima',pt:'Prévia',pl:'Zapowiedź',ru:'Анонс',tr:'Ön izleme',vi:'Báo trước',id:'Pratinjau',th:'ตัวอย่าง',ar:'لمحة'},
     list:    {ko:'목록',en:'List',ja:'一覧','zh-Hans':'列表','zh-Hant':'列表',de:'Liste',fr:'Liste',es:'Lista',it:'Elenco',pt:'Lista',pl:'Lista',ru:'Список',tr:'Liste',vi:'Danh sách',id:'Daftar',th:'รายการ',ar:'القائمة'},
     toGlobe: {ko:'플레이어 지구본',en:'Player Globe',ja:'プレイヤー地球儀','zh-Hans':'玩家地球仪','zh-Hant':'玩家地球儀',de:'Spieler-Globus',fr:'Globe des joueurs',es:'Globo de jugadores',it:'Globo dei giocatori',pt:'Globo dos jogadores',pl:'Globus graczy',ru:'Глобус игроков',tr:'Oyuncu Küresi',vi:'Địa cầu người chơi',id:'Globe Pemain',th:'ลูกโลกผู้เล่น',ar:'كرة اللاعبين'},
+    roadmap: {ko:'로드맵',en:'Roadmap',ja:'ロードマップ','zh-Hans':'路线图','zh-Hant':'路線圖',de:'Roadmap',fr:'Feuille de route',es:'Hoja de ruta',it:'Roadmap',pt:'Roteiro',pl:'Plan rozwoju',ru:'Дорожная карта',tr:'Yol haritası',vi:'Lộ trình',id:'Peta jalan',th:'แผนงาน',ar:'خارطة الطريق'},
+    updatedAt:{ko:'기준일',en:'As of',ja:'基準日','zh-Hans':'更新日期','zh-Hant':'更新日期',de:'Stand',fr:'Au',es:'Actualizado el',it:'Aggiornato al',pt:'Atualizado em',pl:'Stan na',ru:'По состоянию на',tr:'Güncelleme',vi:'Cập nhật ngày',id:'Per tanggal',th:'ข้อมูล ณ วันที่',ar:'حتى تاريخ'},
     more:    {ko:'더 보기',en:'Show more',ja:'もっと見る','zh-Hans':'查看更多','zh-Hant':'查看更多',de:'Mehr anzeigen',fr:'Afficher plus',es:'Ver más',it:'Mostra altro',pt:'Ver mais',pl:'Pokaż więcej',ru:'Показать ещё',tr:'Daha fazla göster',vi:'Xem thêm',id:'Lihat lainnya',th:'ดูเพิ่มเติม',ar:'عرض المزيد'},
     wip:     {ko:'준비 중입니다.',en:'Under construction.',ja:'準備中です。','zh-Hans':'准备中。','zh-Hant':'準備中。',de:'In Vorbereitung.',fr:'En préparation.',es:'En preparación.',it:'In preparazione.',pt:'Em preparação.',pl:'W przygotowaniu.',ru:'В разработке.',tr:'Hazırlanıyor.',vi:'Đang chuẩn bị.',id:'Sedang disiapkan.',th:'กำลังเตรียมข้อมูล',ar:'قيد الإعداد.'}
   };
@@ -97,13 +99,14 @@
   GROUPS.sort(function (a, b) { return vcmp(a.key, b.key); });
   GROUPS.forEach(function (g) { g.items.sort(function (a, b) { return vcmp(a.note.v, b.note.v); }); });
   var latest = GROUPS.length ? GROUPS[0].items[0] : null;
-  var OPEN = null, listScroll = 0, onList = false;
-  try { var o = JSON.parse(localStorage.getItem('globeUpdOpen') || 'null'); if (o && o.length !== undefined) OPEN = o; } catch (e) {}
-  if (!OPEN) OPEN = GROUPS.length ? [GROUPS[0].key] : [];
+  // 펼침 기억 = 유저가 직접 누른 것만(키 → true/false). 기본 = 가장 새 대단원만 펼침 → 새 대단원(1.0.2 …)이 생기면 누른 적이 없으니 자동으로 펼쳐진다.
+  var STATE = {}, listScroll = 0, onList = false;
+  try { var o = JSON.parse(localStorage.getItem('globeUpdState') || 'null'); if (o && typeof o === 'object' && o.length === undefined) STATE = o; } catch (e) {}
+  function isOpen(key) { return key in STATE ? !!STATE[key] : (GROUPS.length > 0 && key === GROUPS[0].key); }
   try { listScroll = parseInt(sessionStorage.getItem('globeUpdScroll'), 10) || 0; } catch (e) {}
   function remember() {
     if (onList) listScroll = window.scrollY || window.pageYOffset || 0;
-    try { localStorage.setItem('globeUpdOpen', JSON.stringify(OPEN)); sessionStorage.setItem('globeUpdScroll', String(listScroll)); } catch (e) {}
+    try { localStorage.setItem('globeUpdState', JSON.stringify(STATE)); localStorage.setItem('globeRmState', JSON.stringify(RM_STATE)); sessionStorage.setItem('globeUpdScroll', String(listScroll)); } catch (e) {}
   }
   window.addEventListener('pagehide', remember);
   function row(p, cls) {
@@ -115,16 +118,62 @@
     a.appendChild(el('span', 'dt', dot(p.date)));
     li.appendChild(a); return li;
   }
+  // 탭(1106 마스터 "'업데이트, 로드맵' 두개 다 볼 수 있게") — 로드맵 = 게임 로그인 공지 '업데이트 예정'(= 디코 #roadmap) 같은 글, 17개 언어.
+  var TAB = 'u', R = window.GLOBE_ROADMAP, RM_STATE = {};   // 로드맵 펼침 = 유저가 누른 것만 기억(기본 = 전부 펼침)
+  try { var ro = JSON.parse(localStorage.getItem('globeRmState') || 'null'); if (ro && typeof ro === 'object' && ro.length === undefined) RM_STATE = ro; } catch (e) {}
+  function rmItems() { return ((R && R.items) || []).filter(function (it) { return it.title && it.title[LANG] && it.text && it.text[LANG]; }); }
+  function isRmOpen(id) { return id in RM_STATE ? !!RM_STATE[id] : true; }
+  function tabs(v) {
+    var bar = el('div', 'tabs');
+    [['u', t(T.title), '#'], ['r', t(T.roadmap), '#r']].forEach(function (d) {
+      var b = el('button', null, d[1]); b.type = 'button'; b.setAttribute('role', 'tab'); b.setAttribute('aria-selected', TAB === d[0] ? 'true' : 'false');
+      b.addEventListener('click', function () { if (TAB !== d[0]) { remember(); location.hash = d[2]; } });
+      bar.appendChild(b);
+    });
+    v.appendChild(bar);
+  }
+  function drawRoadmap() {
+    document.title = t(T.roadmap) + ' — Player : Final Raid';
+    $('back').href = '../' + HL; $('back').textContent = '‹ ' + t(T.toGlobe);
+    $('title').textContent = t(T.title); $('title').hidden = false;
+    var v = $('view'); v.innerHTML = ''; tabs(v);
+    var items = rmItems();
+    if (!items.length) { v.appendChild(el('p', 'wip', t(T.wip))); return; }
+    if (R.updated) v.appendChild(el('div', 'rm-dt', t(T.updatedAt) + ' ' + dot(R.updated)));
+    var ol = el('ol', 'list');
+    items.forEach(function (it) {
+      var open = isRmOpen(it.id);
+      var li = el('li', 'grp' + (open ? ' open' : '')), b = el('button', 'gh');
+      b.type = 'button'; b.setAttribute('aria-expanded', open ? 'true' : 'false');
+      b.appendChild(el('span', 'tri')); b.appendChild(el('span', 'tt', it.title[LANG]));
+      var sub = el('ol', 'sub'); sub.hidden = !open;
+      // 본문 줄 하나 = 행 하나(레이드 목록처럼 줄마다 항목인 글)
+      it.text[LANG].split('\n').forEach(function (ln) {
+        if (!ln.trim()) return;
+        var row = el('li', 'rm'), a = el('a'); a.appendChild(el('span', 'tt', ln.trim())); row.appendChild(a); sub.appendChild(row);
+      });
+      b.addEventListener('click', function () {
+        var now = !isRmOpen(it.id); RM_STATE[it.id] = now;
+        li.classList.toggle('open', now); sub.hidden = !now; b.setAttribute('aria-expanded', now ? 'true' : 'false');
+        remember();
+      });
+      li.appendChild(b); li.appendChild(sub); ol.appendChild(li);
+    });
+    v.appendChild(ol);
+    onList = true;
+    var y = listScroll;
+    requestAnimationFrame(function () { window.scrollTo(0, y); });
+  }
   function drawList() {
     document.title = t(T.title) + ' — Player : Final Raid';
     $('back').href = '../' + HL; $('back').textContent = '‹ ' + t(T.toGlobe);
     $('title').textContent = t(T.title); $('title').hidden = false;
-    var v = $('view'); v.innerHTML = '';
+    var v = $('view'); v.innerHTML = ''; tabs(v);
     if (!POSTS.length) { v.appendChild(el('p', 'wip', t(T.wip))); return; }
     var ol = el('ol', 'list');
     POSTS.filter(function (p) { return p.pre; }).forEach(function (p) { ol.appendChild(row(p)); });
     GROUPS.forEach(function (g) {
-      var open = OPEN.indexOf(g.key) >= 0;
+      var open = isOpen(g.key);
       var li = el('li', 'grp' + (open ? ' open' : '')), b = el('button', 'gh');
       b.type = 'button'; b.setAttribute('aria-expanded', open ? 'true' : 'false');
       b.appendChild(el('span', 'tri'));
@@ -134,8 +183,7 @@
       var sub = el('ol', 'sub'); sub.hidden = !open;
       g.items.forEach(function (p) { sub.appendChild(row(p)); });
       b.addEventListener('click', function () {
-        var i = OPEN.indexOf(g.key), now = i < 0;
-        if (now) OPEN.push(g.key); else OPEN.splice(i, 1);
+        var now = !isOpen(g.key); STATE[g.key] = now;
         li.classList.toggle('open', now); sub.hidden = !now; b.setAttribute('aria-expanded', now ? 'true' : 'false');
         remember();
       });
@@ -149,7 +197,7 @@
   function drawPost(post) {
     remember(); onList = false;
     document.title = post.title + ' — Player : Final Raid';
-    $('back').href = '#'; $('back').textContent = '‹ ' + t(T.list);
+    $('back').href = TAB === 'r' ? '#r' : '#'; $('back').textContent = '‹ ' + t(T.list);
     $('title').hidden = true;
     var v = $('view'); v.innerHTML = '';
     var art = el('article', 'art'), hd = el('header', 'art-hd');
@@ -160,7 +208,7 @@
     var bd = el('div', 'art-bd');
     post.render(bd, post);
     art.appendChild(bd);
-    var ft = el('div', 'art-ft'), a = el('a', null, t(T.list)); a.href = '#';
+    var ft = el('div', 'art-ft'), a = el('a', null, t(T.list)); a.href = TAB === 'r' ? '#r' : '#';
     ft.appendChild(a); art.appendChild(ft);
     v.appendChild(art);
     window.scrollTo(0, 0);
@@ -168,7 +216,11 @@
   function route() {
     var m = location.hash.match(/p=([^&]+)/), id = m && decodeURIComponent(m[1]);
     var post = id && POSTS.filter(function (p) { return p.id === id; })[0];
-    if (post) drawPost(post); else drawList();
+    if (post) { drawPost(post); return; }
+    var nt = location.hash === '#r' ? 'r' : 'u';
+    if (nt !== TAB) listScroll = 0;   // 탭을 바꾸면 맨 위부터, 같은 탭 복귀는 그 자리
+    TAB = nt;
+    if (TAB === 'r') drawRoadmap(); else drawList();
   }
   window.addEventListener('hashchange', route);
   route();

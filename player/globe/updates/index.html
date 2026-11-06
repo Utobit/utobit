@@ -9,6 +9,14 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Noto+Sans+KR:wght@400;700;900&family=Noto+Sans+JP:wght@400;700&family=Noto+Sans+TC:wght@400;700&family=Noto+Sans+SC:wght@400;700&family=Noto+Sans+Thai:wght@400;700&family=Noto+Sans+Arabic:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../contents/contents.css">
 <style>
+  /* 탭: 업데이트 | 로드맵 (1106 마스터) */
+  .tabs{display:flex;gap:8px;margin-top:14px}
+  .tabs button{padding:8px 18px;border:1px solid var(--line);border-radius:999px;background:var(--panel);color:var(--muted);font:inherit;font-size:14px;font-weight:700;cursor:pointer}
+  .tabs button[aria-selected=true]{color:#1a1030;border-color:transparent;background:linear-gradient(90deg,#ffe3a3,var(--gold))}
+  .tabs button:hover{border-color:var(--gold)}
+  .rm-dt{margin-top:14px;font-size:13px;color:var(--muted)}
+  .list .rm a{cursor:default}
+  .list .rm .tt{font-weight:500;line-height:1.7;white-space:pre-line}
   /* 게시판 목록 */
   .list{list-style:none;margin-top:18px;border-top:2px solid var(--line-strong)}
   .list a{display:flex;align-items:center;gap:10px;padding:15px 6px;border-bottom:1px solid var(--line);color:var(--text)}
@@ -80,10 +88,11 @@
 <body>
 <a id="back"></a>
 <h1 id="title"></h1>
-<!-- 목록(#) ↔ 글(#p=아이디). 예고 = preview.js(손으로 쓴 글), 업데이트 = notes.js(게임 CDN 패치노트 생성본). 그 언어 글이 있는 것만 보인다 -->
+<!-- 탭 업데이트(#) | 로드맵(#r) ↔ 글(#p=아이디). 예고 = preview.js(손으로 쓴 글), 업데이트 = notes.js, 로드맵 = roadmap.js(둘 다 게임 CDN 패치노트 생성본). 그 언어 글이 있는 것만 보인다 -->
 <main id="view"></main>
 <script src="preview.js"></script>
 <script src="notes.js"></script>
+<script src="roadmap.js"></script>
 <script src="updates.js"></script>
 </body>
 </html>
