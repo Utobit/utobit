@@ -40,6 +40,11 @@
     .hidden { display: none; }
     .policy { font-size: 0.78rem; color: #6b7280; line-height: 1.8; margin-top: 24px; }
     .policy a { color: #2563eb; }
+    .use p, .pol li { font-size: 0.85rem; line-height: 1.8; color: #374151; word-break: keep-all; }
+    .use ul, .pol { padding-left: 1.2rem; margin: 6px 0 10px; }
+    .use li { font-size: 0.85rem; line-height: 1.8; color: #374151; }
+    .use a { color: #2563eb; }
+    .prod.off { cursor: default; }
     footer { border-top: 1px solid #e5e7eb; padding: 20px 16px; text-align: center; font-size: 0.75rem; color: #9ca3af; line-height: 1.8; word-break: keep-all; }
   </style>
 </head>
@@ -78,15 +83,38 @@
     <button class="btn sm" onclick="location.href=location.pathname + (TEST ? '?test=1' : '')">처음으로</button>
   </section>
 
-  <div class="policy">
-    디지털 재화(크리스탈)는 결제 즉시 지급됩니다. 지급된 크리스탈을 사용하지 않았다면 결제일로부터 7일 이내에 청약철회를 요청할 수 있습니다.
-    자세한 내용은 <a href="/player/refund/">청약철회 및 환불정책</a>·<a href="/player/terms/">이용약관</a>을 확인해 주세요.
-    문의: <a href="mailto:clus0109@gmail.com">clus0109@gmail.com</a>
-  </div>
+  <section class="step" id="stepUse">
+    <h2>충전한 크리스탈은 어디에 쓰나요?</h2>
+    <div class="use">
+      <p><b>충전 경로</b> — 이 페이지에서 게임 닉네임으로 계정을 찾고 상품을 고른 뒤 결제하면, 크리스탈이 그 게임 계정에 바로 들어갑니다.</p>
+      <p><b>사용 경로</b> — 게임 앱 「Player : Final Raid」를 열고 아래 화면에서 크리스탈을 사용합니다.</p>
+      <ul>
+        <li>시스템상점: 앰플(전투 버프)·회복 물약·스킬 선택권·스탯 초기화권·시간의 파편 등 게임 아이템 구매</li>
+        <li>에이전트 고용: 전투를 돕는 동료(에이전트) 고용</li>
+        <li>길드: 길드 창설</li>
+      </ul>
+      <p>크리스탈은 게임 안에서만 쓸 수 있으며 현금으로 바꾸거나 다른 계정에 넘길 수 없습니다.</p>
+      <p>앱 내려받기: <a href="https://play.google.com/store/apps/details?id=com.utobit.playerfinalraid" target="_blank" rel="noopener">Google Play</a></p>
+    </div>
+  </section>
+
+  <section class="step" id="stepPolicy">
+    <h2>유의사항 및 환불정책</h2>
+    <ul class="pol">
+      <li>1회 결제 금액은 최대 100,000원입니다.</li>
+      <li>충전된 크리스탈의 이용기간과 환불가능기간은 결제시점으로부터 1년 이내로 제한됩니다.</li>
+      <li>결제한 날부터 7일 이내이고 충전된 크리스탈을 사용하지 않았다면 청약철회(전액 환불)를 요청할 수 있습니다. 일부를 사용한 경우 사용하지 않은 분량에 한해 환불 여부를 확인해 안내합니다.</li>
+      <li>환불은 결제한 수단(카드·간편결제)으로만 진행합니다.</li>
+      <li>충전된 크리스탈은 다른 이용자에게 양도할 수 없습니다.</li>
+      <li>환불 신청: 이메일 <a href="mailto:clus0109@gmail.com">clus0109@gmail.com</a> (주문번호·결제일시·게임 닉네임·사유를 적어 주세요). 3영업일 이내에 확인해 안내합니다.</li>
+    </ul>
+    <p class="policy">자세한 내용은 <a href="/player/refund/">청약철회 및 환불정책</a>·<a href="/player/terms/">이용약관</a>을 확인해 주세요.</p>
+  </section>
 </main>
 <footer>
-  상호: 유토비트 | 대표자: <span id="bizOwner">(확인 중)</span> | 사업자등록번호: 598-01-03840<br>
-  통신판매업 신고번호: <span id="bizMailOrder">(신고 처리 중)</span> | 주소: <span id="bizAddr">(확인 중)</span> | 이메일: clus0109@gmail.com
+  상호: 유토비트(utobit) | 대표자: 박영시 | 사업자등록번호: 598-01-03840<br>
+  주소: 충청북도 충주시 연수서2길 7, 301호(연수동) | 전화: <span id="bizTel">(등록 중)</span><br>
+  통신판매업 신고번호: <span id="bizMailOrder">(신고 처리 중)</span> | 이메일: clus0109@gmail.com
 </footer>
 
 <script>
@@ -97,6 +125,10 @@ const API = TEST ? "https://uwpaalwrka.execute-api.ap-northeast-2.amazonaws.com/
 const $ = (id) => document.getElementById(id);
 const won = (n) => "₩" + Number(n).toLocaleString("ko-KR");
 const num = (n) => Number(n).toLocaleString("ko-KR");
+// 판매 상품(서버 표 lambda_purchase_verify.PRICE_KRW 와 같은 값 — 결제 금액은 언제나 서버가 정한다. 이 표는 결제 개통 전 안내용)
+const STATIC_PRODUCTS = [["크리스탈 1,000개", 1100], ["크리스탈 3,000개", 3300], ["크리스탈 5,000개", 5500], ["성좌와의 계약(30일)", 5500],
+  ["크리스탈 10,000개", 11000], ["시스템의 큰손", 11000], ["이나리 스타터 팩", 11000], ["헌터 패스", 25000], ["크리스탈 30,000개", 33000],
+  ["이나리 수확제 팩", 33000], ["크리스탈 50,000개", 55000], ["미드나이트 소드 팩", 55000], ["이나리 풀 팩", 55000], ["크리스탈 100,000개", 100000]];
 let PRODUCTS = [], CLIENT_KEY = "", picked = null, widgets = null, order = null;
 
 async function api(body) {
@@ -134,7 +166,11 @@ async function findAccount() {
 async function loadProducts() {
   const r = await api({ action: "products" });
   if (!r.ok) {
-    $("products").textContent = r.error === "toss_not_configured" ? "웹 결제를 준비하고 있습니다. 곧 열립니다." : "상품을 불러오지 못했습니다. 잠시 뒤 다시 시도해 주세요.";
+    if (r.error === "toss_not_configured") {
+      $("products").innerHTML = STATIC_PRODUCTS.map(p => `<div class="prod off"><div class="nm">${p[0]}</div><div class="pr">${won(p[1])}</div>
+        <div class="bn">웹 결제 보너스 +${num(Math.floor(p[1] / 11))} 크리스탈</div></div>`).join("");
+      banner("info", "웹 결제를 준비하고 있습니다. 결제가 열리면 이 화면에서 바로 구매할 수 있습니다.");
+    } else $("products").textContent = "상품을 불러오지 못했습니다. 잠시 뒤 다시 시도해 주세요.";
     return;
   }
   PRODUCTS = r.products; CLIENT_KEY = r.clientKey;
