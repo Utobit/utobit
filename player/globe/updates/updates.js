@@ -1,5 +1,5 @@
 /* 플레이어 지구본 › 업데이트 게시판 (1104 마스터 '웹 페이지에 업데이트 게시판' / 카페 업데이트 글 형식). 17개 언어.
-   목록 = 예고(preview.js, 맨 위 고정) + 업데이트(notes.js = 게임 CDN 패치노트 그대로).
+   목록 = 예고(preview.js, 맨 위 고정) + 업데이트(notes.js = 게임 CDN 패치노트 그대로) — 대단원(X.Y.Z) › 글(X.Y.Z.W) 탐색기 형태.
    글 = ❖ 제목 · 줄 목록 · 일러스트 액자 카드. 주소 #p=pre(예고) / #p=v1.0.1.50(업데이트).
    그 언어 글이 없는 것은 목록에 넣지 않는다(다른 언어로 대신 보여 주지 않는다). */
 (function () {
@@ -12,7 +12,6 @@
     more:    {ko:'더 보기',en:'Show more',ja:'もっと見る','zh-Hans':'查看更多','zh-Hant':'查看更多',de:'Mehr anzeigen',fr:'Afficher plus',es:'Ver más',it:'Mostra altro',pt:'Ver mais',pl:'Pokaż więcej',ru:'Показать ещё',tr:'Daha fazla göster',vi:'Xem thêm',id:'Lihat lainnya',th:'ดูเพิ่มเติม',ar:'عرض المزيد'},
     wip:     {ko:'준비 중입니다.',en:'Under construction.',ja:'準備中です。','zh-Hans':'准备中。','zh-Hant':'準備中。',de:'In Vorbereitung.',fr:'En préparation.',es:'En preparación.',it:'In preparazione.',pt:'Em preparação.',pl:'W przygotowaniu.',ru:'В разработке.',tr:'Hazırlanıyor.',vi:'Đang chuẩn bị.',id:'Sedang disiapkan.',th:'กำลังเตรียมข้อมูล',ar:'قيد الإعداد.'}
   };
-  var PAGE = 20;
 
   var LANG = (function () {
     var s = null; try { s = localStorage.getItem('globeLang'); } catch (e) {}
@@ -83,34 +82,72 @@
     flush();
   }
 
-  var shown = 0;
+  // 목록 = 탐색기 형태(1106 마스터 "대단원 1.0.1 / 1.0.2 … 하부에 1.0.1.1 이렇게 탐색기 형태로").
+  // 대단원 = X.Y.Z(반고정 버전), 하부 = X.Y.Z.W 글. 펼침 상태·스크롤은 기억한다(1106 마스터 "펼쳐놨으면 계속 펼쳐놓으셈") —
+  // 글에 들어갔다 나와도, 다시 열어도 그대로. 처음엔 가장 새 대단원만 펼침.
+  function vnum(v) { return v.split('.').map(function (x) { return parseInt(x, 10) || 0; }); }
+  function vcmp(a, b) { a = vnum(a); b = vnum(b); for (var i = 0; i < 4; i++) { if ((a[i] || 0) !== (b[i] || 0)) return (b[i] || 0) - (a[i] || 0); } return 0; }
+  var GROUPS = [], gmap = {};
+  POSTS.forEach(function (p) {
+    if (p.pre) return;
+    var k = p.note.v.split('.').slice(0, 3).join('.');
+    if (!gmap[k]) { gmap[k] = { key: k, items: [] }; GROUPS.push(gmap[k]); }
+    gmap[k].items.push(p);
+  });
+  GROUPS.sort(function (a, b) { return vcmp(a.key, b.key); });
+  GROUPS.forEach(function (g) { g.items.sort(function (a, b) { return vcmp(a.note.v, b.note.v); }); });
+  var latest = GROUPS.length ? GROUPS[0].items[0] : null;
+  var OPEN = null, listScroll = 0, onList = false;
+  try { var o = JSON.parse(localStorage.getItem('globeUpdOpen') || 'null'); if (o && o.length !== undefined) OPEN = o; } catch (e) {}
+  if (!OPEN) OPEN = GROUPS.length ? [GROUPS[0].key] : [];
+  try { listScroll = parseInt(sessionStorage.getItem('globeUpdScroll'), 10) || 0; } catch (e) {}
+  function remember() {
+    if (onList) listScroll = window.scrollY || window.pageYOffset || 0;
+    try { localStorage.setItem('globeUpdOpen', JSON.stringify(OPEN)); sessionStorage.setItem('globeUpdScroll', String(listScroll)); } catch (e) {}
+  }
+  window.addEventListener('pagehide', remember);
+  function row(p, cls) {
+    var li = el('li', cls), a = el('a');
+    a.href = '#p=' + encodeURIComponent(p.id);
+    a.appendChild(el('span', 'cat' + (p.pre ? ' pre' : ''), p.cat));
+    a.appendChild(el('span', 'tt', p.title));
+    if (p.pre || p === latest) a.appendChild(el('span', 'new'));
+    a.appendChild(el('span', 'dt', dot(p.date)));
+    li.appendChild(a); return li;
+  }
   function drawList() {
     document.title = t(T.title) + ' — Player : Final Raid';
     $('back').href = '../' + HL; $('back').textContent = '‹ ' + t(T.toGlobe);
     $('title').textContent = t(T.title); $('title').hidden = false;
     var v = $('view'); v.innerHTML = '';
     if (!POSTS.length) { v.appendChild(el('p', 'wip', t(T.wip))); return; }
-    var ol = el('ol', 'list'), more = el('button', 'more', t(T.more));
-    more.type = 'button';
-    v.appendChild(ol); v.appendChild(more);
-    shown = 0;
-    function page() {
-      POSTS.slice(shown, shown + PAGE).forEach(function (p, k) {
-        var li = el('li'), a = el('a');
-        a.href = '#p=' + encodeURIComponent(p.id);
-        a.appendChild(el('span', 'cat' + (p.pre ? ' pre' : ''), p.cat));
-        a.appendChild(el('span', 'tt', p.title));
-        if (shown + k <= (pv ? 1 : 0)) a.appendChild(el('span', 'new'));
-        a.appendChild(el('span', 'dt', dot(p.date)));
-        li.appendChild(a); ol.appendChild(li);
+    var ol = el('ol', 'list');
+    POSTS.filter(function (p) { return p.pre; }).forEach(function (p) { ol.appendChild(row(p)); });
+    GROUPS.forEach(function (g) {
+      var open = OPEN.indexOf(g.key) >= 0;
+      var li = el('li', 'grp' + (open ? ' open' : '')), b = el('button', 'gh');
+      b.type = 'button'; b.setAttribute('aria-expanded', open ? 'true' : 'false');
+      b.appendChild(el('span', 'tri'));
+      b.appendChild(el('span', 'tt', 'v' + g.key));
+      b.appendChild(el('span', 'cnt', String(g.items.length)));
+      b.appendChild(el('span', 'dt', dot(g.items[g.items.length - 1].date) + ' ~ ' + dot(g.items[0].date)));
+      var sub = el('ol', 'sub'); sub.hidden = !open;
+      g.items.forEach(function (p) { sub.appendChild(row(p)); });
+      b.addEventListener('click', function () {
+        var i = OPEN.indexOf(g.key), now = i < 0;
+        if (now) OPEN.push(g.key); else OPEN.splice(i, 1);
+        li.classList.toggle('open', now); sub.hidden = !now; b.setAttribute('aria-expanded', now ? 'true' : 'false');
+        remember();
       });
-      shown = Math.min(POSTS.length, shown + PAGE);
-      more.hidden = shown >= POSTS.length;
-    }
-    more.addEventListener('click', page);
-    page();
+      li.appendChild(b); li.appendChild(sub); ol.appendChild(li);
+    });
+    v.appendChild(ol);
+    onList = true;
+    var y = listScroll;
+    requestAnimationFrame(function () { window.scrollTo(0, y); });
   }
   function drawPost(post) {
+    remember(); onList = false;
     document.title = post.title + ' — Player : Final Raid';
     $('back').href = '#'; $('back').textContent = '‹ ' + t(T.list);
     $('title').hidden = true;

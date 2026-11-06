@@ -18,8 +18,18 @@
   .list .tt{flex:1;min-width:0;font-size:15px;font-weight:600}
   .list .dt{flex:none;font-size:13px;color:var(--muted)}
   .list .new{flex:none;width:6px;height:6px;border-radius:50%;background:var(--red);box-shadow:0 0 6px var(--red)}
-  .more{display:block;margin:16px auto 0;padding:10px 22px;border:1px solid var(--line-strong);border-radius:999px;background:var(--panel2);color:var(--text);font:inherit;font-size:14px;cursor:pointer}
-  .more:hover{border-color:var(--gold)}
+  /* 대단원(탐색기) */
+  .list .gh{display:flex;align-items:center;gap:10px;width:100%;padding:15px 6px;border:0;border-bottom:1px solid var(--line);background:var(--panel);color:var(--text);font:inherit;text-align:start;cursor:pointer}
+  .list .gh:hover{background:rgba(150,130,255,.12)}
+  .list .gh .tt{font-size:16px;font-weight:800}
+  .list .tri{flex:none;width:0;height:0;border-style:solid;border-width:5px 0 5px 7px;border-color:transparent transparent transparent var(--gold);transition:transform .15s}
+  .list .grp.open .tri{transform:rotate(90deg)}
+  .list .cnt{flex:none;padding:1px 8px;border-radius:999px;font-size:12px;font-weight:700;color:var(--muted);border:1px solid var(--line)}
+  .list .sub{list-style:none}
+  .list .sub a{padding-inline-start:30px;background:rgba(0,0,0,.12)}
+  .list .sub a:hover{background:rgba(150,130,255,.08)}
+  [dir=rtl] .list .tri{border-width:5px 7px 5px 0;border-color:transparent var(--gold) transparent transparent}
+  [dir=rtl] .list .grp.open .tri{transform:rotate(-90deg)}
 
   /* 글 */
   .art{margin-top:18px}
