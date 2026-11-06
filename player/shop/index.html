@@ -178,8 +178,8 @@ async function loadProducts() {
   $("products").innerHTML = PRODUCTS.map((p, i) => `<button class="prod" data-i="${i}">
       <div class="nm">${p.orderName}</div><div class="pr">${won(p.amount)}</div>
       <div class="bn">웹 결제 보너스 +${num(p.webBonus)} 크리스탈</div></button>`).join("");
-  document.querySelectorAll(".prod").forEach(b => b.onclick = () => {
-    document.querySelectorAll(".prod").forEach(x => x.classList.remove("sel"));
+  document.querySelectorAll("#products .prod").forEach(b => b.onclick = () => {
+    document.querySelectorAll("#products .prod").forEach(x => x.classList.remove("sel"));
     b.classList.add("sel"); picked = PRODUCTS[+b.dataset.i]; refreshPay();
   });
 }
