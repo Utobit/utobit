@@ -146,19 +146,25 @@ function banner(kind, html) { $("banner").innerHTML = html ? `<div class="msg ${
 let ACCT = null;
 const esc = (t) => String(t).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 function renderAccount() {
-  $("acctBox").innerHTML = `<div class="acct"><input id="nickIn" placeholder="게임 닉네임(대소문자까지 정확히)" maxlength="40">
+  $("acctBox").innerHTML = `<div class="acct"><input id="nickIn" placeholder="게임 닉네임 2글자 이상 입력" maxlength="40" autocomplete="off">
     <button class="btn sm" id="nickBtn">찾기</button></div><div id="acctList"></div>`;
-  $("nickBtn").onclick = findAccount;
-  $("nickIn").onkeydown = (e) => { if (e.key === "Enter") findAccount(); };
+  $("nickBtn").onclick = () => findAccount(true);
+  $("nickIn").onkeydown = (e) => { if (e.key === "Enter") findAccount(true); };
+  $("nickIn").oninput = () => { clearTimeout(SUG_T); SUG_T = setTimeout(() => findAccount(false), 300); };
 }
-async function findAccount() {
-  const nick = $("nickIn").value.trim(); if (!nick) return;
+let SUG_T = null, SUG_SEQ = 0;
+// 1106 마스터 "자동검색 — 검색하면 여러개 나오고 그 중에서 내꺼 클릭": 입력하는 대로 비슷한 닉네임 후보(최대 8)를 띄운다.
+async function findAccount(now) {
+  const nick = $("nickIn").value.trim();
   ACCT = null; refreshPay();
+  if (nick.length < 2) { $("acctList").innerHTML = nick && now ? `<p class="who">2글자 이상 입력해 주세요.</p>` : ""; return; }
+  const seq = ++SUG_SEQ;
   $("acctList").innerHTML = `<p class="who">찾는 중…</p>`;
-  const r = await api({ action: "lookup", nickname: nick });
+  const r = await api({ action: "lookup", nickname: nick, partial: true });
+  if (seq !== SUG_SEQ) return;   // 더 최근 입력의 결과만 그린다
   const list = r.accounts || [];
-  if (!list.length) { $("acctList").innerHTML = `<p class="who">이 닉네임의 계정을 찾지 못했습니다. 게임 안 닉네임과 똑같이 입력해 주세요.</p>`; return; }
-  $("acctList").innerHTML = `<p class="who">받을 계정을 눌러 고르세요.</p><div class="grid">` + list.map((a, i) =>
+  if (!list.length) { $("acctList").innerHTML = `<p class="who">'${esc(nick)}'(이)가 들어간 닉네임을 찾지 못했습니다.</p>`; return; }
+  $("acctList").innerHTML = `<p class="who">내 계정을 눌러 고르세요. 레벨·가입 순번으로 확인할 수 있습니다.</p><div class="grid">` + list.map((a, i) =>
     `<button class="prod acc" data-i="${i}"><div class="nm">${esc(a.nickname)}</div><div class="pr">Lv.${a.level}</div><div class="bn">가입 순번 #${a.regNo}</div></button>`).join("") + `</div>`;
   document.querySelectorAll(".acc").forEach(b => b.onclick = () => {
     document.querySelectorAll(".acc").forEach(x => x.classList.remove("sel"));
