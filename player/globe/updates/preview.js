@@ -2,7 +2,8 @@
    1104 마스터 구술: 도준혁 출전 + 스킬 9종. 한국어 = 마스터 원문 그대로(이야기 = 1104 2차 구술, 문단 배열).
    용어 = 게임 언어팩(범람 게이트 raid.012·행운 ui.stat_luk·기본공격 등록형 skill_format.004·너클 weapon_type.010·마도구 weapon_type.004 …).
    '더 빠르게'는 설명 원문이 비어 있어 이름·종류만. 예고를 내리려면 window.GLOBE_PREVIEW = null. */
-window.GLOBE_PREVIEW = {
+window.GLOBE_PREVIEW = null; // 1114 마스터 "예고는 내리고" — 도준혁 출전 예고 내림(아래 원문은 보관)
+window.GLOBE_PREVIEW_ARCHIVE_1104 = {
   date: '2026-11-04',
   img: 'dojunhyeok.jpg',
   // 스킬 = [등급, 종류(basic|passive|active|counter|''), 무기 제한(true = 너클·마도구)]
