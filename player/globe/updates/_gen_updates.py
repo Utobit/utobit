@@ -23,8 +23,11 @@ def by_lang(rows):
 
 
 def main():
-    if len(sys.argv) > 1:
-        raw = open(sys.argv[1], encoding="utf-8").read()
+    # 1114: --cut X.Y.Z.W = 스토어 게시 확인된 버전까지(디코 게시 전이라도). 파일 인자 = 로컬 patchnotes.json
+    args = [a for a in sys.argv[1:] if not a.startswith("--cut")]
+    cut_arg = next((a.split("=", 1)[1] for a in sys.argv[1:] if a.startswith("--cut=")), None)
+    if args:
+        raw = open(args[0], encoding="utf-8").read()
     else:
         raw = urllib.request.urlopen(CDN, timeout=30).read().decode("utf-8")
     src = json.loads(raw)
@@ -35,6 +38,8 @@ def main():
     try:
         posted = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "..", "tools", "discord_patch_notes_posted.json"), encoding="utf-8"))
         cut = max((k for k in posted.keys()), key=vkey)
+        if cut_arg and vkey(cut_arg) > vkey(cut):
+            cut = cut_arg
     except Exception as e:
         print(f"[updates] 출시 컷을 읽지 못함({e}) — 컷 없이 전부")
     seen, notes, held = set(), [], []
