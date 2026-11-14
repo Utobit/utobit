@@ -551,6 +551,7 @@
     solo: '개인', members: '인원', memberN: function (n) { return '인원 ' + n + '명'; }, master: '마스터',
     wgTitle: '월드급 게이트 발생', wgRaid: function (c) { return c + ' 레이드'; }, wgWait: function (n, m) { return '참여 대기 ' + n + ' / ' + m + '명 (선착순)'; },
     wgNote: '참여 신청은 게임 안 협회 › 원정에서 할 수 있습니다.',
+    wgBattle: '전투 진행 중', wgDone: '공략 완료',
     brTitle: '보스 레이드', brName: '서리늑대', brLoc: '오슬로 · 실시간 4인 파티 레이드', brSoon: '오픈'
   } : {
     ph: 'Nickname or #hunter number', go: 'Search', level: 'LEVEL', stat: 'TOTAL STATS', power: 'COMBAT POWER',
@@ -576,6 +577,7 @@
     solo: 'Individual', members: 'MEMBERS', memberN: function (n) { return n + (n === 1 ? ' member' : ' members'); }, master: 'Master',
     wgTitle: 'World-class gate detected', wgRaid: function (c) { return c + ' Raid'; }, wgWait: function (n, m) { return 'Waiting to join: ' + n + ' / ' + m + ' (first come, first served)'; },
     wgNote: 'Apply in the game under Association › Raid.',
+    wgBattle: 'Battle in progress', wgDone: 'Cleared',
     brTitle: 'Boss Raid', brName: 'Frost Wolf', brLoc: 'Oslo · Live 4-player party raid', brSoon: 'Open now'
   };
 
@@ -1363,8 +1365,9 @@
     if (wgPopup) { wgPopup.remove(); wgPopup = null; }
     var box = el('div', 'gpop');
     box.appendChild(el('b', null, T.wgTitle + ' · ' + T.wgRaid(wgCity(g))));
-    box.appendChild(el('span', null, T.wgWait(g.waiting || 0, g.cap || 200)));
-    box.appendChild(el('em', null, T.wgNote));
+    var st = g.status || 'recruiting';   // 1114 전투 중·공략 완료 게이트도 표시(게임 지도와 같은 범위)
+    if (st === 'recruiting') { box.appendChild(el('span', null, T.wgWait(g.waiting || 0, g.cap || 200))); box.appendChild(el('em', null, T.wgNote)); }
+    else box.appendChild(el('span', null, st === 'done' ? T.wgDone : T.wgBattle));
     if (map) {
       map.flyTo({ center: [g.lng, g.lat], zoom: 9, duration: still ? 0 : 3000, essential: true });
       wgPopup = new mapboxgl.Popup({ offset: 70, maxWidth: '280px' }).setLngLat([g.lng, g.lat]).setDOMContent(box).addTo(map);
