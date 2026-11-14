@@ -235,6 +235,8 @@
       filter: drop-shadow(0 0 10px rgba(80, 160, 255, .9)); animation: wgspin 14s linear infinite; }   /* 인게임 월드게이트와 같은 그림(스톰아이), 같은 방향으로 빙글 */
     .wg .wgl { position: absolute; top: 100%; left: 50%; transform: translateX(-50%); margin-top: 2px; white-space: nowrap; text-align: center;
       font-weight: 800; font-size: 13px; line-height: 1.25; color: #dff1ff; text-shadow: 0 0 8px rgba(40, 120, 255, .95), 0 1px 2px #000; }
+    .wg.over .img { opacity: .45; animation: none; filter: grayscale(.6); }   /* 끝난 게이트 = 흐리게·정지 */
+    .wg.over .wgl small { color: #ffd76a; font-weight: 700; }
     .wg .wgl small { display: block; font-size: 11px; color: #9fd0ff; }
     @keyframes wgspin { to { transform: rotate(-360deg); } }
     @media (prefers-reduced-motion: reduce) { .wg .img { animation: none; } }
@@ -551,7 +553,7 @@
     solo: '개인', members: '인원', memberN: function (n) { return '인원 ' + n + '명'; }, master: '마스터',
     wgTitle: '월드급 게이트 발생', wgRaid: function (c) { return c + ' 레이드'; }, wgWait: function (n, m) { return '참여 대기 ' + n + ' / ' + m + '명 (선착순)'; },
     wgNote: '참여 신청은 게임 안 협회 › 원정에서 할 수 있습니다.',
-    wgBattle: '전투 진행 중', wgDone: '공략 완료',
+    wgBattle: '전투 진행 중', wgDone: '클리어', wgFail: '공략 실패',
     brTitle: '보스 레이드', brName: '서리늑대', brLoc: '오슬로 · 실시간 4인 파티 레이드', brSoon: '오픈'
   } : {
     ph: 'Nickname or #hunter number', go: 'Search', level: 'LEVEL', stat: 'TOTAL STATS', power: 'COMBAT POWER',
@@ -577,7 +579,7 @@
     solo: 'Individual', members: 'MEMBERS', memberN: function (n) { return n + (n === 1 ? ' member' : ' members'); }, master: 'Master',
     wgTitle: 'World-class gate detected', wgRaid: function (c) { return c + ' Raid'; }, wgWait: function (n, m) { return 'Waiting to join: ' + n + ' / ' + m + ' (first come, first served)'; },
     wgNote: 'Apply in the game under Association › Raid.',
-    wgBattle: 'Battle in progress', wgDone: 'Cleared',
+    wgBattle: 'Battle in progress', wgDone: 'Cleared', wgFail: 'Failed',
     brTitle: 'Boss Raid', brName: 'Frost Wolf', brLoc: 'Oslo · Live 4-player party raid', brSoon: 'Open now'
   };
 
@@ -1360,6 +1362,13 @@
   // 1025 월드게이트(원정) — 마스터 "웹뷰에도 월드게이트 배치" / "'월드급 게이트 발생'으로 안내". 수가 적어 DOM 표식(크게·빙글)으로 그린다.
   var worldGates = [], wgMarkers = [], wgPopup = null;
   function wgCity(g) { return (g.names && g.names[LANG]) || (KO ? g.city : (g.cityEn || g.city)); }
+  // 1114 마스터("월드게이트 발생- 이 기본인데. 클리어 된 게이트는 클리어라고 표시"): 표식 아래 작은 글 = 발생(모집 중) / 전투 진행 중 / 클리어 / 공략 실패
+  function wgState(g) {
+    var st = g.status || 'recruiting';
+    if (st === 'done') return g.cleared === false ? T.wgFail : T.wgDone;
+    if (st === 'battle') return T.wgBattle;
+    return T.wgTitle;
+  }
   function openWorldGate(g) {
     userTouched = true;
     if (wgPopup) { wgPopup.remove(); wgPopup = null; }
@@ -1367,7 +1376,7 @@
     box.appendChild(el('b', null, T.wgTitle + ' · ' + T.wgRaid(wgCity(g))));
     var st = g.status || 'recruiting';   // 1114 전투 중·공략 완료 게이트도 표시(게임 지도와 같은 범위)
     if (st === 'recruiting') { box.appendChild(el('span', null, T.wgWait(g.waiting || 0, g.cap || 200))); box.appendChild(el('em', null, T.wgNote)); }
-    else box.appendChild(el('span', null, st === 'done' ? T.wgDone : T.wgBattle));
+    else box.appendChild(el('span', null, wgState(g)));
     if (map) {
       map.flyTo({ center: [g.lng, g.lat], zoom: 9, duration: still ? 0 : 3000, essential: true });
       wgPopup = new mapboxgl.Popup({ offset: 70, maxWidth: '280px' }).setLngLat([g.lng, g.lat]).setDOMContent(box).addTo(map);
@@ -1379,7 +1388,8 @@
     worldGates.forEach(function (g) {
       var d = el('div', (g.stage || 11) >= 12 ? 'wg red' : 'wg'); d.style.setProperty('z-index', '40', 'important');   // 유적지·게이트 표식보다 위
       d.appendChild(el('i', 'img'));
-      var l = el('div', 'wgl', T.wgRaid(wgCity(g))); l.appendChild(el('small', null, T.wgTitle)); d.appendChild(l);
+      var l = el('div', 'wgl', T.wgRaid(wgCity(g))); l.appendChild(el('small', null, wgState(g))); d.appendChild(l);
+      if (g.status === 'done') d.classList.add('over');
       d.addEventListener('click', function (e) { e.stopPropagation(); openWorldGate(g); });
       wgMarkers.push(new mapboxgl.Marker({ element: d, anchor: 'center' }).setLngLat([g.lng, g.lat]).addTo(map));
     });
