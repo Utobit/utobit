@@ -1,0 +1,59 @@
+/* 컨텐츠 안내 › 보스레이드 — 보스 목록·보스별 정보. 색 = ../contents.css 변수 그대로. 버튼 반응 = 색만(확대·축소 없음) */
+h2.sec{margin-top:28px;font-size:17px;font-weight:700;color:var(--gold)}
+.blist{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.brow{display:flex;align-items:center;gap:12px;padding:10px 14px;border:1px solid var(--line);border-radius:14px;color:var(--text);
+  background:linear-gradient(120deg,rgba(40,30,90,.55),rgba(14,10,34,.8));transition:border-color .15s,background .15s}
+.brow:hover,.brow:active{border-color:var(--gold);background:linear-gradient(120deg,rgba(60,45,120,.7),rgba(20,15,48,.9))}
+.no{flex:none;width:22px;text-align:center;font-size:13px;font-weight:700;color:var(--muted)}
+.bface{flex:none;display:grid;place-items:center;width:52px;height:52px;border-radius:50%;overflow:hidden;border:1px solid var(--line-strong);background:rgba(20,15,48,.9)}
+.bface img{width:100%;height:100%;object-fit:cover}
+.bface.none svg{width:26px;height:26px;fill:none;stroke:var(--muted);stroke-width:1.6;stroke-linecap:round}
+.binfo{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.4}
+.binfo b{font-size:15.5px;font-weight:700}
+.binfo i{font-style:normal;font-size:12.5px;color:var(--muted)}
+.bmeta{flex:none;display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.bmeta em{font-style:normal;font-size:12.5px;font-weight:700;color:var(--cyan);white-space:nowrap}
+.chip{display:inline-block;padding:2px 9px;border-radius:999px;font-size:11.5px;font-weight:700;white-space:nowrap;border:1px solid var(--line-strong);color:var(--muted)}
+.chip.on{border-color:rgba(255,210,122,.7);color:var(--gold);background:rgba(255,210,122,.1)}
+
+/* 보스별 정보 — 머리 */
+h1.hero .bface.lg{width:72px;height:72px}
+h1.hero .htxt{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.3}
+h1.hero .htxt small{font-size:13.5px;font-weight:600;color:var(--cyan)}
+h1.hero .chip{flex:none;font-size:12.5px}
+
+.card{margin-top:16px;padding:16px 18px;border:1px solid var(--line);border-radius:18px;background:var(--panel)}
+.card h2{font-size:16px;font-weight:700;color:var(--gold);margin-bottom:12px}
+.card.note b{display:block;font-size:14.5px;color:var(--text)}
+.card.note p{margin-top:6px;font-size:14px;color:var(--body)}
+.art{display:block;width:100%;height:auto;border-radius:12px}
+.art.look{max-width:420px;margin:0 auto;filter:drop-shadow(0 0 22px rgba(94,230,255,.25))}
+.wip.sm{margin-top:0;padding:26px 14px}
+.wip.sm small{font-size:12.5px}
+
+/* 단계 고르기 */
+.stages{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:20px}
+.stages button{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 4px;border:1px solid var(--line);border-radius:12px;
+  background:var(--panel2);color:var(--muted);font:inherit;cursor:pointer;transition:border-color .15s,color .15s,background .15s}
+.stages button b{font-size:13.5px}
+.stages button span{font-size:12px}
+.stages button:hover{border-color:var(--line-strong);color:var(--text)}
+.stages button.on{border-color:var(--gold);color:var(--gold);background:rgba(255,210,122,.1)}
+.stages .stat{grid-column:1/-1;margin-top:4px;padding:10px 14px;border-radius:12px;background:rgba(20,15,48,.6);font-size:13.5px;color:var(--body);line-height:1.7}
+
+/* 패턴 */
+.pats{list-style:none;display:flex;flex-direction:column;gap:10px}
+.pats li{display:flex;gap:12px;align-items:flex-start}
+.pats img{flex:none;width:56px;height:56px;border-radius:10px;border:1px solid var(--line-strong)}
+.pats b{font-size:14.5px}
+.pats p{font-size:13.5px;color:var(--body);line-height:1.6}
+
+/* 보상·드랍 */
+.rline{font-size:14px;color:var(--body)}
+.drops{list-style:none;display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.drops li{display:flex;align-items:center;gap:12px;padding:8px 12px;border:1px solid var(--line);border-radius:12px;background:rgba(20,15,48,.6)}
+.drops img{flex:none;width:44px;height:44px;object-fit:contain}
+.drops b{flex:1;min-width:0;font-size:14.5px}
+.drops em{flex:none;font-style:normal;font-weight:700;color:var(--gold)}
+
+@media (max-width:480px){.bface{width:44px;height:44px} .brow{gap:9px;padding:9px 11px} .binfo b{font-size:14.5px} h1.hero .bface.lg{width:56px;height:56px} h1.hero{flex-wrap:wrap}}
