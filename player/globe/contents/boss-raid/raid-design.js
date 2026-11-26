@@ -12,7 +12,7 @@ function e(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return 
 function w(k,v){return lang==='ko'?k:v;}function $(id){return document.getElementById(id);}
 function fmt(s){var a=arguments;return s.replace(/\{(\d+)\}/g,function(m,i){return a[+i+1];});}
 function prop(b){return (window.BOSS_RAID_DRAFTS||{})[b.id]||null;}
-function art(b){return b.id!=='frost-wolf'?'img/drafts/'+b.id+'.jpg':b.concept||b.look||b.face;}
+function art(b){if(b.id==='ruby-phoenix')return '';return b.id!=='frost-wolf'?'img/drafts/'+b.id+'.jpg':b.concept||b.look||b.face;}
 function color(b){return (prop(b)||{}).color||'#90c6e7';}
 function status(b){return '<span class="status '+(b.open?'available':'planned')+'">'+e(t(b.open?L.open:L.soon))+'</span>';}
 function badge(){return '<span class="draft-badge">'+w('기획 초안','Design draft')+'</span>';}
