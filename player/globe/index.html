@@ -1586,6 +1586,8 @@
     b.addEventListener('click', function () {
       if (p[0] === LANG) { openBurgerPanel('bmenu'); return; }
       try { localStorage.setItem('globeLang', p[0]); } catch (e) {}
+      // 1127: 주소에 ?hl= 이 붙어 있으면(하위 페이지에서 돌아온 주소·공유 주소) 그 값이 저장값보다 먼저라 새로고침해도 언어가 안 바뀌었다 → 주소의 hl 도 고른 언어로 바꾼다
+      try { var u = new URL(location.href); u.searchParams.delete('lang'); u.searchParams.set('hl', p[0]); location.replace(u.toString()); return; } catch (e) {}
       location.reload();
     });
     $('lmenu').appendChild(b);
