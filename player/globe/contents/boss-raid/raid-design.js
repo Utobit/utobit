@@ -9,7 +9,9 @@ var draft=q.get('draft')==='1',detail=document.body.dataset.view==='boss',P=deta
 document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';document.body.classList.add('raid-guide');
 function t(x){return x&&(x[lang]||x.en||x.ko)||'';}
 function e(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
-function w(k,v){return lang==='ko'?k:v;}function $(id){return document.getElementById(id);}
+var TR=(window.BOSS_RAID_I18N||{})[lang]||{},TRE=(window.BOSS_RAID_I18N||{}).en||{};
+function tr(s){return lang==='ko'||!s?s:(TR[s]||TRE[s]||s);}
+function w(k,v){return lang==='ko'?k:(TR[k]||v);}function $(id){return document.getElementById(id);}
 function fmt(s){var a=arguments;return s.replace(/\{(\d+)\}/g,function(m,i){return a[+i+1];});}
 function prop(b){return (window.BOSS_RAID_DRAFTS||{})[b.id]||null;}
 function art(b){if(b.id==='ruby-phoenix')return b.concept||b.face||'';return b.id!=='frost-wolf'?'img/drafts/'+b.id+'.jpg':b.concept||b.look||b.face;}
@@ -20,20 +22,20 @@ function url(b){return(detail?'index.html':'boss/index.html')+suffix+'&id='+enco
 function pic(b,c){return art(b)?'<img class="'+c+'" src="'+P+art(b)+'" alt="'+e(t(b.name))+'" loading="lazy">':'<div class="art-pending">'+e(t(L.tba))+'</div>';}
 function sec(id,title,body,tag){return '<section id="'+id+'" class="detail-section"><div class="section-heading"><h2>'+e(title)+'</h2>'+(tag||'')+'</div>'+body+'</section>';}
 function notice(){return '<aside class="review-note"><b>'+w('1차 디자인 검토본','First design review')+'</b><span>'+w('미출시 보스의 이미지와 스킬은 검토용 초안입니다.','Unreleased boss images and skills are review drafts.')+'</span></aside>';}
-function skills(a){return '<div class="skill-grid">'+a.map(function(s){return '<article class="skill"><div class="skill-head"><div><small>'+e(s[1])+'</small><h3>'+e(s[0])+'</h3></div></div><p>'+e(s[3])+'</p></article>';}).join('')+'</div>';}
+function skills(a){return '<div class="skill-grid">'+a.map(function(s){return '<article class="skill"><div class="skill-head"><div><small>'+e(tr(s[1]))+'</small><h3>'+e(tr(s[0]))+'</h3></div></div><p>'+e(tr(s[3]))+'</p></article>';}).join('')+'</div>';}
 function drops(b,p){
  var a=b.drops;
  if(a&&a.length)return '<div class="reward-grid">'+a.map(function(d){return '<article class="reward"><img src="'+P+d.icon+'" alt="" loading="lazy"><div><h3>'+e(t(d.name))+'</h3><span class="drop-rate">'+e(d.pct)+'%</span></div></article>';}).join('')+'</div>';
- if(p&&p.rewards&&p.rewards.length)return '<div class="reward-grid">'+p.rewards.map(function(d){return '<article class="reward"><div><h3>'+e(d[0])+'</h3><p>'+e(d[2])+'</p></div></article>';}).join('')+'</div>';
+ if(p&&p.rewards&&p.rewards.length)return '<div class="reward-grid">'+p.rewards.map(function(d){return '<article class="reward"><div><h3>'+e(tr(d[0]))+'</h3><p>'+e(tr(d[2]))+'</p></div></article>';}).join('')+'</div>';
  return '<p>'+e(t(L.tba))+'</p>';
 }
 if(!detail){
  document.title=t(L.raid)+' — PLAYER';$('title').className='catalog-title';$('title').innerHTML='<span class="eyebrow">PLAYER / FIELD ARCHIVE</span>'+e(t(L.raid));
  var guide=$('body').innerHTML;$('body').innerHTML=(draft?notice():'')+'<details class="guide-rules"><summary>'+w('레이드 입장 및 진행 안내','Entry & raid guide')+'</summary>'+guide+'</details>';
  $('bosses').innerHTML='<header class="catalog-head"><div><h2>'+e(t(L.list))+'</h2></div><span id="result-count"></span></header><div class="catalog-tools"><div class="filters" role="group" aria-label="'+w('공개 상태','Availability')+'"><button data-filter="all" aria-pressed="true">'+w('전체','All')+'</button><button data-filter="open" aria-pressed="false">'+e(t(L.open))+'</button><button data-filter="planned" aria-pressed="false">'+e(t(L.soon))+'</button></div><label class="search"><span>'+w('보스 검색','Search')+'</span><input id="boss-search" type="search" placeholder="'+w('이름 또는 특징','Name or trait')+'"></label></div><nav id="boss-grid" class="boss-grid" aria-label="'+e(t(L.list))+'"></nav>';
- var filter='all';function draw(){var term=$('boss-search').value.trim().toLowerCase(),a=D.bosses.filter(function(b){return(filter==='all'||(filter==='open'?b.open:!b.open))&&[t(b.name),t(b.trait),(prop(b)||{}).role||''].join(' ').toLowerCase().includes(term);});
+ var filter='all';function draw(){var term=$('boss-search').value.trim().toLowerCase(),a=D.bosses.filter(function(b){return(filter==='all'||(filter==='open'?b.open:!b.open))&&[t(b.name),t(b.trait),tr((prop(b)||{}).role||'')].join(' ').toLowerCase().includes(term);});
  $('result-count').textContent=a.length+' / '+D.bosses.length;
- $('boss-grid').innerHTML=a.length?a.map(function(b){var p=prop(b);return '<a class="boss-card" style="--accent:'+color(b)+'" href="'+url(b)+'"><div class="card-art">'+pic(b,'boss-art')+'<span class="catalog-number">'+String(D.bosses.indexOf(b)+1).padStart(2,'0')+'</span>'+status(b)+'</div><div class="card-copy"><div class="card-level">'+(b.lv?'LV. '+e(b.lv):w('레벨 미정','Level TBA'))+'</div><h3>'+e(t(b.name))+'</h3><p>'+e(p?p.role:t(b.trait)||t(L.tba))+'</p><div class="card-footer"><span>'+w('상세 정보','View dossier')+'</span><span aria-hidden="true">↗</span></div></div></a>';}).join(''):'<p class="empty">'+w('검색 결과가 없습니다.','No matching bosses.')+'</p>';}
+ $('boss-grid').innerHTML=a.length?a.map(function(b){var p=prop(b);return '<a class="boss-card" style="--accent:'+color(b)+'" href="'+url(b)+'"><div class="card-art">'+pic(b,'boss-art')+'<span class="catalog-number">'+String(D.bosses.indexOf(b)+1).padStart(2,'0')+'</span>'+status(b)+'</div><div class="card-copy"><div class="card-level">'+(b.lv?'LV. '+e(b.lv):w('레벨 미정','Level TBA'))+'</div><h3>'+e(t(b.name))+'</h3><p>'+e(p?tr(p.role):t(b.trait)||t(L.tba))+'</p><div class="card-footer"><span>'+w('상세 정보','View dossier')+'</span><span aria-hidden="true">↗</span></div></div></a>';}).join(''):'<p class="empty">'+w('검색 결과가 없습니다.','No matching bosses.')+'</p>';}
  $('boss-search').addEventListener('input',draw);document.querySelector('.filters').addEventListener('click',function(ev){var b=ev.target.closest('button[data-filter]');if(!b)return;filter=b.dataset.filter;this.querySelectorAll('button').forEach(function(x){x.setAttribute('aria-pressed',String(x===b));});draw();});draw();return;
 }
 var b=D.bosses.find(function(x){return x.id===q.get('id');});$('back').href='../index.html'+suffix;$('back').textContent='‹ '+t(L.raid);
